@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal, viewChild } from '@angular/core';
 import {
   AtmButton,
+  AtmContextMenu,
+  AtmContextMenuItem,
+  AtmContextMenuSelect,
   AtmFlow,
   AtmFlowConnectEnd,
   AtmFlowContextMenuEvent,
@@ -60,7 +63,7 @@ export class NodeSendMessage {
 @Component({
   selector: 'flow-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AtmFlow, AtmFlowNodeDef, AtmButton, DemoPage, DemoSection, NodeSendMessage],
+  imports: [AtmFlow, AtmFlowNodeDef, AtmButton, AtmContextMenu, DemoPage, DemoSection, NodeSendMessage],
   template: `
     <demo-page
       title="Flow"
@@ -231,6 +234,24 @@ export class NodeSendMessage {
       </demo-section>
 
       <demo-section
+        id="flow-context-menu"
+        title="Menu de contexto"
+        description="AtmContextMenu integrado ao output (contextMenu) do flow: uma única instância com itens dinâmicos por alvo. Botão direito no canvas abre o menu geral (adicionar node naquele ponto, auto layout, ajustar visão); em um node abre o menu próprio dele — com o nome no header — para duplicar, desconectar ou excluir; em uma edge dá para animar, tracejar ou excluir a conexão."
+        [code]="flowContextMenuCode"
+      >
+        <atm-flow
+          #flowCtx
+          class="w-full"
+          [(nodes)]="ctxNodes"
+          [(edges)]="ctxEdges"
+          [height]="420"
+          defaultEdgeType="smoothstep"
+          (contextMenu)="onFlowContextMenu($event)"
+        />
+        <atm-context-menu #flowMenu (itemClick)="onFlowMenuAction($event)" />
+      </demo-section>
+
+      <demo-section
         id="flow-add-drop"
         title="Adicionar módulo ao soltar conexão"
         description="Arraste do output de um node e solte no vazio: o connectEnd retorna a posição (flow e tela via flowToScreen) e abre um seletor de módulos — o escolhido é criado ali, já conectado."
@@ -393,6 +414,8 @@ export class FlowPage {
 
   readonly flowGroups = viewChild.required<AtmFlow>('flowGroups');
   readonly flowInteract = viewChild.required<AtmFlow>('flowInteract');
+  readonly flowCtx = viewChild.required<AtmFlow>('flowCtx');
+  readonly flowMenu = viewChild.required<AtmContextMenu>('flowMenu');
   readonly flowAdd = viewChild.required<AtmFlow>('flowAdd');
   readonly flowJson = viewChild.required<AtmFlow>('flowJson');
   readonly flowStress = viewChild.required<AtmFlow>('flowStress');
@@ -709,6 +732,112 @@ export class FlowPage {
   onContextMenu(e: AtmFlowContextMenuEvent): void {
     const what = e.node ? `node "${e.node.label ?? e.node.id}"` : e.edge ? `edge ${e.edge.id}` : 'canvas';
     this.toast.info(`Clique direito em ${what} (x: ${Math.round(e.position.x)}, y: ${Math.round(e.position.y)})`);
+  }
+
+  /* --------------------- menu de contexto --------------------- */
+
+  readonly ctxNodes = signal<AtmFlowNode[]>([
+    { id: 'cx-start', label: 'Início', icon: 'icofont-play-alt-2', color: 'var(--atm-success)', position: { x: 0, y: 150 } },
+    { id: 'cx-crm', label: 'Consultar CRM', icon: 'icofont-database', position: { x: 250, y: 60 } },
+    { id: 'cx-mail', label: 'Enviar e-mail', icon: 'icofont-email', color: 'var(--atm-info)', position: { x: 250, y: 240 } },
+    { id: 'cx-end', label: 'Finalizar', icon: 'icofont-check-circled', color: 'var(--atm-primary)', position: { x: 520, y: 150 } },
+  ]);
+
+  readonly ctxEdges = signal<AtmFlowEdge[]>([
+    { id: 'cxe1', source: 'cx-start', target: 'cx-crm' },
+    { id: 'cxe2', source: 'cx-start', target: 'cx-mail', animated: true },
+    { id: 'cxe3', source: 'cx-crm', target: 'cx-end' },
+    { id: 'cxe4', source: 'cx-mail', target: 'cx-end', dashed: true },
+  ]);
+
+  private readonly canvasMenuItems: AtmContextMenuItem[] = [
+    { label: 'Adicionar node aqui', value: 'add-node', icon: 'plus' },
+    { label: 'Auto layout', value: 'auto-layout', icon: 'site-map' },
+    { label: 'Ajustar visão', value: 'fit-view', icon: 'eye-alt' },
+    { label: 'Limpar canvas', value: 'clear', icon: 'trash', danger: true, separatorBefore: true },
+  ];
+
+  /** Um único AtmContextMenu; os itens mudam conforme o alvo do clique direito. */
+  onFlowContextMenu(e: AtmFlowContextMenuEvent): void {
+    let items: AtmContextMenuItem[];
+    let header: string;
+    if (e.node) {
+      header = e.node.label ?? e.node.id;
+      items = [
+        { label: 'Editar node', value: 'edit', icon: 'edit' },
+        { label: 'Duplicar', value: 'duplicate', icon: 'copy', shortcut: 'Ctrl+D' },
+        { label: 'Desconectar tudo', value: 'disconnect', icon: 'close-circled' },
+        { label: 'Excluir node', value: 'delete-node', icon: 'trash', danger: true, separatorBefore: true },
+      ];
+    } else if (e.edge) {
+      header = `Conexão ${e.edge.source} → ${e.edge.target}`;
+      items = [
+        { label: e.edge.animated ? 'Parar animação' : 'Animar fluxo', value: 'edge-animate', icon: 'exchange' },
+        { label: e.edge.dashed ? 'Linha sólida' : 'Linha tracejada', value: 'edge-dashed', icon: 'ruler' },
+        { label: 'Excluir conexão', value: 'delete-edge', icon: 'trash', danger: true, separatorBefore: true },
+      ];
+    } else {
+      header = 'Canvas';
+      items = this.canvasMenuItems;
+    }
+    this.flowMenu().open(e.event, { items, header, data: e });
+  }
+
+  onFlowMenuAction(sel: AtmContextMenuSelect): void {
+    const e = sel.data as AtmFlowContextMenuEvent;
+    const node = e.node;
+    const edge = e.edge;
+    switch (sel.item.value) {
+      case 'add-node':
+        this.ctxNodes.update((ns) => [
+          ...ns,
+          { id: atmUid('n'), label: 'Novo node', icon: 'icofont-plus', position: { x: e.position.x - 60, y: e.position.y - 20 } },
+        ]);
+        break;
+      case 'auto-layout':
+        this.flowCtx().autoLayout('LR');
+        break;
+      case 'fit-view':
+        this.flowCtx().fitView();
+        break;
+      case 'clear':
+        this.ctxNodes.set([]);
+        this.ctxEdges.set([]);
+        break;
+      case 'edit':
+        this.toast.info(`Abra aqui seu editor do node "${node?.label ?? node?.id}".`);
+        break;
+      case 'duplicate':
+        if (node) {
+          this.ctxNodes.update((ns) => [
+            ...ns,
+            { ...node, id: atmUid('n'), position: { x: node.position.x + 40, y: node.position.y + 50 } },
+          ]);
+        }
+        break;
+      case 'disconnect':
+        if (node) this.ctxEdges.update((es) => es.filter((ed) => ed.source !== node.id && ed.target !== node.id));
+        break;
+      case 'delete-node':
+        if (node) {
+          this.ctxNodes.update((ns) => ns.filter((n) => n.id !== node.id));
+          this.ctxEdges.update((es) => es.filter((ed) => ed.source !== node.id && ed.target !== node.id));
+        }
+        break;
+      case 'edge-animate':
+        if (edge) this.updateCtxEdge(edge.id, (ed) => ({ ...ed, animated: !ed.animated }));
+        break;
+      case 'edge-dashed':
+        if (edge) this.updateCtxEdge(edge.id, (ed) => ({ ...ed, dashed: !ed.dashed }));
+        break;
+      case 'delete-edge':
+        if (edge) this.ctxEdges.update((es) => es.filter((ed) => ed.id !== edge.id));
+        break;
+    }
+  }
+
+  private updateCtxEdge(id: string, patch: (edge: AtmFlowEdge) => AtmFlowEdge): void {
+    this.ctxEdges.update((es) => es.map((ed) => (ed.id === id ? patch(ed) : ed)));
   }
 
   /* ------------------ adicionar ao soltar --------------------- */
@@ -1030,6 +1159,31 @@ maxTwoOutgoing = (conn, nodes, edges) =>
 onDrop(e: DragEvent) {
   const pos = this.flow().screenToFlow({ x: e.clientX, y: e.clientY });
   this.nodes.update((ns) => [...ns, { id: uid(), label: '...', position: pos }]);
+}`;
+
+  readonly flowContextMenuCode = `<atm-flow #flow [(nodes)]="nodes" [(edges)]="edges" (contextMenu)="onCtx($event)" />
+<atm-context-menu #menu (itemClick)="onAction($event)" />
+
+// Uma única instância; itens e header dinâmicos conforme o alvo:
+onCtx(e: AtmFlowContextMenuEvent) {
+  const items = e.node ? this.nodeItems         // menu próprio do node
+              : e.edge ? this.edgeItems(e.edge) // menu da conexão
+              : this.canvasItems;               // menu geral do canvas
+  const header = e.node ? e.node.label : e.edge ? 'Conexão' : 'Canvas';
+  this.menu().open(e.event, { items, header, data: e });
+}
+
+// O data (evento do flow) volta em cada clique — com a posição em
+// coordenadas do flow, pronta para criar um node naquele ponto:
+onAction(sel: AtmContextMenuSelect) {
+  const e = sel.data as AtmFlowContextMenuEvent;
+  switch (sel.item.value) {
+    case 'add-node':
+      this.nodes.update((ns) => [...ns, { id: uid(), label: 'Novo', position: e.position }]);
+      break;
+    case 'duplicate':   /* e.node é o node clicado */ break;
+    case 'delete-edge': /* e.edge é a conexão clicada */ break;
+  }
 }`;
 
   readonly addDropCode = `<atm-flow #flow [(nodes)]="nodes" [(edges)]="edges" (connectEnd)="onConnectEnd($event)" />

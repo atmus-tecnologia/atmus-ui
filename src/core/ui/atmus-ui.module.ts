@@ -27,6 +27,7 @@ import { AtmListbox } from './components/listbox/listbox.component';
 import { AtmAutocomplete } from './components/autocomplete/autocomplete.component';
 import { AtmDropdown } from './components/dropdown/dropdown.component';
 import { AtmDropdownRemote } from './components/dropdown/dropdown-remote.component';
+import { AtmContextMenu, AtmContextMenuTrigger } from './components/context-menu/context-menu.component';
 import { AtmTooltip } from './components/tooltip/tooltip.directive';
 import { AtmPopover } from './components/popover/popover.component';
 import { AtmModal } from './components/modal/modal.component';
@@ -98,6 +99,8 @@ const COMPONENTS = [
   AtmAutocomplete,
   AtmDropdown,
   AtmDropdownRemote,
+  AtmContextMenu,
+  AtmContextMenuTrigger,
   AtmTooltip,
   AtmPopover,
   AtmModal,

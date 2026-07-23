@@ -43,6 +43,7 @@ export * from './components/listbox/listbox.component';
 export * from './components/autocomplete/autocomplete.component';
 export * from './components/dropdown/dropdown.component';
 export * from './components/dropdown/dropdown-remote.component';
+export * from './components/context-menu/context-menu.component';
 export * from './components/tooltip/tooltip.directive';
 export * from './components/popover/popover.component';
 export * from './components/modal/modal.component';
