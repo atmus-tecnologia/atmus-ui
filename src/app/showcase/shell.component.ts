@@ -152,6 +152,19 @@ const MENU: MenuGroup[] = [
     ],
   },
   {
+    label: 'Diagramas',
+    icon: 'icofont-site-map',
+    items: [
+      { label: 'Flow — Básico', link: '/flow', fragment: 'flow-basic', badge: 'novo' },
+      { label: 'Flow — Custom nodes', link: '/flow', fragment: 'flow-custom', badge: 'novo' },
+      { label: 'Flow — Interações', link: '/flow', fragment: 'flow-interaction', badge: 'novo' },
+      { label: 'Flow — Add ao soltar', link: '/flow', fragment: 'flow-add-drop', badge: 'novo' },
+      { label: 'Flow — Eventos', link: '/flow', fragment: 'flow-events', badge: 'novo' },
+      { label: 'Flow — Layout & JSON', link: '/flow', fragment: 'flow-json', badge: 'novo' },
+      { label: 'Flow — Stress test', link: '/flow', fragment: 'flow-stress', badge: 'novo' },
+    ],
+  },
+  {
     label: 'Cores',
     icon: 'icofont-color-picker',
     items: [

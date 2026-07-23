@@ -74,5 +74,7 @@ export * from './components/datepicker/date-range-picker.component';
 export * from './components/datepicker/time-field.component';
 export * from './components/color/color.components';
 export * from './components/chart/chart.component';
+export * from './components/flow/flow.types';
+export * from './components/flow/flow.component';
 
 export * from './atmus-ui.module';
