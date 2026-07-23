@@ -52,6 +52,18 @@ const MENU: MenuGroup[] = [
     ],
   },
   {
+    label: 'Upload',
+    icon: 'icofont-cloud-upload',
+    items: [
+      { label: 'FileInput', link: '/upload', fragment: 'file-input', badge: 'novo' },
+      { label: 'Área de drop', link: '/upload', fragment: 'file-input-dropzone', badge: 'novo' },
+      { label: 'Tamanhos', link: '/upload', fragment: 'file-input-sizes' },
+      { label: 'Envio (FormData)', link: '/upload', fragment: 'file-input-upload', badge: 'API' },
+      { label: 'Upload com crop', link: '/upload', fragment: 'file-input-crop', badge: 'novo' },
+      { label: 'ImageCrop', link: '/upload', fragment: 'image-crop', badge: 'novo' },
+    ],
+  },
+  {
     label: 'Seleção',
     icon: 'icofont-ui-check',
     items: [

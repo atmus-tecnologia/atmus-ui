@@ -33,6 +33,8 @@ export * from './components/input/textarea.component';
 export * from './components/input/number-field.component';
 export * from './components/input/search-field.component';
 export * from './components/input/input-otp.component';
+export * from './components/file-input/file-input.component';
+export * from './components/image-crop/image-crop.component';
 export * from './components/checkbox/checkbox.component';
 export * from './components/checkbox/checkbox-group.component';
 export * from './components/radio/radio-group.component';

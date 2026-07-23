@@ -9,6 +9,7 @@ export const routes: Routes = [
       { path: '', loadComponent: () => import('./showcase/pages/home.page').then((m) => m.HomePage) },
       { path: 'buttons', loadComponent: () => import('./showcase/pages/buttons.page').then((m) => m.ButtonsPage) },
       { path: 'inputs', loadComponent: () => import('./showcase/pages/inputs.page').then((m) => m.InputsPage) },
+      { path: 'upload', loadComponent: () => import('./showcase/pages/upload.page').then((m) => m.UploadPage) },
       { path: 'selection', loadComponent: () => import('./showcase/pages/selection.page').then((m) => m.SelectionPage) },
       { path: 'selects', loadComponent: () => import('./showcase/pages/selects.page').then((m) => m.SelectsPage) },
       { path: 'dropdowns', loadComponent: () => import('./showcase/pages/dropdowns.page').then((m) => m.DropdownsPage) },

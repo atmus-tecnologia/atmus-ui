@@ -17,6 +17,8 @@ import { AtmTextarea } from './components/input/textarea.component';
 import { AtmNumberField } from './components/input/number-field.component';
 import { AtmSearchField } from './components/input/search-field.component';
 import { AtmInputOtp } from './components/input/input-otp.component';
+import { AtmFileInput } from './components/file-input/file-input.component';
+import { AtmImageCrop, AtmImageCropDialog } from './components/image-crop/image-crop.component';
 import { AtmCheckbox } from './components/checkbox/checkbox.component';
 import { AtmCheckboxGroup } from './components/checkbox/checkbox-group.component';
 import { AtmRadioGroup } from './components/radio/radio-group.component';
@@ -89,6 +91,9 @@ const COMPONENTS = [
   AtmNumberField,
   AtmSearchField,
   AtmInputOtp,
+  AtmFileInput,
+  AtmImageCrop,
+  AtmImageCropDialog,
   AtmCheckbox,
   AtmCheckboxGroup,
   AtmRadioGroup,
