@@ -202,15 +202,25 @@ export class AtmImageCrop {
     afterNextRender(() => {
       const el = this.containerEl()?.nativeElement;
       if (!el) return;
+      // Deferred to rAF to avoid "ResizeObserver loop completed with
+      // undelivered notifications" (the callback re-renders and can resize
+      // the observed container).
+      let raf = 0;
       const ro = new ResizeObserver(() => {
-        this.containerW.set(el.clientWidth);
-        this.containerH.set(el.clientHeight);
-        this.clampBox();
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          this.containerW.set(el.clientWidth);
+          this.containerH.set(el.clientHeight);
+          this.clampBox();
+        });
       });
       ro.observe(el);
       this.containerW.set(el.clientWidth);
       this.containerH.set(el.clientHeight);
-      this.destroyRef.onDestroy(() => ro.disconnect());
+      this.destroyRef.onDestroy(() => {
+        cancelAnimationFrame(raf);
+        ro.disconnect();
+      });
     });
 
     this.destroyRef.onDestroy(() => this.releaseUrl());

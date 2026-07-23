@@ -870,33 +870,49 @@ export class AtmFlow {
 
   constructor() {
     afterNextRender(() => {
+      // Work is deferred to rAF — mutating layout synchronously inside a
+      // ResizeObserver callback triggers "ResizeObserver loop completed
+      // with undelivered notifications".
+      let hostRaf = 0;
       const hostRo = new ResizeObserver((entries) => {
         const rect = entries[0]?.contentRect;
-        if (rect) this.zone.run(() => this.hostSize.set({ w: rect.width, h: rect.height }));
+        if (!rect) return;
+        cancelAnimationFrame(hostRaf);
+        hostRaf = requestAnimationFrame(() =>
+          this.zone.run(() => this.hostSize.set({ w: rect.width, h: rect.height })),
+        );
       });
       hostRo.observe(this.host.nativeElement);
 
+      let nodeRaf = 0;
+      const pendingNodes = new Set<HTMLElement>();
       this.nodeRo = new ResizeObserver((entries) => {
-        const next = new Map(this.dims());
-        let changed = false;
-        for (const entry of entries) {
-          const el = entry.target as HTMLElement;
-          const id = el.dataset['flowNode'];
-          if (!id) continue;
-          const w = el.offsetWidth;
-          const h = el.offsetHeight;
-          if (!w || !h) continue;
-          const prev = next.get(id);
-          if (!prev || Math.abs(prev.w - w) > 0.5 || Math.abs(prev.h - h) > 0.5) {
-            next.set(id, { w, h });
-            changed = true;
+        for (const entry of entries) pendingNodes.add(entry.target as HTMLElement);
+        cancelAnimationFrame(nodeRaf);
+        nodeRaf = requestAnimationFrame(() => {
+          const next = new Map(this.dims());
+          let changed = false;
+          for (const el of pendingNodes) {
+            const id = el.dataset['flowNode'];
+            if (!id) continue;
+            const w = el.offsetWidth;
+            const h = el.offsetHeight;
+            if (!w || !h) continue;
+            const prev = next.get(id);
+            if (!prev || Math.abs(prev.w - w) > 0.5 || Math.abs(prev.h - h) > 0.5) {
+              next.set(id, { w, h });
+              changed = true;
+            }
           }
-        }
-        if (changed) this.zone.run(() => this.dims.set(next));
+          pendingNodes.clear();
+          if (changed) this.zone.run(() => this.dims.set(next));
+        });
       });
       this.roReady.set(true);
 
       this.destroyRef.onDestroy(() => {
+        cancelAnimationFrame(hostRaf);
+        cancelAnimationFrame(nodeRaf);
         hostRo.disconnect();
         this.nodeRo?.disconnect();
       });

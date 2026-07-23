@@ -141,6 +141,7 @@ export class AtmAudioVisualizer {
   private ctx2d: CanvasRenderingContext2D | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private rafId = 0;
+  private resizeRaf = 0;
   private readonly levels = new Float32Array(BINS);
 
   constructor() {
@@ -255,7 +256,12 @@ export class AtmAudioVisualizer {
   private initCanvas(): void {
     const canvas = this.canvasRef().nativeElement;
     this.ctx2d = canvas.getContext('2d');
-    this.resizeObserver = new ResizeObserver(() => this.syncCanvasSize());
+    // Deferred to rAF — resizing the observed canvas inside the callback
+    // triggers "ResizeObserver loop completed with undelivered notifications".
+    this.resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(this.resizeRaf);
+      this.resizeRaf = requestAnimationFrame(() => this.syncCanvasSize());
+    });
     this.resizeObserver.observe(canvas);
     this.syncCanvasSize();
     this.zone.runOutsideAngular(() => {
@@ -451,6 +457,7 @@ export class AtmAudioVisualizer {
 
   private cleanup(): void {
     cancelAnimationFrame(this.rafId);
+    cancelAnimationFrame(this.resizeRaf);
     this.resizeObserver?.disconnect();
     this.audioEl.pause();
     this.audioEl.removeAttribute('src');

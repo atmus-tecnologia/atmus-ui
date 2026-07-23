@@ -127,10 +127,38 @@ interface ThemeColors {
   surface: string;
 }
 
+/** Bar rectangle recorded during draw — used to resolve the exact dataset on click. */
+interface BarRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  di: number;
+  index: number;
+}
+
+/** Series point position recorded during draw — used to resolve the exact dataset on click. */
+interface SeriesPt {
+  x: number;
+  y: number;
+  di: number;
+  index: number;
+}
+
 type Geom =
-  | { kind: 'cartesian'; x: number; y: number; w: number; h: number; centers: number[]; horizontal: boolean }
+  | {
+      kind: 'cartesian';
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      centers: number[];
+      horizontal: boolean;
+      bars?: BarRect[];
+      pts?: SeriesPt[];
+    }
   | { kind: 'pie'; cx: number; cy: number; r: number; inner: number; slices: { start: number; end: number; index: number }[] }
-  | { kind: 'radar'; cx: number; cy: number; r: number; count: number }
+  | { kind: 'radar'; cx: number; cy: number; r: number; count: number; pts: SeriesPt[] }
   | { kind: 'funnel'; x: number; w: number; count: number }
   | { kind: 'scatter'; pts: { x: number; y: number; di: number; pi: number }[] }
   | { kind: 'rings'; cx: number; cy: number; rings: { r: number; thick: number; index: number }[] }
@@ -307,7 +335,11 @@ export class AtmChart {
   /** Arc rendering style for radial-bar and gauge. */
   readonly radialStyle = input<'solid' | 'dotted'>('solid');
 
-  /** Emitted when the user clicks a data point / bar / slice / stage. */
+  /**
+   * Emitted when the user clicks a data point / bar / slice / stage.
+   * `datasetIndex`/`datasetLabel` identify the exact series clicked — e.g. the
+   * specific bar within a group or stack, the nearest line marker, etc.
+   */
   readonly pointClick = output<AtmChartPointEvent>();
 
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
@@ -357,6 +389,7 @@ export class AtmChart {
   private readonly rgbCache = new Map<string, { r: number; g: number; b: number; a: number }>();
   private ro?: ResizeObserver;
   private raf = 0;
+  private resizeRaf = 0;
   private progress = 1;
   private ready = false;
   private fontFamily = 'sans-serif';
@@ -403,9 +436,14 @@ export class AtmChart {
       this.ctx = canvas.getContext('2d');
       this.fontFamily = getComputedStyle(this.host.nativeElement).fontFamily || 'sans-serif';
       this.zone.runOutsideAngular(() => {
+        // Deferred to rAF — resizing the canvas inside the observer callback
+        // triggers "ResizeObserver loop completed with undelivered notifications".
         this.ro = new ResizeObserver(() => {
-          this.resizeCanvas();
-          this.drawNow();
+          cancelAnimationFrame(this.resizeRaf);
+          this.resizeRaf = requestAnimationFrame(() => {
+            this.resizeCanvas();
+            this.drawNow();
+          });
         });
         this.ro.observe(this.wrapperRef().nativeElement);
         canvas.addEventListener('mousemove', this.onMove, { passive: true });
@@ -418,6 +456,7 @@ export class AtmChart {
 
     this.destroyRef.onDestroy(() => {
       cancelAnimationFrame(this.raf);
+      cancelAnimationFrame(this.resizeRaf);
       this.ro?.disconnect();
     });
   }
@@ -467,7 +506,7 @@ export class AtmChart {
     this.drawNow();
   };
 
-  private readonly onClick = (): void => {
+  private readonly onClick = (e: MouseEvent): void => {
     const hit = this.lastHit;
     if (!hit) return;
     const type = this.type();
@@ -489,17 +528,45 @@ export class AtmChart {
       return;
     }
     if (type !== 'pie' && type !== 'donut' && type !== 'funnel' && type !== 'radial-bar') {
-      const first = this.seriesList()[0];
-      if (first) {
-        datasetIndex = first.di;
-        datasetLabel = first.ds.label;
-        value = first.ds.data[hit.index] ?? 0;
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      const s =
+        this.datasetAt(e.clientX - rect.left, e.clientY - rect.top, hit.index) ?? this.seriesList()[0];
+      if (s) {
+        datasetIndex = s.di;
+        datasetLabel = s.ds.label;
+        value = s.ds.data[hit.index] ?? s.ds.ranges?.[hit.index]?.[1] ?? 0;
       }
     }
     this.zone.run(() =>
       this.pointClick.emit({ index: hit.index, label: labels[hit.index] ?? '', datasetIndex, datasetLabel, value }),
     );
   };
+
+  /** Resolves which series (bar / point) sits under the cursor for the hovered category. */
+  private datasetAt(mx: number, my: number, index: number): Series | null {
+    const g = this.geom;
+    if (!g || (g.kind !== 'cartesian' && g.kind !== 'radar')) return null;
+    const series = this.seriesList();
+    if (g.kind === 'cartesian') {
+      const bar = g.bars?.find(
+        (b) =>
+          b.index === index && mx >= b.x - 2 && mx <= b.x + b.w + 2 && my >= b.y - 2 && my <= b.y + b.h + 2,
+      );
+      if (bar) return series.find((s) => s.di === bar.di) ?? null;
+    }
+    let best: SeriesPt | null = null;
+    let bd = 18 * 18;
+    for (const p of g.pts ?? []) {
+      if (p.index !== index) continue;
+      const d = (p.x - mx) ** 2 + (p.y - my) ** 2;
+      if (d < bd) {
+        bd = d;
+        best = p;
+      }
+    }
+    const b = best;
+    return b ? (series.find((s) => s.di === b.di) ?? null) : null;
+  }
 
   private hitTest(mx: number, my: number): Hit | null {
     const g = this.geom;
@@ -962,6 +1029,9 @@ export class AtmChart {
       });
     }
 
+    const barRects: BarRect[] = [];
+    const seriesPts: SeriesPt[] = [];
+
     // Bars
     if (hasBars) {
       const groupW = (pw / n) * 0.62;
@@ -990,6 +1060,7 @@ export class AtmChart {
           const top = Math.min(y0, y1);
           const bh = Math.abs(y0 - y1);
           const r = Math.min(4, barW / 2, bh);
+          barRects.push({ x: x0, y: top, w: barW, h: bh, di: s.di, index: i });
           ctx.fillStyle = color;
           ctx.beginPath();
           ctx.roundRect(x0, top, barW, bh, stacked ? 0 : v >= 0 ? [r, r, 0, 0] : [0, 0, r, r]);
@@ -1019,6 +1090,7 @@ export class AtmChart {
       const color = this.resolveColor(s.color);
       const data = s.ds.data;
       const pts: Pt[] = centers.map((cx, i) => ({ x: cx, y: zeroY + (y(data[i] ?? 0) - zeroY) * t }));
+      pts.forEach((p, i) => seriesPts.push({ x: p.x, y: p.y, di: s.di, index: i }));
       const smooth = s.ds.smooth ?? this.smooth();
 
       if (pts.length > 1) {
@@ -1087,7 +1159,7 @@ export class AtmChart {
       ctx.restore();
     }
 
-    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: false };
+    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: false, bars: barRects, pts: seriesPts };
   }
 
   // ------------------------------------------------------------------
@@ -1179,6 +1251,7 @@ export class AtmChart {
       labels.forEach((l, i) => ctx.fillText(truncate(l, catW), px - 8, centers[i]));
     }
 
+    const barRects: BarRect[] = [];
     const groupH = rowH * 0.62;
     const barH = stacked ? Math.min(groupH, 30) : Math.min(groupH / series.length, 26);
     for (let i = 0; i < n; i++) {
@@ -1205,6 +1278,7 @@ export class AtmChart {
         const left = Math.min(x0, x1);
         const bw = Math.abs(x1 - x0);
         const r = Math.min(4, barH / 2, bw);
+        barRects.push({ x: left, y: y0, w: bw, h: barH, di: s.di, index: i });
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.roundRect(left, y0, bw, barH, stacked ? 0 : v >= 0 ? [0, r, r, 0] : [r, 0, 0, r]);
@@ -1235,7 +1309,7 @@ export class AtmChart {
       ctx.fillText(this.xTitle(), px + pw / 2, h - 4);
     }
 
-    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: true };
+    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: true, bars: barRects };
   }
 
   // ------------------------------------------------------------------
@@ -1374,6 +1448,7 @@ export class AtmChart {
 
     // Series polygons (smooth = closed spline, like modern "star" radars)
     const smooth = this.smooth();
+    const seriesPts: SeriesPt[] = [];
     for (const s of series) {
       const color = this.resolveColor(s.color);
       const pts: Pt[] = labels.map((_, i) => {
@@ -1381,6 +1456,7 @@ export class AtmChart {
         const rr = Math.max(0, Math.min(1, (s.ds.data[i] ?? 0) / max)) * R * t;
         return { x: cx + Math.cos(a) * rr, y: cy + Math.sin(a) * rr };
       });
+      pts.forEach((p, i) => seriesPts.push({ x: p.x, y: p.y, di: s.di, index: i }));
       ctx.beginPath();
       if (smooth && pts.length > 2) this.traceClosedSmooth(ctx, pts);
       else pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
@@ -1405,7 +1481,7 @@ export class AtmChart {
       });
     }
 
-    this.geom = { kind: 'radar', cx, cy, r: R, count: n };
+    this.geom = { kind: 'radar', cx, cy, r: R, count: n, pts: seriesPts };
   }
 
   // ------------------------------------------------------------------
@@ -1611,6 +1687,7 @@ export class AtmChart {
       });
     }
 
+    const barRects: BarRect[] = [];
     const groupW = (pw / n) * 0.55;
     const barW = Math.min(groupW / series.length, 16);
     series.forEach((s, si) => {
@@ -1625,13 +1702,14 @@ export class AtmChart {
         const yBot = y(mid - half);
         const x0 = centers[i] - (barW * series.length) / 2 + si * barW + 1.5;
         const bw = barW - 3;
+        barRects.push({ x: x0, y: yTop, w: bw, h: Math.max(yBot - yTop, bw), di: s.di, index: i });
         ctx.beginPath();
         ctx.roundRect(x0, yTop, bw, Math.max(yBot - yTop, bw), bw / 2);
         ctx.fill();
       }
     });
 
-    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: false };
+    this.geom = { kind: 'cartesian', x: px, y: py, w: pw, h: ph, centers, horizontal: false, bars: barRects };
   }
 
   // ------------------------------------------------------------------

@@ -40,7 +40,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       <demo-section
         id="chart-bar"
         title="Colunas & Barras"
-        description="Colunas agrupadas e barras horizontais com cantos arredondados."
+        description="Colunas agrupadas e barras horizontais com cantos arredondados. Clique numa coluna — o pointClick identifica a série exata clicada."
         [code]="barCode"
       >
         <div class="flex w-full flex-col gap-8">
@@ -50,6 +50,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             [labels]="trimestres"
             [datasets]="barData"
             [height]="280"
+            (pointClick)="onPoint($event)"
           />
           <atm-chart
             type="bar-horizontal"
@@ -509,7 +510,14 @@ export class ChartsPage {
 <!-- Área com gradiente -->
 <atm-chart type="area" [labels]="semanas" [datasets]="areaData" [height]="260" />`;
 
-  readonly barCode = `<atm-chart type="bar" title="Vendas por trimestre" [labels]="trimestres" [datasets]="barData" />
+  readonly barCode = `<!-- pointClick emite { index, label, datasetIndex, datasetLabel, value } da barra clicada -->
+<atm-chart
+  type="bar"
+  title="Vendas por trimestre"
+  [labels]="trimestres"
+  [datasets]="barData"
+  (pointClick)="onPoint($event)"
+/>
 
 <atm-chart
   type="bar-horizontal"

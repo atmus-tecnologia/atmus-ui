@@ -141,10 +141,16 @@ export class AtmTabs implements OnDestroy {
   protected readonly canScrollRight = signal(false);
 
   private resizeObserver?: ResizeObserver;
+  private resizeRaf = 0;
 
   constructor() {
     afterNextRender(() => {
-      this.resizeObserver = new ResizeObserver(() => this.updateOverflow());
+      // Deferred to rAF to avoid "ResizeObserver loop completed with
+      // undelivered notifications" (toggling the arrows resizes the list).
+      this.resizeObserver = new ResizeObserver(() => {
+        cancelAnimationFrame(this.resizeRaf);
+        this.resizeRaf = requestAnimationFrame(() => this.updateOverflow());
+      });
       this.resizeObserver.observe(this.listRef().nativeElement);
       this.updateOverflow();
     });
@@ -161,6 +167,7 @@ export class AtmTabs implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    cancelAnimationFrame(this.resizeRaf);
     this.resizeObserver?.disconnect();
   }
 
