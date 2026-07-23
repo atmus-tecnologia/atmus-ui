@@ -11,6 +11,7 @@ import {
   AtmLabel,
   AtmNumberField,
   AtmSearchField,
+  AtmSignature,
   AtmTagGroup,
   AtmTextarea,
   AtmToastService,
@@ -28,6 +29,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     AtmTextarea,
     AtmNumberField,
     AtmSearchField,
+    AtmSignature,
     AtmInputOtp,
     AtmTagGroup,
     AtmLabel,
@@ -210,6 +212,64 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       </demo-section>
 
       <demo-section
+        id="signature"
+        title="Signature"
+        description="Assinatura desenhada no canvas ou digitada (fonte cursiva). O valor do form é um data URL PNG transparente — funciona com [(ngModel)] e formControlName."
+        [code]="signatureCode"
+      >
+        <div class="grid w-full gap-6 md:grid-cols-2">
+          <div>
+            <atm-label [required]="true">Assinatura</atm-label>
+            <atm-signature
+              [(ngModel)]="signature"
+              #signatureModel="ngModel"
+              [invalid]="!!signatureModel.invalid && !!signatureModel.touched"
+              required
+            />
+            @if (signatureModel.invalid && signatureModel.touched) {
+              <atm-error-message>A assinatura é obrigatória.</atm-error-message>
+            }
+          </div>
+          <div class="flex flex-col">
+            <atm-label>Valor do form (preview)</atm-label>
+            @if (signature()) {
+              <img
+                [src]="signature()"
+                alt="Assinatura"
+                class="min-h-36 w-full flex-1 rounded-atm border border-line bg-surface-alt
+                  object-contain p-2"
+              />
+            } @else {
+              <div
+                class="flex min-h-36 flex-1 items-center justify-center rounded-atm border
+                  border-dashed border-line text-sm text-ink-faint"
+              >
+                null
+              </div>
+            }
+          </div>
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="signature-options"
+        title="Signature — opções"
+        description="Somente desenho ([allowTyped]=false), cor da caneta, tamanhos e estado desabilitado. Métodos toDataUrl() / toBlob() / toFile() para envio à API."
+        [code]="signatureOptionsCode"
+      >
+        <div class="grid w-full gap-6 md:grid-cols-2">
+          <div>
+            <atm-label>Somente desenho, caneta escura</atm-label>
+            <atm-signature size="slim" [allowTyped]="false" penColor="var(--atm-ink)" />
+          </div>
+          <div>
+            <atm-label>Desabilitado</atm-label>
+            <atm-signature size="slim" [allowTyped]="false" [disabled]="true" />
+          </div>
+        </div>
+      </demo-section>
+
+      <demo-section
         id="form"
         title="Form completo"
         description="Reactive Forms + Fieldset + validação."
@@ -259,6 +319,7 @@ export class InputsPage {
   readonly quantity = signal<number | null>(1);
   readonly lastSearch = signal('');
   readonly tags = signal<string[]>(['angular', 'tailwind']);
+  readonly signature = signal<string | null>(null);
 
   readonly form = this.fb.group({
     name: ['', Validators.required],
@@ -318,6 +379,31 @@ export class InputsPage {
   readonly otpCode = `<atm-input-otp [length]="6" (completed)="verify($event)" />`;
 
   readonly tagsCode = `<atm-tag-group [(ngModel)]="tags" [maxTags]="10" />`;
+
+  readonly signatureCode = `<!-- valor do form: data URL PNG transparente (string) ou null -->
+<atm-signature
+  [(ngModel)]="signature"
+  #signatureModel="ngModel"
+  [invalid]="!!signatureModel.invalid && !!signatureModel.touched"
+  required
+/>
+
+<!-- também funciona com Reactive Forms -->
+<atm-signature formControlName="signature" [invalid]="isInvalid('signature')" />`;
+
+  readonly signatureOptionsCode = `<!-- somente desenho, sem o toggle de modo -->
+<atm-signature [allowTyped]="false" />
+
+<!-- cor e espessura da caneta (padrão: token primary) -->
+<atm-signature penColor="var(--atm-ink)" [penWidth]="3" />
+
+<!-- tamanhos e estados -->
+<atm-signature size="large" />
+<atm-signature size="slim" [disabled]="true" />
+
+<!-- envio à API -->
+<atm-signature #sig />
+const file = sig.toFile('assinatura.png'); // ou toBlob() / toDataUrl()`;
 
   readonly formCode = `form = this.fb.group({
   name: ['', Validators.required],

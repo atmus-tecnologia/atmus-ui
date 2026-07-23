@@ -20,6 +20,7 @@ import { AtmInputOtp } from './components/input/input-otp.component';
 import { AtmRichText } from './components/rich-text/rich-text.component';
 import { AtmFileInput } from './components/file-input/file-input.component';
 import { AtmImageCrop, AtmImageCropDialog } from './components/image-crop/image-crop.component';
+import { AtmSignature } from './components/signature/signature.component';
 import { AtmCheckbox } from './components/checkbox/checkbox.component';
 import { AtmCheckboxGroup } from './components/checkbox/checkbox-group.component';
 import { AtmRadioGroup } from './components/radio/radio-group.component';
@@ -101,6 +102,7 @@ const COMPONENTS = [
   AtmFileInput,
   AtmImageCrop,
   AtmImageCropDialog,
+  AtmSignature,
   AtmCheckbox,
   AtmCheckboxGroup,
   AtmRadioGroup,

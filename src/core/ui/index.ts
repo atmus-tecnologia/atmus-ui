@@ -37,6 +37,7 @@ export * from './components/input/input-otp.component';
 export * from './components/rich-text/rich-text.component';
 export * from './components/file-input/file-input.component';
 export * from './components/image-crop/image-crop.component';
+export * from './components/signature/signature.component';
 export * from './components/checkbox/checkbox.component';
 export * from './components/checkbox/checkbox-group.component';
 export * from './components/radio/radio-group.component';

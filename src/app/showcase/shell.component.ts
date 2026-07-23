@@ -87,6 +87,7 @@ const MENU: MenuGroup[] = [
       { label: 'SearchField', link: '/inputs', fragment: 'search-field' },
       { label: 'InputOTP', link: '/inputs', fragment: 'input-otp' },
       { label: 'TagGroup', link: '/inputs', fragment: 'tag-group' },
+      { label: 'Signature', link: '/inputs', fragment: 'signature', badge: 'novo' },
       { label: 'Form & Fieldset', link: '/inputs', fragment: 'form' },
     ],
   },
