@@ -10,6 +10,7 @@ import {
   AtmLabel,
   AtmModal,
   AtmPopover,
+  AtmSwitch,
   AtmToastService,
   AtmTooltip,
   AtmTooltipPlacement,
@@ -68,6 +69,7 @@ export class ProductListDemo {
     AtmModal,
     AtmDrawer,
     AtmPopover,
+    AtmSwitch,
     AtmTooltip,
     AtmInput,
     AtmLabel,
@@ -131,22 +133,94 @@ export class ProductListDemo {
         </atm-button>
       </demo-section>
 
-      <demo-section id="drawer" title="Drawer" [code]="drawerCode">
+      <demo-section
+        id="drawer"
+        title="Drawer"
+        description="Laterais ocupam a altura toda; cima/baixo viram um sheet centralizado com handle. Entrada e saída deslizam."
+        [code]="drawerCode"
+      >
         <atm-button variant="outline" color="neutral" (clicked)="drawerPos.set('right'); showDrawer.set(true)">
           Direita
         </atm-button>
         <atm-button variant="outline" color="neutral" (clicked)="drawerPos.set('left'); showDrawer.set(true)">
           Esquerda
         </atm-button>
+        <atm-button variant="outline" color="neutral" (clicked)="drawerPos.set('top'); showDrawer.set(true)">
+          Cima
+        </atm-button>
         <atm-button variant="outline" color="neutral" (clicked)="drawerPos.set('bottom'); showDrawer.set(true)">
           Baixo
         </atm-button>
-        <atm-drawer [(open)]="showDrawer" [position]="drawerPos()" header="Filtros">
+        <atm-drawer
+          [(open)]="showDrawer"
+          [position]="drawerPos()"
+          header="Filtros"
+          description="Ajuste as opções e aplique."
+        >
           <p class="text-sm text-ink-muted">Conteúdo do drawer ({{ drawerPos() }}).</p>
           <div footer class="flex justify-end">
             <atm-button size="slim" (clicked)="showDrawer.set(false)">Aplicar</atm-button>
           </div>
         </atm-drawer>
+      </demo-section>
+
+      <demo-section
+        id="drawer-in-container"
+        title="Drawer em container"
+        description='Com container="parent" o drawer abre dentro do ancestral posicionado mais próximo — aqui, um sheet de baixo pra cima dentro do modal.'
+        [code]="drawerContainerCode"
+      >
+        <atm-button variant="outline" color="neutral" icon="file-text" (clicked)="showTermsModal.set(true)">
+          Abrir modal com sheet
+        </atm-button>
+        <atm-modal [(open)]="showTermsModal" header="Terms of Service" width="36rem">
+          <div class="flex flex-col gap-3 text-sm text-ink-muted">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua.
+            </p>
+            <p>
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+              fugiat nulla pariatur.
+            </p>
+            <atm-button variant="soft" icon="gear" (clicked)="showModalSheet.set(true)">
+              Abrir preferências (sheet)
+            </atm-button>
+          </div>
+          <div footer class="flex justify-end gap-2">
+            <atm-button variant="outline" color="neutral" (clicked)="showTermsModal.set(false)">
+              Close
+            </atm-button>
+            <atm-button (clicked)="showTermsModal.set(false)">I Agree</atm-button>
+          </div>
+
+          <atm-drawer
+            [(open)]="showModalSheet"
+            position="bottom"
+            container="parent"
+            header="Preferences"
+            description="Manage your notification settings."
+            size="75%"
+            width="100%"
+          >
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm font-medium text-ink">Push Notifications</p>
+                  <p class="text-xs text-ink-muted">Receive alerts on your device.</p>
+                </div>
+                <atm-switch [(ngModel)]="prefPush" />
+              </div>
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm font-medium text-ink">Email Digests</p>
+                  <p class="text-xs text-ink-muted">Weekly summary of activity.</p>
+                </div>
+                <atm-switch [(ngModel)]="prefEmail" />
+              </div>
+            </div>
+          </atm-drawer>
+        </atm-modal>
       </demo-section>
 
       <demo-section id="popover" title="Popover" [code]="popoverCode">
@@ -205,6 +279,10 @@ export class OverlaysPage {
   readonly modalName = signal('Ana Souza');
   readonly showDrawer = signal(false);
   readonly drawerPos = signal<'left' | 'right' | 'top' | 'bottom'>('right');
+  readonly showTermsModal = signal(false);
+  readonly showModalSheet = signal(false);
+  readonly prefPush = signal(true);
+  readonly prefEmail = signal(false);
 
   saveModal(): void {
     this.showModal.set(false);
@@ -279,10 +357,27 @@ this.ref.close(selectedProduct); // devolve o resultado`;
 });
 if (ok) { /* excluir */ }`;
 
-  readonly drawerCode = `<atm-drawer [(open)]="show" position="right" header="Filtros" size="24rem">
+  readonly drawerCode = `<!-- lateral: size = largura -->
+<atm-drawer [(open)]="show" position="right" header="Filtros" size="24rem">
   ...conteúdo...
   <div footer><atm-button (clicked)="apply()">Aplicar</atm-button></div>
+</atm-drawer>
+
+<!-- sheet (cima/baixo): size = altura, width = largura (centralizado) -->
+<atm-drawer [(open)]="show" position="bottom" header="Preferences"
+  description="Manage your notification settings." size="24rem" width="32rem">
+  ...conteúdo...
 </atm-drawer>`;
+
+  readonly drawerContainerCode = `<atm-modal [(open)]="showModal" header="Terms of Service" width="36rem">
+  ...conteúdo do modal...
+
+  <!-- container="parent" ancora no modal (ancestral posicionado mais próximo) -->
+  <atm-drawer [(open)]="showSheet" position="bottom" container="parent"
+    header="Preferences" size="75%" width="100%">
+    ...conteúdo do sheet...
+  </atm-drawer>
+</atm-modal>`;
 
   readonly popoverCode = `<atm-popover placement="bottom">
   <atm-button trigger>Abrir popover</atm-button>

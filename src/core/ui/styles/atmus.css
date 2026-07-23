@@ -324,12 +324,28 @@
     transform: translateX(0);
   }
 }
+@keyframes atm-drawer-right-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
 @keyframes atm-drawer-left {
   from {
     transform: translateX(-100%);
   }
   to {
     transform: translateX(0);
+  }
+}
+@keyframes atm-drawer-left-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }
 @keyframes atm-drawer-top {
@@ -340,6 +356,14 @@
     transform: translateY(0);
   }
 }
+@keyframes atm-drawer-top-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
 @keyframes atm-drawer-bottom {
   from {
     transform: translateY(100%);
@@ -347,4 +371,39 @@
   to {
     transform: translateY(0);
   }
+}
+@keyframes atm-drawer-bottom-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* Drawer slide animations — static classes so Tailwind/purge never drops them.
+   `both` keeps the final frame applied while the element stays mounted. */
+.atm-drawer-in-right {
+  animation: atm-drawer-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.atm-drawer-out-right {
+  animation: atm-drawer-right-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
+}
+.atm-drawer-in-left {
+  animation: atm-drawer-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.atm-drawer-out-left {
+  animation: atm-drawer-left-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
+}
+.atm-drawer-in-top {
+  animation: atm-drawer-top 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.atm-drawer-out-top {
+  animation: atm-drawer-top-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
+}
+.atm-drawer-in-bottom {
+  animation: atm-drawer-bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.atm-drawer-out-bottom {
+  animation: atm-drawer-bottom-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
 }
