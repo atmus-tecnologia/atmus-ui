@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AtmChart, AtmChartDataset, AtmChartPointEvent, AtmToastService } from '../../../core/ui';
+import {
+  AtmChart,
+  AtmChartDataset,
+  AtmChartPointEvent,
+  AtmChartTreeEvent,
+  AtmChartTreeNode,
+  AtmToastService,
+} from '../../../core/ui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -9,7 +16,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
   template: `
     <demo-page
       title="Gráficos"
-      description="AtmChart renderiza em canvas HTML5 com animações, tooltip interativo, legenda clicável, dark mode automático e responsividade. Tipos: line, area, bar, bar-horizontal, pie, donut, radar, funnel e mistos."
+      description="AtmChart renderiza em canvas HTML5 com animações, tooltip interativo, legenda clicável, dark mode automático e responsividade. Tipos: line, area, bar, bar-horizontal, pie, donut, radar, funnel (horizontal, vertical e pirâmide), heatmap, treemap com drill-down e mistos."
       importCode="import { AtmChart } from 'src/core/ui';"
     >
       <demo-section
@@ -166,6 +173,70 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       </demo-section>
 
       <demo-section
+        id="chart-heatmap"
+        title="Heatmap"
+        description="Matriz de intensidade — os labels são as colunas e cada dataset vira uma linha. Cor única com escala de intensidade, valores opcionais e pointClick por célula."
+        [code]="heatmapCode"
+      >
+        <div class="flex w-full flex-col gap-8">
+          <atm-chart
+            type="heatmap"
+            title="Uso por funcionalidade"
+            subtitle="Sessões por semana"
+            [labels]="heatSemanas"
+            [datasets]="heatData"
+            [height]="280"
+            (pointClick)="onPoint($event)"
+          />
+          <atm-chart
+            type="heatmap"
+            title="Commits por dia da semana"
+            [labels]="meses"
+            [datasets]="commitsData"
+            [colors]="['--atm-success']"
+            [height]="220"
+          />
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="chart-treemap"
+        title="Treemap"
+        description="Retângulos proporcionais ao valor (layout squarified). Duplo clique adentra grupos com filhos — a setinha volta um nível. Para dados remotos, use [loadChildren] para buscar os filhos numa API no drill-down."
+        [code]="treemapCode"
+      >
+        <div class="flex w-full flex-col gap-8">
+          <atm-chart
+            type="treemap"
+            title="Vendas por cidade"
+            [tree]="treemapCidades"
+            [height]="300"
+            [showValues]="true"
+            (nodeClick)="onNode($event)"
+          />
+          <atm-chart
+            type="treemap"
+            title="Dispositivos"
+            subtitle="Duplo clique num grupo para adentrar — a seta no canto volta um nível"
+            [tree]="treemapDispositivos"
+            [height]="320"
+            (nodeClick)="onNode($event)"
+            (drillDown)="onDrill($event)"
+          />
+          <atm-chart
+            type="treemap"
+            title="Receita por região"
+            subtitle="Duplo clique carrega os estados via API simulada ([loadChildren])"
+            [tree]="treemapRegioes"
+            [loadChildren]="loadEstados"
+            [height]="300"
+            [showValues]="true"
+            [format]="brl"
+          />
+        </div>
+      </demo-section>
+
+      <demo-section
         id="chart-pie"
         title="Pie & Donut"
         description="Fatias interativas (hover destaca), percentuais e total no centro do donut."
@@ -293,6 +364,32 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             [datasets]="funnelVendasData"
             [colors]="['--atm-primary', '--atm-info', '--atm-success', '--atm-warning', '--atm-danger']"
             [height]="280"
+          />
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="chart-funnel-styles"
+        title="Funil vertical & pirâmide"
+        description="Dois estilos além do funil horizontal: barras centradas com conectores e percentual de conversão por etapa (vertical), e pirâmide invertida com rótulos laterais. Ambos emitem pointClick por etapa."
+        [code]="funnelStylesCode"
+      >
+        <div class="grid w-full gap-6 lg:grid-cols-2">
+          <atm-chart
+            type="funnel-vertical"
+            title="Funil de recrutamento"
+            [labels]="etapasRecrut"
+            [datasets]="funnelRecrutData"
+            [height]="360"
+            (pointClick)="onPoint($event)"
+          />
+          <atm-chart
+            type="funnel-pyramid"
+            title="Pirâmide de conversão"
+            [labels]="etapasVendas"
+            [datasets]="funnelVendasData"
+            [height]="360"
+            (pointClick)="onPoint($event)"
           />
         </div>
       </demo-section>
@@ -456,6 +553,108 @@ export class ChartsPage {
 
   readonly funnelVendasData: AtmChartDataset[] = [{ label: 'Pessoas', data: [12400, 5580, 2790, 1120, 430] }];
 
+  readonly etapasRecrut = ['Sourcing', 'Triagem', 'Avaliação', 'Entrevista RH', 'Técnica', 'Proposta', 'Contratados'];
+
+  readonly funnelRecrutData: AtmChartDataset[] = [
+    { label: 'Candidatos', data: [1380, 1100, 990, 880, 740, 330, 200] },
+  ];
+
+  private rnd(seed: number): number {
+    return Math.abs(Math.sin((seed + 1) * 12.9898) * 43758.5453) % 1;
+  }
+
+  readonly heatSemanas = Array.from({ length: 16 }, (_, i) => `s${i + 1}`);
+
+  readonly heatFeatures = ['Dashboard', 'Relatórios', 'Busca', 'Perfil', 'Cobrança', 'Config', 'Inbox', 'Agenda'];
+
+  readonly heatData: AtmChartDataset[] = this.heatFeatures.map((label, r) => ({
+    label,
+    data: this.heatSemanas.map((_, c) => Math.round(this.rnd(r * 37 + c * 3) * 100)),
+  }));
+
+  readonly diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  readonly commitsData: AtmChartDataset[] = this.diasSemana.map((label, r) => ({
+    label,
+    data: this.meses.map((_, c) => Math.round(this.rnd(r * 13 + c * 7 + 5) * 40)),
+  }));
+
+  readonly treemapCidades: AtmChartTreeNode[] = [
+    { label: 'São Paulo', value: 486 },
+    { label: 'Rio de Janeiro', value: 297 },
+    { label: 'Belo Horizonte', value: 182 },
+    { label: 'Curitiba', value: 141 },
+    { label: 'Porto Alegre', value: 118 },
+    { label: 'Recife', value: 96 },
+    { label: 'Salvador', value: 84 },
+    { label: 'Fortaleza', value: 63 },
+    { label: 'Manaus', value: 41 },
+    { label: 'Goiânia', value: 33 },
+  ];
+
+  readonly treemapDispositivos: AtmChartTreeNode[] = [
+    {
+      label: 'Desktops',
+      children: [
+        { label: 'Apple', value: 383 },
+        { label: 'Dell', value: 246 },
+        { label: 'Lenovo', value: 208 },
+        { label: 'Acer', value: 157 },
+        { label: 'HP', value: 129 },
+      ],
+    },
+    {
+      label: 'Mobile',
+      children: [
+        { label: 'Samsung', value: 341 },
+        { label: 'Apple', value: 296 },
+        { label: 'Xiaomi', value: 212 },
+        { label: 'Motorola', value: 118 },
+      ],
+    },
+    {
+      label: 'Tablets',
+      children: [
+        { label: 'Apple', value: 168 },
+        { label: 'Samsung', value: 102 },
+        { label: 'Amazon', value: 58 },
+      ],
+    },
+    {
+      label: 'Wearables',
+      children: [
+        { label: 'Apple', value: 94 },
+        { label: 'Garmin', value: 47 },
+        { label: 'Huawei', value: 31 },
+      ],
+    },
+  ];
+
+  readonly treemapRegioes: AtmChartTreeNode[] = [
+    { label: 'Sudeste', value: 4820 },
+    { label: 'Sul', value: 2310 },
+    { label: 'Nordeste', value: 1980 },
+    { label: 'Centro-Oeste', value: 940 },
+    { label: 'Norte', value: 610 },
+  ];
+
+  private readonly estadosPorRegiao: Record<string, [string, number][]> = {
+    Sudeste: [['São Paulo', 2530], ['Minas Gerais', 1080], ['Rio de Janeiro', 890], ['Espírito Santo', 320]],
+    Sul: [['Paraná', 940], ['Rio Grande do Sul', 820], ['Santa Catarina', 550]],
+    Nordeste: [['Bahia', 610], ['Pernambuco', 480], ['Ceará', 430], ['Maranhão', 250], ['Outros', 210]],
+    'Centro-Oeste': [['Goiás', 390], ['Distrito Federal', 310], ['Mato Grosso', 240]],
+    Norte: [['Pará', 260], ['Amazonas', 210], ['Outros', 140]],
+  };
+
+  /** Simula uma API que devolve os filhos do nó no drill-down do treemap. */
+  readonly loadEstados = (node: AtmChartTreeNode): Promise<AtmChartTreeNode[]> =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        const rows = this.estadosPorRegiao[node.label] ?? [];
+        resolve(rows.map(([label, value]) => ({ label, value })));
+      }, 700),
+    );
+
   readonly configData: AtmChartDataset[] = [
     { label: 'Recorrente', data: [42000, 48500, 51200, 49800, 56400, 61300] },
     { label: 'Avulso', data: [12800, 9400, 14100, 11700, 15900, 13200] },
@@ -493,6 +692,14 @@ export class ChartsPage {
 
   onPoint(e: AtmChartPointEvent): void {
     this.toast.info(`${e.datasetLabel}: ${e.value}`, e.label);
+  }
+
+  onNode(e: AtmChartTreeEvent): void {
+    this.toast.info(e.path.map((n) => n.label).join(' / '), e.node.label);
+  }
+
+  onDrill(e: AtmChartTreeEvent): void {
+    this.toast.info(`Drill-down em ${e.node.label}`, 'Treemap');
   }
 
   readonly lineCode = `<atm-chart
@@ -637,6 +844,59 @@ export class ChartsPage {
   [labels]="etapas"
   [datasets]="funnelData"
   [colors]="['--atm-primary', '--atm-info', '--atm-success', '--atm-warning', '--atm-danger']"
+/>`;
+
+  readonly heatmapCode = `<!-- labels = colunas; cada dataset é uma linha da matriz -->
+<atm-chart
+  type="heatmap"
+  title="Uso por funcionalidade"
+  [labels]="semanas"
+  [datasets]="[
+    { label: 'Dashboard', data: [82, 34, 61, ...] },
+    { label: 'Relatórios', data: [12, 78, 44, ...] },
+    ...
+  ]"
+  (pointClick)="onPoint($event)"  <!-- { index: coluna, datasetIndex: linha, value } -->
+/>
+
+<!-- Cor customizada (escala de intensidade sobre um único tom) -->
+<atm-chart type="heatmap" [labels]="meses" [datasets]="commitsData" [colors]="['--atm-success']" />`;
+
+  readonly treemapCode = `<!-- Nós hierárquicos: value opcional em grupos (soma dos filhos) -->
+<atm-chart
+  type="treemap"
+  [tree]="[
+    { label: 'Desktops', children: [{ label: 'Apple', value: 383 }, ...] },
+    { label: 'Mobile', children: [{ label: 'Samsung', value: 341 }, ...] },
+  ]"
+  (nodeClick)="onNode($event)"   <!-- { node, path } -->
+  (drillDown)="onDrill($event)"  <!-- duplo clique adentra o grupo; a seta volta -->
+/>
+
+<!-- Drill-down remoto: sem children, o duplo clique chama loadChildren (ex.: API) -->
+<atm-chart
+  type="treemap"
+  [tree]="regioes"
+  [loadChildren]="loadEstados"
+/>
+
+// loadEstados = (node) => this.api.get(\`/regioes/\${node.label}/estados\`)
+//   → Promise<AtmChartTreeNode[]>`;
+
+  readonly funnelStylesCode = `<!-- Vertical: barras centradas + conectores + % de conversão -->
+<atm-chart
+  type="funnel-vertical"
+  [labels]="['Sourcing', 'Triagem', 'Avaliação', ...]"
+  [datasets]="[{ label: 'Candidatos', data: [1380, 1100, 990, ...] }]"
+  (pointClick)="onPoint($event)"
+/>
+
+<!-- Pirâmide invertida com rótulos laterais (paleta do tema por etapa) -->
+<atm-chart
+  type="funnel-pyramid"
+  [labels]="etapas"
+  [datasets]="funnelData"
+  (pointClick)="onPoint($event)"
 />`;
 
   readonly sparkCode = `<atm-chart
