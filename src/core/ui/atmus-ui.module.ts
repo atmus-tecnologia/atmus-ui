@@ -74,6 +74,8 @@ import {
 } from './components/color/color.components';
 import { AtmChart } from './components/chart/chart.component';
 import { AtmAudioVisualizer } from './components/audio-visualizer/audio-visualizer.component';
+import { AtmKanban } from './components/kanban/kanban.component';
+import { AtmEventCalendar } from './components/event-calendar/event-calendar.component';
 import { AtmFlow } from './components/flow/flow.component';
 import { AtmFlowNodeHandle } from './components/flow/flow-handle.component';
 import { AtmFlowNodeDef } from './components/flow/flow-node-def.directive';
@@ -152,6 +154,8 @@ const COMPONENTS = [
   AtmColorField,
   AtmChart,
   AtmAudioVisualizer,
+  AtmKanban,
+  AtmEventCalendar,
   AtmFlow,
   AtmFlowNodeDef,
   AtmFlowNodeHandle,

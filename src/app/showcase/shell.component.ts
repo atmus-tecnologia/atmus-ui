@@ -18,6 +18,45 @@ interface MenuGroup {
   items: MenuItem[];
 }
 
+interface ExampleItem {
+  label: string;
+  description: string;
+  icon: string;
+  link: string;
+  badge?: string;
+}
+
+const EXAMPLES: ExampleItem[] = [
+  {
+    label: 'Kanban',
+    description: 'Board com drag & drop',
+    icon: 'icofont-listine-dots',
+    link: '/examples/kanban',
+    badge: 'novo',
+  },
+  {
+    label: 'Calendário',
+    description: 'Agenda com eventos',
+    icon: 'icofont-ui-calendar',
+    link: '/examples/calendar',
+    badge: 'novo',
+  },
+  {
+    label: 'Chat / Atendimento',
+    description: 'Tela completa de suporte',
+    icon: 'icofont-ui-chat',
+    link: '/examples/chat',
+    badge: 'novo',
+  },
+  {
+    label: 'Dashboard Sales',
+    description: 'Painel de vendas',
+    icon: 'icofont-chart-histogram',
+    link: '/examples/dashboard',
+    badge: 'novo',
+  },
+];
+
 const MENU: MenuGroup[] = [
   {
     label: 'Começando',
@@ -231,19 +270,107 @@ const MENU: MenuGroup[] = [
           </div>
         </div>
 
-        <div class="p-3">
-          <div class="atm-field flex h-9 items-center gap-2 px-2.5 text-sm">
-            <i class="icofont-ui-search text-xs text-ink-faint" aria-hidden="true"></i>
-            <input
-              type="text"
-              placeholder="Filtrar componentes..."
-              class="h-full w-full bg-transparent outline-none placeholder:text-ink-faint"
-              [value]="filter()"
-              (input)="onFilter($event)"
-            />
+        <!-- Tabs: Componentes | Exemplos -->
+        <div class="px-3 pt-3">
+          <div class="flex rounded-atm bg-surface-alt p-0.5" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              class="atm-focus h-8 flex-1 cursor-pointer rounded-[calc(var(--atm-radius)-3px)]
+                text-xs font-semibold transition-colors"
+              [attr.aria-selected]="tab() === 'components'"
+              [class]="
+                tab() === 'components'
+                  ? 'bg-surface text-ink shadow-atm'
+                  : 'text-ink-muted hover:text-ink'
+              "
+              (click)="setTab('components')"
+            >
+              Componentes
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="atm-focus h-8 flex-1 cursor-pointer rounded-[calc(var(--atm-radius)-3px)]
+                text-xs font-semibold transition-colors"
+              [attr.aria-selected]="tab() === 'examples'"
+              [class]="
+                tab() === 'examples'
+                  ? 'bg-surface text-ink shadow-atm'
+                  : 'text-ink-muted hover:text-ink'
+              "
+              (click)="setTab('examples')"
+            >
+              Exemplos
+            </button>
           </div>
         </div>
 
+        @if (tab() === 'components') {
+          <div class="p-3">
+            <div class="atm-field flex h-9 items-center gap-2 px-2.5 text-sm">
+              <i class="icofont-ui-search text-xs text-ink-faint" aria-hidden="true"></i>
+              <input
+                type="text"
+                placeholder="Filtrar componentes..."
+                class="h-full w-full bg-transparent outline-none placeholder:text-ink-faint"
+                [value]="filter()"
+                (input)="onFilter($event)"
+              />
+            </div>
+          </div>
+        } @else {
+          <p class="px-4 pt-4 pb-2 text-[11px] font-semibold tracking-wide text-ink-faint uppercase">
+            Telas de exemplo
+          </p>
+        }
+
+        @if (tab() === 'examples') {
+          <nav class="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
+            @for (example of examples; track example.link) {
+              <a
+                [routerLink]="example.link"
+                class="flex items-center gap-3 rounded-lg border px-2.5 py-2.5 transition-colors"
+                [class]="
+                  currentPathValue() === example.link
+                    ? 'border-primary/40 bg-primary-soft'
+                    : 'border-transparent hover:bg-surface-alt'
+                "
+                (click)="sidebarOpen.set(false)"
+              >
+                <span
+                  class="flex size-8 shrink-0 items-center justify-center rounded-md text-sm"
+                  [class]="
+                    currentPathValue() === example.link
+                      ? 'bg-primary text-primary-contrast'
+                      : 'bg-surface-alt text-ink-muted'
+                  "
+                >
+                  <i [class]="example.icon" aria-hidden="true"></i>
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span
+                    class="flex items-center gap-1.5 text-[13px] font-semibold"
+                    [class]="currentPathValue() === example.link ? 'text-primary' : 'text-ink'"
+                  >
+                    {{ example.label }}
+                    @if (example.badge) {
+                      <span
+                        class="rounded-full bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold
+                          text-primary uppercase"
+                      >
+                        {{ example.badge }}
+                      </span>
+                    }
+                  </span>
+                  <span class="block truncate text-[11px] text-ink-muted">
+                    {{ example.description }}
+                  </span>
+                </span>
+              </a>
+            }
+          </nav>
+        } @else {
         <nav class="flex-1 overflow-y-auto px-3 pb-6">
           @for (group of filteredMenu(); track group.label) {
             <button
@@ -322,6 +449,7 @@ const MENU: MenuGroup[] = [
             </p>
           }
         </nav>
+        }
       </aside>
 
       @if (sidebarOpen()) {
@@ -332,7 +460,7 @@ const MENU: MenuGroup[] = [
       }
 
       <!-- Main -->
-      <div class="flex min-w-0 flex-1 flex-col lg:pl-64">
+      <div class="flex min-w-0 flex-1 flex-col lg:pl-72">
         <header
           class="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-3 border-b border-line
             bg-surface/80 px-5 backdrop-blur-md"
@@ -362,7 +490,14 @@ const MENU: MenuGroup[] = [
           </button>
         </header>
 
-        <main class="mx-auto w-full max-w-4xl flex-1 px-5 py-8 lg:px-10">
+        <main
+          class="mx-auto w-full flex-1"
+          [class]="
+            isExampleRoute()
+              ? 'max-w-none px-5 py-6 lg:px-8'
+              : 'max-w-4xl px-5 py-8 lg:px-10'
+          "
+        >
           <router-outlet />
         </main>
       </div>
@@ -376,6 +511,10 @@ export class ShowcaseShell {
   readonly theme = inject(AtmThemeService);
   readonly sidebarOpen = signal(false);
   readonly filter = signal('');
+  readonly examples = EXAMPLES;
+
+  /** Aba manual escolhida pelo usuário; null segue a rota atual. */
+  private readonly manualTab = signal<'components' | 'examples' | null>(null);
 
   /** Grupos fechados (por label). Começa tudo fechado; o grupo da rota atual abre via effect. */
   private readonly collapsed = signal<Set<string>>(new Set(MENU.map((g) => g.label)));
@@ -397,6 +536,18 @@ export class ShowcaseShell {
     () => this.currentUrl().split('#')[1] ?? null,
   );
 
+  readonly currentPathValue = computed(() => this.currentPath());
+
+  readonly isExampleRoute = computed(() => this.currentPath().startsWith('/examples'));
+
+  readonly tab = computed<'components' | 'examples'>(
+    () => this.manualTab() ?? (this.isExampleRoute() ? 'examples' : 'components'),
+  );
+
+  setTab(tab: 'components' | 'examples'): void {
+    this.manualTab.set(tab);
+  }
+
   readonly filteredMenu = computed(() => {
     const term = this.filter().trim().toLowerCase();
     if (!term) return MENU;
@@ -410,6 +561,8 @@ export class ShowcaseShell {
     // Ao navegar, expande automaticamente o(s) grupo(s) que contêm a rota atual.
     effect(() => {
       const path = this.currentPath();
+      // A aba volta a seguir a rota após qualquer navegação.
+      this.manualTab.set(null);
       const active = MENU.filter((g) => g.items.some((i) => i.link === path));
       if (!active.length) return;
       this.collapsed.update((set) => {

@@ -81,6 +81,8 @@ export * from './components/datepicker/time-field.component';
 export * from './components/color/color.components';
 export * from './components/chart/chart.component';
 export * from './components/audio-visualizer/audio-visualizer.component';
+export * from './components/kanban/kanban.component';
+export * from './components/event-calendar/event-calendar.component';
 export * from './components/flow/flow.types';
 export * from './components/flow/flow.component';
 export * from './components/flow/flow-node-def.directive';
