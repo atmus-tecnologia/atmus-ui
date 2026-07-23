@@ -1,0 +1,68 @@
+# atm-kbd
+
+> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+
+## Purpose
+
+Representa tecla de atalho.
+
+## Notes from source
+
+Horizontal or vertical separator with optional label. */
+@Component({
+  selector: 'atm-separator',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class]': 'vertical() ? "self-stretch inline-flex" : "block w-full"' },
+  template: `
+    @if (vertical()) {
+      <span class="mx-2 w-px self-stretch bg-line" role="separator"></span>
+    } @else if (label()) {
+      <div class="flex items-center gap-3" role="separator">
+        <span class="h-px flex-1 bg-line"></span>
+        <span class="text-xs font-medium text-ink-faint uppercase">{{ label() }}</span>
+        <span class="h-px flex-1 bg-line"></span>
+      </div>
+    } @else {
+      <span class="block h-px w-full bg-line" role="separator"></span>
+    }
+  `,
+})
+export class AtmSeparator {
+  readonly vertical = input(false);
+  readonly label = input<string | undefined>(undefined);
+}
+
+/** Keyboard shortcut hint.
+
+## Identity
+
+- **Class**: `AtmKbd`
+- **Selector**: `atm-kbd`
+- **Kind**: Component
+
+## Inputs
+
+_Nenhum._
+## Outputs
+
+_Nenhum._
+## Models (two-way)
+
+_Nenhum._
+## Content projection
+
+- `default`
+
+## Usage example
+
+```html
+<atm-kbd>Ctrl</atm-kbd>
+```
+
+## Conventions
+
+- Sizes: `large | medium | slim` (when `size` input exists)
+- Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
+- Variants: `solid | soft | outline | ghost` (when `variant` input exists)
+- Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
+- Icons via icofont name or `<atm-icon name="..." />`
