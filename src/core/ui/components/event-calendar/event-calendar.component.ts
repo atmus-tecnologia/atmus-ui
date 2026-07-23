@@ -102,6 +102,10 @@ const MONTHS = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ];
+const MONTHS_SHORT = [
+  'jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.',
+  'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.',
+];
 
 const SOLID: Record<AtmColor, string> = {
   primary: 'bg-primary text-primary-contrast',
@@ -182,6 +186,10 @@ function floorTo(value: number, step: number): number {
 function minutesLabel(minutes: number): string {
   return `${pad(Math.floor(minutes / 60))}:${pad(Math.round(minutes % 60))}`;
 }
+/** "26 de jul. de 2026" */
+function shortDate(d: Date): string {
+  return `${d.getDate()} de ${MONTHS_SHORT[d.getMonth()]} de ${d.getFullYear()}`;
+}
 
 /**
  * Full event calendar (scheduler) with month, week, day and list views.
@@ -209,23 +217,45 @@ function minutesLabel(minutes: number): string {
   host: {
     class: 'flex flex-col overflow-hidden rounded-atm-lg border border-line bg-surface',
     '[class.select-none]': 'drag() || monthDragId()',
+    '(document:pointerdown)': 'onDocumentPointerDown($event)',
+    '(document:keydown.escape)': 'viewMenuOpen.set(false)',
   },
   template: `
     <!-- ============ Toolbar ============ -->
-    <div class="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3">
-      <button
-        type="button"
-        class="atm-focus h-8 cursor-pointer rounded-atm border border-line px-3 text-xs
-          font-medium text-ink transition-colors hover:bg-surface-alt"
-        (click)="goToday()"
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-3 border-b border-line px-4 py-3">
+      <!-- Date tile -->
+      <div
+        class="flex w-11 shrink-0 flex-col items-center overflow-hidden rounded-atm-lg border
+          border-line py-1 leading-none shadow-sm"
+        aria-hidden="true"
       >
-        Hoje
-      </button>
-      <div class="flex items-center gap-1">
+        <span class="text-[9px] font-bold tracking-wide text-ink-faint uppercase">
+          {{ monthTileLabel() }}
+        </span>
+        <span class="mt-0.5 text-lg font-bold text-ink">{{ date().getDate() }}</span>
+      </div>
+      <!-- Title + period -->
+      <div class="min-w-0">
+        <div class="flex items-center gap-2">
+          <h2 class="truncate text-base font-bold text-ink">{{ title() }}</h2>
+          @if (weekBadge()) {
+            <span
+              class="shrink-0 rounded-md border border-line bg-surface-alt px-1.5 py-0.5
+                text-[10px] font-semibold text-ink-muted"
+            >
+              {{ weekBadge() }}
+            </span>
+          }
+        </div>
+        <p class="mt-0.5 truncate text-xs text-ink-muted">{{ subtitle() }}</p>
+      </div>
+      <span class="flex-1"></span>
+      <!-- Prev / Today / Next -->
+      <div class="flex h-9 shrink-0 items-stretch overflow-hidden rounded-atm-lg border border-line">
         <button
           type="button"
-          class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-atm
-            text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
+          class="atm-focus flex w-9 cursor-pointer items-center justify-center text-ink-muted
+            transition-colors hover:bg-surface-alt hover:text-ink"
           aria-label="Anterior"
           (click)="navigate(-1)"
         >
@@ -233,33 +263,76 @@ function minutesLabel(minutes: number): string {
         </button>
         <button
           type="button"
-          class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-atm
-            text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
+          class="atm-focus cursor-pointer border-x border-line px-3 text-xs font-semibold
+            text-ink transition-colors hover:bg-surface-alt"
+          (click)="goToday()"
+        >
+          Hoje
+        </button>
+        <button
+          type="button"
+          class="atm-focus flex w-9 cursor-pointer items-center justify-center text-ink-muted
+            transition-colors hover:bg-surface-alt hover:text-ink"
           aria-label="Próximo"
           (click)="navigate(1)"
         >
           <i class="icofont-simple-right" aria-hidden="true"></i>
         </button>
       </div>
-      <h2 class="text-base font-semibold text-ink">{{ title() }}</h2>
-      <span class="flex-1"></span>
-      <div class="flex rounded-atm border border-line p-0.5">
-        @for (option of viewOptions; track option.value) {
-          <button
-            type="button"
-            class="atm-focus h-7 cursor-pointer rounded-[calc(var(--atm-radius)-3px)] px-3 text-xs
-              font-medium transition-colors"
-            [class]="
-              view() === option.value
-                ? 'bg-primary text-primary-contrast shadow-sm'
-                : 'text-ink-muted hover:text-ink'
-            "
-            (click)="view.set(option.value)"
+      <!-- View dropdown -->
+      <div #viewMenu class="relative shrink-0">
+        <button
+          type="button"
+          class="atm-focus flex h-9 cursor-pointer items-center gap-2 rounded-atm-lg border
+            border-line px-3 text-xs font-semibold text-ink transition-colors
+            hover:bg-surface-alt"
+          aria-haspopup="listbox"
+          [attr.aria-expanded]="viewMenuOpen()"
+          (click)="viewMenuOpen.set(!viewMenuOpen())"
+        >
+          {{ viewLabel() }}
+          <i
+            class="icofont-simple-down text-[9px] text-ink-faint transition-transform duration-200"
+            [class.rotate-180]="viewMenuOpen()"
+            aria-hidden="true"
+          ></i>
+        </button>
+        @if (viewMenuOpen()) {
+          <div
+            class="atm-panel animate-atm-pop absolute top-full right-0 z-50 mt-1 w-36 p-1.5"
+            role="listbox"
           >
-            {{ option.label }}
-          </button>
+            @for (option of viewOptions; track option.value) {
+              <button
+                type="button"
+                class="atm-option py-2"
+                role="option"
+                [attr.aria-selected]="view() === option.value"
+                [class.atm-option--selected]="view() === option.value"
+                (click)="selectView(option.value)"
+              >
+                <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
+                @if (view() === option.value) {
+                  <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                }
+              </button>
+            }
+          </div>
         }
       </div>
+      <!-- Add event -->
+      @if (showAddButton()) {
+        <button
+          type="button"
+          class="atm-focus flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-atm-lg
+            bg-primary px-3.5 text-xs font-semibold text-primary-contrast shadow-sm
+            transition-opacity hover:opacity-90"
+          (click)="addEvent.emit()"
+        >
+          <i class="icofont-plus" aria-hidden="true"></i>
+          Novo evento
+        </button>
+      }
     </div>
 
     <!-- ============ Month view ============ -->
@@ -626,8 +699,12 @@ export class AtmEventCalendar {
   readonly slotMinutes = input(0);
   /** Enables drag to move and resize. */
   readonly editable = input(true);
+  /** Shows the "Novo evento" button in the toolbar (listen to addEvent). */
+  readonly showAddButton = input(true);
 
   readonly eventClick = output<AtmCalendarEvent>();
+  /** "Novo evento" toolbar button click. */
+  readonly addEvent = output<void>();
   /** Month cell click. */
   readonly dayClick = output<Date>();
   /** Time range picked on week/day: drag-select on empty space or a slot click. */
@@ -647,6 +724,7 @@ export class AtmEventCalendar {
 
   private readonly gridRef = viewChild<ElementRef<HTMLElement>>('grid');
   private readonly scrollerRef = viewChild<ElementRef<HTMLElement>>('scroller');
+  private readonly viewMenuRef = viewChild<ElementRef<HTMLElement>>('viewMenu');
 
   constructor() {
     // Scroll the time grid to the start of the working hours when it appears.
@@ -661,23 +739,55 @@ export class AtmEventCalendar {
 
   // ---------- toolbar ----------
 
+  /** "julho 2026" — month of the visible period (week start for the week view). */
   readonly title = computed(() => {
+    const d = this.view() === 'week' ? startOfWeek(this.date()) : this.date();
+    return `${MONTHS[d.getMonth()].toLowerCase()} ${d.getFullYear()}`;
+  });
+
+  /** Range of the visible period, e.g. "26 de jul. de 2026 – 1 de ago. de 2026". */
+  readonly subtitle = computed(() => {
     const d = this.date();
     switch (this.view()) {
       case 'week': {
         const first = startOfWeek(d);
-        const last = addDays(first, 6);
-        if (first.getMonth() === last.getMonth()) {
-          return `${first.getDate()} – ${last.getDate()} de ${MONTHS[first.getMonth()]} de ${first.getFullYear()}`;
-        }
-        return `${first.getDate()} ${MONTHS[first.getMonth()].slice(0, 3)} – ${last.getDate()} ${MONTHS[last.getMonth()].slice(0, 3)} ${last.getFullYear()}`;
+        return `${shortDate(first)} – ${shortDate(addDays(first, 6))}`;
       }
       case 'day':
-        return `${this.weekdayLabel(d)}, ${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
-      default:
-        return `${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+        return `${this.weekdayLabel(d)}, ${shortDate(d)}`;
+      default: {
+        const first = new Date(d.getFullYear(), d.getMonth(), 1);
+        const last = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        return `${shortDate(first)} – ${shortDate(last)}`;
+      }
     }
   });
+
+  /** "Semana N" (week of the month) — shown on the week and day views. */
+  readonly weekBadge = computed(() => {
+    const view = this.view();
+    if (view !== 'week' && view !== 'day') return '';
+    return `Semana ${Math.ceil(startOfWeek(this.date()).getDate() / 7)}`;
+  });
+
+  readonly monthTileLabel = computed(() => MONTHS_SHORT[this.date().getMonth()].toUpperCase());
+
+  readonly viewMenuOpen = signal(false);
+
+  readonly viewLabel = computed(
+    () => this.viewOptions.find((o) => o.value === this.view())?.label ?? '',
+  );
+
+  selectView(view: AtmEventCalendarView): void {
+    this.view.set(view);
+    this.viewMenuOpen.set(false);
+  }
+
+  onDocumentPointerDown(e: Event): void {
+    if (!this.viewMenuOpen()) return;
+    const menu = this.viewMenuRef()?.nativeElement;
+    if (menu && !menu.contains(e.target as Node)) this.viewMenuOpen.set(false);
+  }
 
   goToday(): void {
     this.date.set(new Date());

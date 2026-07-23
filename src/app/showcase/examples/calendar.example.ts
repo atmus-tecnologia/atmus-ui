@@ -278,6 +278,7 @@ function buildEvents(): AtmCalendarEvent[] {
         [workStart]="8"
         [workEnd]="19"
         [slotMinutes]="30"
+        (addEvent)="openCreate()"
         (eventClick)="onEventClick($event)"
         (dayClick)="openCreate($event)"
         (rangeSelect)="openCreateRange($event)"
