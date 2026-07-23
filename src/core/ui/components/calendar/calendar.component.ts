@@ -14,6 +14,13 @@ export interface AtmCalendarDay {
   isToday: boolean;
 }
 
+interface AtmCalendarMonthView {
+  month: number;
+  year: number;
+  label: string;
+  days: AtmCalendarDay[];
+}
+
 const WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 const MONTHS = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -31,56 +38,62 @@ export function atmSameDay(a: Date | null | undefined, b: Date | null | undefine
 
 /**
  * Month calendar. Single mode: [(value)]. Range mode: [range]=true + [(rangeValue)].
+ * `[months]="2"` renders consecutive months side by side (double calendar).
+ * `[flat]="true"` removes the border/background so it can live inside a panel.
  */
 @Component({
   selector: 'atm-calendar, atm-range-calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-block select-none' },
   template: `
-    <div class="w-72 rounded-atm-lg border border-line bg-surface p-3">
-      <!-- Header -->
-      <div class="mb-2 flex items-center justify-between">
-        <button
-          type="button"
-          class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-full
-            text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
-          aria-label="Mês anterior"
-          (click)="navigate(-1)"
-        >
-          <i class="icofont-simple-left" aria-hidden="true"></i>
-        </button>
-        <span class="text-sm font-semibold text-ink">
-          {{ monthLabel() }} {{ viewYear() }}
-        </span>
-        <button
-          type="button"
-          class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-full
-            text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
-          aria-label="Próximo mês"
-          (click)="navigate(1)"
-        >
-          <i class="icofont-simple-right" aria-hidden="true"></i>
-        </button>
-      </div>
+    <div [class]="containerClasses()">
+      @for (view of monthViews(); track view.year + '-' + view.month) {
+        <div class="w-72 p-3">
+          <!-- Header -->
+          <div class="mb-2 flex items-center justify-between">
+            <button
+              type="button"
+              class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-full
+                text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
+              aria-label="Mês anterior"
+              (click)="navigate(-1)"
+            >
+              <i class="icofont-simple-left" aria-hidden="true"></i>
+            </button>
+            <span class="text-sm font-semibold text-ink">
+              {{ view.label }} {{ view.year }}
+            </span>
+            <button
+              type="button"
+              class="atm-focus flex size-8 cursor-pointer items-center justify-center rounded-full
+                text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
+              aria-label="Próximo mês"
+              (click)="navigate(1)"
+            >
+              <i class="icofont-simple-right" aria-hidden="true"></i>
+            </button>
+          </div>
 
-      <!-- Weekdays -->
-      <div class="grid grid-cols-7 gap-y-0.5 text-center">
-        @for (day of weekdays; track $index) {
-          <span class="py-1 text-[11px] font-semibold text-ink-faint">{{ day }}</span>
-        }
-        <!-- Days -->
-        @for (day of days(); track day.date.getTime()) {
-          <button
-            type="button"
-            [class]="dayClasses(day)"
-            [disabled]="isDisabled(day.date)"
-            (click)="pick(day.date)"
-            (mouseenter)="hovered.set(day.date)"
-          >
-            {{ day.date.getDate() }}
-          </button>
-        }
-      </div>
+          <!-- Weekdays -->
+          <div class="grid grid-cols-7 gap-y-0.5 text-center">
+            @for (day of weekdays; track $index) {
+              <span class="py-1 text-[11px] font-semibold text-ink-faint">{{ day }}</span>
+            }
+            <!-- Days -->
+            @for (day of view.days; track day.date.getTime()) {
+              <button
+                type="button"
+                [class]="dayClasses(day)"
+                [disabled]="isDisabled(day)"
+                (click)="pick(day.date)"
+                (mouseenter)="hovered.set(day.date)"
+              >
+                {{ day.date.getDate() }}
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -90,6 +103,10 @@ export class AtmCalendar {
   readonly rangeValue = model<{ start: Date | null; end: Date | null }>({ start: null, end: null });
   readonly minDate = input<Date | undefined>(undefined);
   readonly maxDate = input<Date | undefined>(undefined);
+  /** How many consecutive months are rendered side by side. */
+  readonly months = input(1);
+  /** Removes border/background/radius — for embedding inside a picker panel. */
+  readonly flat = input(false);
 
   readonly picked = output<Date>();
 
@@ -102,23 +119,19 @@ export class AtmCalendar {
   readonly viewYear = signal(this.today.getFullYear());
   readonly hovered = signal<Date | null>(null);
 
-  readonly monthLabel = computed(() => MONTHS[this.viewMonth()]);
+  readonly containerClasses = computed(() =>
+    ['flex', this.flat() ? '' : 'rounded-atm-lg border border-line bg-surface'].join(' '),
+  );
 
-  readonly days = computed<AtmCalendarDay[]>(() => {
-    const year = this.viewYear();
-    const month = this.viewMonth();
-    const first = new Date(year, month, 1);
-    const start = new Date(year, month, 1 - first.getDay());
-    const result: AtmCalendarDay[] = [];
-    for (let i = 0; i < 42; i++) {
-      const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-      result.push({
-        date,
-        inMonth: date.getMonth() === month,
-        isToday: atmSameDay(date, this.today),
-      });
+  readonly monthViews = computed<AtmCalendarMonthView[]>(() => {
+    const views: AtmCalendarMonthView[] = [];
+    for (let offset = 0; offset < this.months(); offset++) {
+      const base = new Date(this.viewYear(), this.viewMonth() + offset, 1);
+      const month = base.getMonth();
+      const year = base.getFullYear();
+      views.push({ month, year, label: MONTHS[month], days: this.buildDays(year, month) });
     }
-    return result;
+    return views;
   });
 
   navigate(delta: number): void {
@@ -141,9 +154,12 @@ export class AtmCalendar {
     this.viewYear.set(date.getFullYear());
   }
 
-  isDisabled(date: Date): boolean {
-    if (this.minDate() && date < this.stripTime(this.minDate()!)) return true;
-    if (this.maxDate() && date > this.maxDate()!) return true;
+  isDisabled(day: AtmCalendarDay): boolean {
+    // In multi-month mode, adjacent-month days are display-only (they repeat
+    // in the neighbor month, so clicking/highlighting them would duplicate).
+    if (this.months() > 1 && !day.inMonth) return true;
+    if (this.minDate() && day.date < this.stripTime(this.minDate()!)) return true;
+    if (this.maxDate() && day.date > this.maxDate()!) return true;
     return false;
   }
 
@@ -167,6 +183,10 @@ export class AtmCalendar {
     const base =
       'flex size-9 cursor-pointer items-center justify-center text-xs font-medium ' +
       'transition-all duration-100 disabled:pointer-events-none disabled:opacity-30 outline-none';
+
+    if (this.months() > 1 && !day.inMonth) {
+      return `${base} rounded-full text-ink-faint`;
+    }
 
     if (this.range()) {
       const { start, end } = this.rangeValue();
@@ -193,6 +213,21 @@ export class AtmCalendar {
         : '') +
       (day.inMonth ? 'text-ink' : 'text-ink-faint/60')
     );
+  }
+
+  private buildDays(year: number, month: number): AtmCalendarDay[] {
+    const first = new Date(year, month, 1);
+    const start = new Date(year, month, 1 - first.getDay());
+    const result: AtmCalendarDay[] = [];
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      result.push({
+        date,
+        inMonth: date.getMonth() === month,
+        isToday: atmSameDay(date, this.today),
+      });
+    }
+    return result;
   }
 
   private stripTime(d: Date): Date {

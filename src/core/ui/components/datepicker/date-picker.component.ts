@@ -12,7 +12,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { signal } from '@angular/core';
 import { ATM_SIZE_HEIGHT, ATM_SIZE_PX, ATM_SIZE_TEXT, AtmSize } from '../../types';
 import { AtmOverlayBase } from '../../utils/overlay-base';
-import { AtmCalendar } from '../calendar/calendar.component';
+import { AtmButton } from '../button/button.component';
+import { AtmCalendar, atmSameDay } from '../calendar/calendar.component';
+import { AtmDatePreset } from './date-presets';
 
 export function atmFormatDate(date: Date | null): string {
   if (!date) return '';
@@ -40,11 +42,13 @@ export function atmParseDate(text: string): Date | null {
  * Flips above when there is no viewport space below.
  * With `[editable]="true"` the field becomes a typeable input with a
  * dd/mm/yyyy mask and the calendar opens only via the icon button.
+ * `[presets]` shows recommendation shortcuts beside the calendar and
+ * `[confirm]="true"` only applies the change after clicking "Confirmar".
  */
 @Component({
   selector: 'atm-date-picker, atm-date-field',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AtmCalendar],
+  imports: [AtmButton, AtmCalendar],
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AtmDatePicker), multi: true },
   ],
@@ -113,14 +117,55 @@ export function atmParseDate(text: string): Date | null {
     }
 
     @if (isOpen()) {
-      <div #panel [style]="panelStyle()" class="animate-atm-pop z-50 w-max">
-        <atm-calendar
-          class="shadow-atm-lg"
-          [value]="value()"
-          [minDate]="minDate()"
-          [maxDate]="maxDate()"
-          (valueChange)="onPick($event)"
-        />
+      <div
+        #panel
+        [style]="panelStyle()"
+        class="atm-panel animate-atm-pop z-50 flex w-max flex-col overflow-hidden"
+      >
+        <div class="flex items-stretch">
+          @if (presets().length) {
+            <div class="flex w-40 shrink-0 flex-col gap-0.5 border-r border-line p-2">
+              <span class="px-2.5 py-2 text-sm font-semibold text-ink">{{ presetsTitle() }}</span>
+              @for (preset of presets(); track preset.label; let i = $index) {
+                <button
+                  type="button"
+                  class="atm-option atm-focus py-1.5"
+                  [class.atm-option--selected]="i === activePresetIndex()"
+                  (click)="applyPreset(preset)"
+                >
+                  {{ preset.label }}
+                </button>
+              }
+            </div>
+          }
+          <atm-calendar
+            [flat]="true"
+            [value]="shownValue()"
+            [minDate]="minDate()"
+            [maxDate]="maxDate()"
+            (valueChange)="onPick($event)"
+          />
+        </div>
+
+        @if (confirm()) {
+          <div class="flex items-center justify-between gap-2 border-t border-line p-2">
+            <button
+              type="button"
+              class="atm-focus flex size-8 shrink-0 cursor-pointer items-center justify-center
+                rounded-atm text-danger transition-colors hover:bg-danger-soft"
+              aria-label="Limpar seleção"
+              (click)="clearPending()"
+            >
+              <i class="icofont-ui-delete" aria-hidden="true"></i>
+            </button>
+            <div class="flex items-center gap-2">
+              <atm-button size="slim" variant="ghost" color="neutral" (clicked)="cancel()">
+                Cancelar
+              </atm-button>
+              <atm-button size="slim" (clicked)="confirmSelection()">Confirmar</atm-button>
+            </div>
+          </div>
+        }
       </div>
     }
   `,
@@ -133,6 +178,11 @@ export class AtmDatePicker extends AtmOverlayBase implements ControlValueAccesso
   readonly clearable = input(true);
   /** Typeable input with dd/mm/yyyy mask; calendar opens via the icon button. */
   readonly editable = input(false);
+  /** Recommendation shortcuts shown beside the calendar (e.g. ATM_DATE_PRESETS). */
+  readonly presets = input<AtmDatePreset[]>([]);
+  readonly presetsTitle = input('Atalhos');
+  /** When true, the change is only applied after clicking "Confirmar". */
+  readonly confirm = input(false);
   readonly minDate = input<Date | undefined>(undefined);
   readonly maxDate = input<Date | undefined>(undefined);
 
@@ -143,6 +193,8 @@ export class AtmDatePicker extends AtmOverlayBase implements ControlValueAccesso
   readonly calendar = viewChild(AtmCalendar);
 
   readonly value = signal<Date | null>(null);
+  /** Selection being edited in the open panel (only applied on "Confirmar" in confirm mode). */
+  readonly pending = signal<Date | null>(null);
   /** Masked text shown in the editable input. */
   readonly text = signal('');
   readonly disabledByForm = signal(false);
@@ -151,6 +203,14 @@ export class AtmDatePicker extends AtmOverlayBase implements ControlValueAccesso
 
   readonly isDisabled = computed(() => this.disabled() || this.disabledByForm());
   readonly display = computed(() => atmFormatDate(this.value()));
+  /** Date highlighted in the calendar: pending in confirm mode, else the value. */
+  readonly shownValue = computed(() => (this.confirm() ? this.pending() : this.value()));
+
+  readonly activePresetIndex = computed(() => {
+    const current = this.shownValue();
+    if (!current) return -1;
+    return this.presets().findIndex((preset) => atmSameDay(preset.value(), current));
+  });
 
   readonly triggerClasses = computed(() =>
     [
@@ -203,6 +263,7 @@ export class AtmDatePicker extends AtmOverlayBase implements ControlValueAccesso
 
   override open(): void {
     super.open();
+    this.pending.set(this.value());
     queueMicrotask(() => {
       const v = this.value();
       if (v) this.calendar()?.showDate(v);
@@ -210,12 +271,41 @@ export class AtmDatePicker extends AtmOverlayBase implements ControlValueAccesso
   }
 
   protected override onClosed(): void {
+    this.pending.set(this.value());
     this.touchedFn();
   }
 
   onPick(date: Date | null): void {
+    if (this.confirm()) {
+      this.pending.set(date);
+      return;
+    }
     this.setDate(date);
     this.close();
+  }
+
+  applyPreset(preset: AtmDatePreset): void {
+    const date = preset.value();
+    if (this.confirm()) {
+      this.pending.set(date);
+      this.calendar()?.showDate(date);
+      return;
+    }
+    this.setDate(date);
+    this.close();
+  }
+
+  confirmSelection(): void {
+    this.setDate(this.pending());
+    this.close();
+  }
+
+  cancel(): void {
+    this.close();
+  }
+
+  clearPending(): void {
+    this.pending.set(null);
   }
 
   clear(event: Event): void {

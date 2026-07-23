@@ -26,6 +26,7 @@ import {
   EDGE_COLOR,
   GROUP_H,
   GROUP_W,
+  HANDLE_R,
   NODE_H,
   NODE_W,
   OPPOSITE,
@@ -209,26 +210,36 @@ import {
           @if (reconnectable() && !locked()) {
             @for (ev of edgeViews(); track 'r' + ev.edge.id) {
               @if (ev.selected && !ev.dimmed) {
-                <circle
-                  class="cursor-crosshair"
-                  [attr.cx]="ev.sx"
-                  [attr.cy]="ev.sy"
-                  r="5"
-                  fill="var(--atm-primary)"
-                  stroke="var(--atm-surface)"
-                  stroke-width="1.5"
-                  (pointerdown)="onReconnectPointerDown(ev.edge, 'source', $event)"
-                />
-                <circle
-                  class="cursor-crosshair"
-                  [attr.cx]="ev.tx"
-                  [attr.cy]="ev.ty"
-                  r="5"
-                  fill="var(--atm-primary)"
-                  stroke="var(--atm-surface)"
-                  stroke-width="1.5"
-                  (pointerdown)="onReconnectPointerDown(ev.edge, 'target', $event)"
-                />
+                <!-- Ends with a marker: the (selected-tinted) marker is the grip;
+                     only marker-less ends get a visible dot. -->
+                @if (reconnectSource()) {
+                  <g class="cursor-move" (pointerdown)="onReconnectPointerDown(ev.edge, 'source', $event)">
+                    <circle [attr.cx]="ev.sx" [attr.cy]="ev.sy" r="10" fill="transparent" />
+                    @if (ev.sGripDot) {
+                      <circle
+                        [attr.cx]="ev.sx"
+                        [attr.cy]="ev.sy"
+                        r="5"
+                        fill="var(--atm-primary)"
+                        stroke="var(--atm-surface)"
+                        stroke-width="1.5"
+                      />
+                    }
+                  </g>
+                }
+                <g class="cursor-move" (pointerdown)="onReconnectPointerDown(ev.edge, 'target', $event)">
+                  <circle [attr.cx]="ev.tx" [attr.cy]="ev.ty" r="10" fill="transparent" />
+                  @if (ev.tGripDot) {
+                    <circle
+                      [attr.cx]="ev.tx"
+                      [attr.cy]="ev.ty"
+                      r="5"
+                      fill="var(--atm-primary)"
+                      stroke="var(--atm-surface)"
+                      stroke-width="1.5"
+                    />
+                  }
+                </g>
               }
             }
           }
@@ -497,6 +508,11 @@ export class AtmFlow {
   readonly autoConnect = input(true);
   /** Selected edges expose endpoint grips that can be dragged to reconnect. */
   readonly reconnectable = input(true);
+  /**
+   * Also allow reconnecting by the source end. Off by default: reconnection
+   * happens by dragging the target end (the arrow, on the input port).
+   */
+  readonly reconnectSource = input(false);
   readonly preventCycles = input(false);
   /** Custom connection validation (connection limit, typing rules…). */
   readonly connectionValidator = input<AtmFlowValidator | null>(null);
@@ -755,11 +771,21 @@ export class AtmFlow {
       if (!sn || !tn) continue;
       const s = this.resolveHandle(sn, 'source', edge.sourceHandle);
       const t = this.resolveHandle(tn, 'target', edge.targetHandle);
-      const { d, mid } = edgePath(s.pt, s.pos, t.pt, t.pos, edge.type ?? defType, edge.points);
-      const selected = selE.has(edge.id);
-      const color = selected ? SELECTED_COLOR : (edge.color ?? EDGE_COLOR);
       const ms = edge.markerStart ?? 'none';
       const me = edge.markerEnd ?? defMarker;
+      // Ends with a marker stop at the border of the handle dot instead of
+      // its center, so arrows stay visible (glued to the dot, not under it).
+      const sPt =
+        ms === 'none'
+          ? s.pt
+          : { x: s.pt.x + DIR[s.pos][0] * HANDLE_R, y: s.pt.y + DIR[s.pos][1] * HANDLE_R };
+      const tPt =
+        me === 'none'
+          ? t.pt
+          : { x: t.pt.x + DIR[t.pos][0] * HANDLE_R, y: t.pt.y + DIR[t.pos][1] * HANDLE_R };
+      const { d, mid } = edgePath(sPt, s.pos, tPt, t.pos, edge.type ?? defType, edge.points);
+      const selected = selE.has(edge.id);
+      const color = selected ? SELECTED_COLOR : (edge.color ?? EDGE_COLOR);
       out.push({
         edge,
         d,
@@ -777,6 +803,8 @@ export class AtmFlow {
         sy: f(s.pt.y + DIR[s.pos][1] * 11),
         tx: f(t.pt.x + DIR[t.pos][0] * 11),
         ty: f(t.pt.y + DIR[t.pos][1] * 11),
+        sGripDot: ms === 'none',
+        tGripDot: me === 'none',
         waypoints: (edge.points ?? []).map((p) => ({ x: f(p.x), y: f(p.y) })),
       });
     }

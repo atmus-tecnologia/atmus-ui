@@ -61,6 +61,12 @@ export interface EdgeView {
   sy: number;
   tx: number;
   ty: number;
+  /**
+   * Draw a visible grip dot at that end. Ends with a marker skip it — the
+   * marker itself (already tinted when selected) acts as the grip.
+   */
+  sGripDot: boolean;
+  tGripDot: boolean;
   /** Reroute points (edge.points) already rounded for rendering. */
   waypoints: AtmFlowPoint[];
 }

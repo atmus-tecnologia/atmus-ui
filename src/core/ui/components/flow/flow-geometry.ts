@@ -42,6 +42,11 @@ export const GROUP_W = 320;
 export const GROUP_H = 220;
 export const EDGE_COLOR = 'var(--atm-ink-faint)';
 export const SELECTED_COLOR = 'var(--atm-primary)';
+/**
+ * Radius of the handle dot (size-2.5 → 10px). Edge endpoints with a marker
+ * are pulled out by this amount so arrows sit against the dot, not under it.
+ */
+export const HANDLE_R = 5;
 
 /** Rounds to 2 decimals — keeps the generated SVG/transform strings short. */
 export function f(n: number): number {

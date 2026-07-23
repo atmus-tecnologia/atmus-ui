@@ -69,6 +69,7 @@ export * from './components/tags/tags.component';
 export * from './components/toolbar/toolbar.component';
 export * from './components/misc/misc.components';
 export * from './components/calendar/calendar.component';
+export * from './components/datepicker/date-presets';
 export * from './components/datepicker/date-picker.component';
 export * from './components/datepicker/date-range-picker.component';
 export * from './components/datepicker/time-field.component';
