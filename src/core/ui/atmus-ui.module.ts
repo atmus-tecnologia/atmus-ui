@@ -68,7 +68,9 @@ import {
   AtmColorSwatchPicker,
 } from './components/color/color.components';
 import { AtmChart } from './components/chart/chart.component';
-import { AtmFlow, AtmFlowNodeDef, AtmFlowNodeHandle } from './components/flow/flow.component';
+import { AtmFlow } from './components/flow/flow.component';
+import { AtmFlowNodeHandle } from './components/flow/flow-handle.component';
+import { AtmFlowNodeDef } from './components/flow/flow-node-def.directive';
 
 const COMPONENTS = [
   AtmIcon,

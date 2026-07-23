@@ -76,5 +76,7 @@ export * from './components/color/color.components';
 export * from './components/chart/chart.component';
 export * from './components/flow/flow.types';
 export * from './components/flow/flow.component';
+export * from './components/flow/flow-node-def.directive';
+export * from './components/flow/flow-handle.component';
 
 export * from './atmus-ui.module';

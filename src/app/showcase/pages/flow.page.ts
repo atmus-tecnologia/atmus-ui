@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal, viewChild } from '@angular/core';
 import {
   AtmButton,
   AtmFlow,
   AtmFlowConnectEnd,
   AtmFlowContextMenuEvent,
   AtmFlowEdge,
+  AtmFlowGroupChange,
   AtmFlowNode,
   AtmFlowNodeDef,
   AtmFlowNodeHandle,
@@ -63,7 +64,7 @@ export class NodeSendMessage {
   template: `
     <demo-page
       title="Flow"
-      description="AtmFlow é um editor de fluxogramas estilo React Flow: canvas com pan/zoom, nodes arrastáveis, conexões por drag, nodes customizados via template, tipos de edge, minimapa, controles, snap, linhas de alinhamento, auto layout, undo/redo (Ctrl+Z), copiar/colar e import/export JSON. Com culling de viewport, aguenta milhares de nodes."
+      description="AtmFlow é um editor de fluxogramas estilo React Flow: canvas com pan/zoom, nodes arrastáveis, conexões por drag, nodes customizados via template, grupos (containers coloridos e redimensionáveis), tipos de edge, minimapa, controles, snap, linhas de alinhamento, auto layout, undo/redo (Ctrl+Z), copiar/colar e import/export JSON. Com culling de viewport, aguenta milhares de nodes."
       importCode="import { AtmFlow, AtmFlowNodeDef } from 'src/core/ui';"
     >
       <demo-section
@@ -115,6 +116,45 @@ export class NodeSendMessage {
             </div>
           </ng-template>
         </atm-flow>
+      </demo-section>
+
+      <demo-section
+        id="flow-groups"
+        title="Grupos"
+        description="Node com group: true vira um container: um retângulo colorido e redimensionável desenhado atrás dos nodes. Arrastar o grupo move tudo que está dentro (parentId). Um node agrupado não escapa arrastando: o grupo cresce automaticamente para continuar contendo ele. Para colocar ou tirar um node de um grupo, segure Ctrl (configurável via groupModifier) enquanto solta — o grupo acende indicando o alvo. Selecione nodes e use 'Agrupar seleção'; com um grupo selecionado dá para desagrupar ou trocar a cor."
+        [code]="groupsCode"
+      >
+        <div class="flex w-full flex-col gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <atm-button size="slim" variant="soft" (click)="groupSelection()">Agrupar seleção</atm-button>
+            <atm-button size="slim" variant="outline" (click)="ungroupSelection()">Desagrupar</atm-button>
+            <span class="ml-2 text-xs text-ink-muted">Cor do grupo:</span>
+            @for (c of groupPalette; track c) {
+              <button
+                type="button"
+                class="atm-focus size-6 cursor-pointer rounded-full border border-line transition-transform
+                  hover:scale-110"
+                [style.background]="c"
+                [attr.aria-label]="'Cor ' + c"
+                (click)="setGroupColor(c)"
+              ></button>
+            }
+          </div>
+          <atm-flow
+            #flowGroups
+            class="w-full"
+            [(nodes)]="groupNodes"
+            [(edges)]="groupEdges"
+            [height]="440"
+            defaultEdgeType="smoothstep"
+            (selectionChange)="groupSel.set($event.nodes)"
+            (groupChange)="onGroupChange($event)"
+          />
+          <p class="text-xs text-ink-faint">
+            Dica: arraste um node e, <strong>segurando Ctrl</strong>, solte dentro do grupo para adicioná-lo —
+            ou fora, para removê-lo. Sem Ctrl, o node não sai: o grupo se expande para acompanhá-lo.
+          </p>
+        </div>
       </demo-section>
 
       <demo-section
@@ -351,6 +391,7 @@ export class NodeSendMessage {
 export class FlowPage {
   readonly toast = inject(AtmToastService);
 
+  readonly flowGroups = viewChild.required<AtmFlow>('flowGroups');
   readonly flowInteract = viewChild.required<AtmFlow>('flowInteract');
   readonly flowAdd = viewChild.required<AtmFlow>('flowAdd');
   readonly flowJson = viewChild.required<AtmFlow>('flowJson');
@@ -451,6 +492,73 @@ export class FlowPage {
     { id: 'te3', source: 't3', target: 't5', type: 'step', dashed: true },
     { id: 'te4', source: 't4', target: 't5', type: 'straight', color: '#8b5cf6' },
   ]);
+
+  /* -------------------------- grupos -------------------------- */
+
+  readonly groupNodes = signal<AtmFlowNode[]>([
+    {
+      id: 'grp-a',
+      group: true,
+      label: 'Pré-processamento',
+      color: '#8b5cf6',
+      position: { x: 0, y: 0 },
+      width: 400,
+      height: 300,
+    },
+    { id: 'ga1', label: 'Receber evento', icon: 'icofont-download', parentId: 'grp-a', position: { x: 40, y: 60 } },
+    { id: 'ga2', label: 'Validar schema', icon: 'icofont-check-circled', parentId: 'grp-a', position: { x: 70, y: 180 } },
+    { id: 'gb1', label: 'Persistir', icon: 'icofont-database', color: 'var(--atm-success)', position: { x: 540, y: 80 } },
+    { id: 'gb2', label: 'Notificar', icon: 'icofont-paper-plane', color: 'var(--atm-info)', position: { x: 540, y: 210 } },
+  ]);
+
+  readonly groupEdges = signal<AtmFlowEdge[]>([
+    { id: 'ge1', source: 'ga1', target: 'ga2', animated: true },
+    { id: 'ge2', source: 'ga2', target: 'gb1' },
+    { id: 'ge3', source: 'ga2', target: 'gb2' },
+  ]);
+
+  readonly groupSel = signal<string[]>([]);
+  readonly groupPalette = ['#8b5cf6', '#6366f1', '#0ea5e9', '#22c55e', '#f59e0b', '#ef4444'];
+
+  private readonly selectedGroupIds = computed(() => {
+    const nodes = this.groupNodes();
+    return this.groupSel().filter((id) => nodes.find((n) => n.id === id)?.group);
+  });
+
+  groupSelection(): void {
+    const nodes = this.groupNodes();
+    const ids = this.groupSel().filter((id) => !nodes.find((n) => n.id === id)?.group);
+    if (!ids.length) {
+      this.toast.warning('Selecione nodes primeiro (clique, Ctrl+clique ou Shift+arrasto).');
+      return;
+    }
+    this.flowGroups().createGroup(ids, { label: 'Novo grupo' });
+  }
+
+  ungroupSelection(): void {
+    const groups = this.selectedGroupIds();
+    if (!groups.length) {
+      this.toast.warning('Selecione um grupo para desagrupar.');
+      return;
+    }
+    for (const id of groups) this.flowGroups().ungroup(id);
+  }
+
+  setGroupColor(color: string): void {
+    const groups = this.selectedGroupIds();
+    if (!groups.length) {
+      this.toast.warning('Selecione um grupo para trocar a cor.');
+      return;
+    }
+    for (const id of groups) this.flowGroups().updateNode(id, { color });
+  }
+
+  onGroupChange(e: AtmFlowGroupChange): void {
+    const name = e.node.label ?? e.node.id;
+    this.toast.info(
+      e.group ? `"${name}" entrou no grupo "${e.group.label ?? e.group.id}"` : `"${name}" saiu do grupo`,
+    );
+  }
 
   /* ------------------- node componentizado -------------------- */
 
@@ -807,6 +915,28 @@ export class FlowPage {
 
 // Redimensionável:
 { id: 't5', label: '...', resizable: true, width: 220, height: 70 }`;
+
+  readonly groupsCode = `<atm-flow #flow [(nodes)]="nodes" [(edges)]="edges" (groupChange)="onGroupChange($event)" />
+
+// Grupo = node com group: true → retângulo colorido, redimensionável,
+// desenhado atrás dos nodes e das edges:
+{ id: 'grp', group: true, label: 'Pré-processamento', color: '#8b5cf6',
+  position: { x: 0, y: 0 }, width: 400, height: 300 }
+
+// Membros apontam para o grupo via parentId — mover o grupo move todos:
+{ id: 'n1', label: 'Receber evento', parentId: 'grp', position: { x: 40, y: 60 } }
+
+// Interação: segure CTRL ao soltar um node dentro de um grupo para
+// adicioná-lo; Ctrl + soltar fora, remove. Emite (groupChange) { node, group | null }.
+// Sem Ctrl um membro nunca escapa: o grupo cresce automaticamente para contê-lo.
+// O modificador é configurável: <atm-flow groupModifier="alt" /> (ctrl | alt | shift)
+
+// API imperativa:
+flow().createGroup(['n1', 'n2'], { label: 'Novo grupo', color: '#0ea5e9' });
+flow().ungroup('grp');                    // dissolve; os nodes ficam
+flow().addToGroup(['n3'], 'grp');
+flow().removeFromGroup(['n3']);
+flow().updateNode('grp', { color: '#22c55e' }); // trocar a cor`;
 
   readonly componentNodesCode = `<!-- 1. Seu componente de node: um componente Angular comum -->
 @Component({

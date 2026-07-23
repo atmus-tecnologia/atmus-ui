@@ -157,6 +157,7 @@ const MENU: MenuGroup[] = [
     items: [
       { label: 'Flow — Básico', link: '/flow', fragment: 'flow-basic', badge: 'novo' },
       { label: 'Flow — Custom nodes', link: '/flow', fragment: 'flow-custom', badge: 'novo' },
+      { label: 'Flow — Grupos', link: '/flow', fragment: 'flow-groups', badge: 'novo' },
       { label: 'Flow — Node componente', link: '/flow', fragment: 'flow-component-nodes', badge: 'novo' },
       { label: 'Flow — Ports tipados', link: '/flow', fragment: 'flow-types', badge: 'novo' },
       { label: 'Flow — Interações', link: '/flow', fragment: 'flow-interaction', badge: 'novo' },

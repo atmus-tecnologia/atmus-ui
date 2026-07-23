@@ -49,8 +49,22 @@ export interface AtmFlowNode<T = any> {
   draggable?: boolean;
   connectable?: boolean;
   deletable?: boolean;
-  /** Shows a resize grip when the node is selected. */
+  /** Shows a resize grip when the node is selected (groups default to true). */
   resizable?: boolean;
+  /**
+   * Renders the node as a group: a resizable colored rectangle drawn behind
+   * the other nodes. Dragging the group moves every node whose `parentId`
+   * points to it. Groups are not connectable unless `connectable: true`.
+   */
+  group?: boolean;
+  /**
+   * Id of the group node this node belongs to. Set it directly, via the
+   * `createGroup()/addToGroup()` API, or by the user: hold the group
+   * modifier (Ctrl by default — see the flow-level `groupModifier` input)
+   * while dropping a node inside (or outside) a group. Without the modifier
+   * a member can't escape: the group auto-grows to keep containing it.
+   */
+  parentId?: string;
 }
 
 export type AtmFlowEdgeType = 'bezier' | 'smoothstep' | 'step' | 'straight';
@@ -152,6 +166,12 @@ export interface AtmFlowReconnectEvent {
 export interface AtmFlowDeleteEvent {
   nodes: AtmFlowNode[];
   edges: AtmFlowEdge[];
+}
+
+/** Emitted when a node enters (`group` set) or leaves (`group` null) a group. */
+export interface AtmFlowGroupChange {
+  node: AtmFlowNode;
+  group: AtmFlowNode | null;
 }
 
 /** Why a dropped connection was rejected. */

@@ -3,10 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  Directive,
   ElementRef,
   NgZone,
-  TemplateRef,
   afterNextRender,
   computed,
   contentChildren,
@@ -22,6 +20,34 @@ import {
 } from '@angular/core';
 import { atmUid } from '../../types';
 import {
+  DEFAULT_HANDLES_LR,
+  DEFAULT_HANDLES_TB,
+  DIR,
+  EDGE_COLOR,
+  GROUP_H,
+  GROUP_W,
+  NODE_H,
+  NODE_W,
+  OPPOSITE,
+  SELECTED_COLOR,
+  anchorOf,
+  bezierPath,
+  edgePath,
+  f,
+} from './flow-geometry';
+import { FlowHistory } from './flow-history';
+import {
+  Candidate,
+  CustomHandleInfo,
+  EdgeView,
+  FlowHandleRef,
+  HandleView,
+  MarkerDef,
+  NodeView,
+} from './flow-internal.types';
+import { computeFlowLayoutWithGroups } from './flow-layout';
+import { AtmFlowNodeDef } from './flow-node-def.directive';
+import {
   AtmFlowConnectEnd,
   AtmFlowConnectInvalid,
   AtmFlowConnection,
@@ -30,11 +56,12 @@ import {
   AtmFlowEdge,
   AtmFlowEdgeEvent,
   AtmFlowEdgeType,
+  AtmFlowGroupChange,
   AtmFlowHandle,
   AtmFlowHandlePosition,
   AtmFlowHandleType,
-  AtmFlowJson,
   AtmFlowInvalidReason,
+  AtmFlowJson,
   AtmFlowLayoutDirection,
   AtmFlowMarker,
   AtmFlowNode,
@@ -47,326 +74,13 @@ import {
   AtmFlowViewport,
 } from './flow.types';
 
-/* ------------------------------------------------------------------ */
-/* Geometry helpers                                                    */
-/* ------------------------------------------------------------------ */
-
-const DIR: Record<AtmFlowHandlePosition, [number, number]> = {
-  top: [0, -1],
-  right: [1, 0],
-  bottom: [0, 1],
-  left: [-1, 0],
-};
-
-const OPPOSITE: Record<AtmFlowHandlePosition, AtmFlowHandlePosition> = {
-  top: 'bottom',
-  bottom: 'top',
-  left: 'right',
-  right: 'left',
-};
-
-const DEFAULT_HANDLES_LR: AtmFlowHandle[] = [
-  { type: 'target', position: 'left' },
-  { type: 'source', position: 'right' },
-];
-
-const DEFAULT_HANDLES_TB: AtmFlowHandle[] = [
-  { type: 'target', position: 'top' },
-  { type: 'source', position: 'bottom' },
-];
-
-const NODE_W = 150;
-const NODE_H = 40;
-const EDGE_COLOR = 'var(--atm-ink-faint)';
-const SELECTED_COLOR = 'var(--atm-primary)';
-
-function f(n: number): number {
-  return Math.round(n * 100) / 100;
-}
-
-function anchorOf(
-  pos: AtmFlowPoint,
-  w: number,
-  h: number,
-  hd: Pick<AtmFlowHandle, 'position' | 'offset'>,
-): AtmFlowPoint {
-  const off = hd.offset ?? 0.5;
-  switch (hd.position) {
-    case 'top':
-      return { x: pos.x + w * off, y: pos.y };
-    case 'bottom':
-      return { x: pos.x + w * off, y: pos.y + h };
-    case 'left':
-      return { x: pos.x, y: pos.y + h * off };
-    default:
-      return { x: pos.x + w, y: pos.y + h * off };
-  }
-}
-
-function bezierPath(
-  s: AtmFlowPoint,
-  sp: AtmFlowHandlePosition,
-  t: AtmFlowPoint,
-  tp: AtmFlowHandlePosition,
-): { d: string; mid: AtmFlowPoint } {
-  const [sdx, sdy] = DIR[sp];
-  const [tdx, tdy] = DIR[tp];
-  const dist = Math.max(Math.abs(t.x - s.x), Math.abs(t.y - s.y));
-  const c = Math.min(Math.max(dist * 0.5, 40), 260);
-  const c1 = { x: s.x + sdx * c, y: s.y + sdy * c };
-  const c2 = { x: t.x + tdx * c, y: t.y + tdy * c };
-  return {
-    d: `M${f(s.x)} ${f(s.y)}C${f(c1.x)} ${f(c1.y)} ${f(c2.x)} ${f(c2.y)} ${f(t.x)} ${f(t.y)}`,
-    mid: {
-      x: (s.x + 3 * c1.x + 3 * c2.x + t.x) / 8,
-      y: (s.y + 3 * c1.y + 3 * c2.y + t.y) / 8,
-    },
-  };
-}
-
-function orthoPoints(
-  s: AtmFlowPoint,
-  sp: AtmFlowHandlePosition,
-  t: AtmFlowPoint,
-  tp: AtmFlowHandlePosition,
-): AtmFlowPoint[] {
-  const EXT = 24;
-  const [sdx, sdy] = DIR[sp];
-  const [tdx, tdy] = DIR[tp];
-  const p1 = { x: s.x + sdx * EXT, y: s.y + sdy * EXT };
-  const p2 = { x: t.x + tdx * EXT, y: t.y + tdy * EXT };
-  const sH = sdy === 0;
-  const tH = tdy === 0;
-  let mids: AtmFlowPoint[];
-  if (sH && tH) {
-    // Route via mid-x only when the target extension is "ahead" of the
-    // source extension for both handle directions; otherwise the segment
-    // would run backwards underneath the nodes.
-    const ahead = (p2.x - p1.x) * sdx >= 0 && (p1.x - p2.x) * tdx >= 0;
-    if (ahead) {
-      const mx = (p1.x + p2.x) / 2;
-      mids = [
-        { x: mx, y: p1.y },
-        { x: mx, y: p2.y },
-      ];
-    } else if (sdx === -tdx) {
-      // Opposing handles but target behind → S-shape around via mid-y.
-      const my = (p1.y + p2.y) / 2;
-      mids = [
-        { x: p1.x, y: my },
-        { x: p2.x, y: my },
-      ];
-    } else {
-      // Same direction → hug the extreme x.
-      const ex = sdx > 0 ? Math.max(p1.x, p2.x) : Math.min(p1.x, p2.x);
-      mids = [
-        { x: ex, y: p1.y },
-        { x: ex, y: p2.y },
-      ];
-    }
-  } else if (!sH && !tH) {
-    const ahead = (p2.y - p1.y) * sdy >= 0 && (p1.y - p2.y) * tdy >= 0;
-    if (ahead) {
-      const my = (p1.y + p2.y) / 2;
-      mids = [
-        { x: p1.x, y: my },
-        { x: p2.x, y: my },
-      ];
-    } else if (sdy === -tdy) {
-      const mx = (p1.x + p2.x) / 2;
-      mids = [
-        { x: mx, y: p1.y },
-        { x: mx, y: p2.y },
-      ];
-    } else {
-      const ey = sdy > 0 ? Math.max(p1.y, p2.y) : Math.min(p1.y, p2.y);
-      mids = [
-        { x: p1.x, y: ey },
-        { x: p2.x, y: ey },
-      ];
-    }
-  } else if (sH) {
-    mids = [{ x: p2.x, y: p1.y }];
-  } else {
-    mids = [{ x: p1.x, y: p2.y }];
-  }
-  const raw = [s, p1, ...mids, p2, t];
-  const pts: AtmFlowPoint[] = [raw[0]];
-  for (const p of raw) {
-    const last = pts[pts.length - 1];
-    if (Math.abs(p.x - last.x) > 0.01 || Math.abs(p.y - last.y) > 0.01) pts.push(p);
-  }
-  return pts;
-}
-
-function roundedPath(pts: AtmFlowPoint[], r: number): string {
-  if (pts.length < 2) return '';
-  let d = `M${f(pts[0].x)} ${f(pts[0].y)}`;
-  for (let i = 1; i < pts.length - 1; i++) {
-    const prev = pts[i - 1];
-    const p = pts[i];
-    const next = pts[i + 1];
-    const inLen = Math.hypot(p.x - prev.x, p.y - prev.y);
-    const outLen = Math.hypot(next.x - p.x, next.y - p.y);
-    const rr = Math.min(r, inLen / 2, outLen / 2);
-    if (rr < 0.5) {
-      d += `L${f(p.x)} ${f(p.y)}`;
-      continue;
-    }
-    const ix = p.x - ((p.x - prev.x) / inLen) * rr;
-    const iy = p.y - ((p.y - prev.y) / inLen) * rr;
-    const ox = p.x + ((next.x - p.x) / outLen) * rr;
-    const oy = p.y + ((next.y - p.y) / outLen) * rr;
-    d += `L${f(ix)} ${f(iy)}Q${f(p.x)} ${f(p.y)} ${f(ox)} ${f(oy)}`;
-  }
-  const last = pts[pts.length - 1];
-  return d + `L${f(last.x)} ${f(last.y)}`;
-}
-
-function polylineMid(pts: AtmFlowPoint[]): AtmFlowPoint {
-  let total = 0;
-  for (let i = 1; i < pts.length; i++) total += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
-  let walk = total / 2;
-  for (let i = 1; i < pts.length; i++) {
-    const seg = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
-    if (walk <= seg) {
-      const k = seg === 0 ? 0 : walk / seg;
-      return {
-        x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * k,
-        y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * k,
-      };
-    }
-    walk -= seg;
-  }
-  return pts[Math.floor(pts.length / 2)];
-}
-
-function edgePath(
-  s: AtmFlowPoint,
-  sp: AtmFlowHandlePosition,
-  t: AtmFlowPoint,
-  tp: AtmFlowHandlePosition,
-  type: AtmFlowEdgeType,
-): { d: string; mid: AtmFlowPoint } {
-  if (type === 'straight') {
-    return {
-      d: `M${f(s.x)} ${f(s.y)}L${f(t.x)} ${f(t.y)}`,
-      mid: { x: (s.x + t.x) / 2, y: (s.y + t.y) / 2 },
-    };
-  }
-  if (type === 'bezier') return bezierPath(s, sp, t, tp);
-  const pts = orthoPoints(s, sp, t, tp);
-  return { d: roundedPath(pts, type === 'step' ? 0 : 10), mid: polylineMid(pts) };
-}
-
-/* ------------------------------------------------------------------ */
-/* Internal view models                                                */
-/* ------------------------------------------------------------------ */
-
-interface HandleView {
-  key: string;
-  id: string | undefined;
-  type: AtmFlowHandleType;
-  handle: AtmFlowHandle;
-  left: string | null;
-  top: string | null;
-  right: string | null;
-  bottom: string | null;
-}
-
-interface NodeView {
-  node: AtmFlowNode;
-  x: number;
-  y: number;
-  selected: boolean;
-  template: TemplateRef<unknown> | null;
-  handles: HandleView[];
-}
-
-interface EdgeView {
-  edge: AtmFlowEdge;
-  d: string;
-  color: string;
-  width: number;
-  selected: boolean;
-  animated: boolean;
-  dashed: boolean;
-  dimmed: boolean;
-  labelX: number;
-  labelY: number;
-  markerStart: string | null;
-  markerEnd: string | null;
-  /** Reconnect grip positions (slightly outside each anchor, on the wire). */
-  sx: number;
-  sy: number;
-  tx: number;
-  ty: number;
-}
-
-interface MarkerDef {
-  id: string;
-  type: AtmFlowMarker;
-  color: string;
-}
-
-interface Candidate {
-  nodeId: string;
-  handleId: string | undefined;
-  key: string;
-  anchor: AtmFlowPoint;
-  position: AtmFlowHandlePosition;
-}
-
-/** Measured info of an <atm-flow-handle> placed inside a custom node. */
-interface CustomHandleInfo {
-  key: string;
-  id: string | undefined;
-  type: AtmFlowHandleType;
-  position: AtmFlowHandlePosition;
-  dataType: string | undefined;
-  /** Center offset relative to the node's top-left corner (flow units). */
-  x: number;
-  y: number;
-}
-
-/* ------------------------------------------------------------------ */
-/* Custom node template directive                                      */
-/* ------------------------------------------------------------------ */
-
-/**
- * Declares a custom node renderer inside `<atm-flow>`:
- *
- * ```html
- * <atm-flow [(nodes)]="nodes" [(edges)]="edges">
- *   <ng-template atmFlowNode="card" let-node let-selected="selected">
- *     <div class="...">{{ node.data.title }}</div>
- *   </ng-template>
- * </atm-flow>
- * ```
- */
-@Directive({ selector: 'ng-template[atmFlowNode]' })
-export class AtmFlowNodeDef {
-  readonly type = input.required<string>({ alias: 'atmFlowNode' });
-  readonly template = inject(TemplateRef);
-
-  static ngTemplateContextGuard(
-    _dir: AtmFlowNodeDef,
-    ctx: unknown,
-  ): ctx is { $implicit: AtmFlowNode; selected: boolean; zoom: number } {
-    return true;
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/* atm-flow                                                            */
-/* ------------------------------------------------------------------ */
-
 /**
  * Node-based flow editor (React Flow style): pan/zoom canvas, draggable
  * nodes, drag-to-connect handles, custom node templates, edge types
- * (bezier/smoothstep/step/straight) with labels & markers, minimap,
- * controls, dotted background, box selection, snap-to-grid, helper lines,
- * auto layout, undo/redo, copy/paste and JSON import/export.
+ * (bezier/smoothstep/step/straight) with labels & markers, groups (colored
+ * resizable containers that drag their children along), minimap, controls,
+ * dotted background, box selection, snap-to-grid, helper lines, auto layout,
+ * undo/redo, copy/paste and JSON import/export.
  * Viewport culling keeps it fast with thousands of nodes.
  */
 @Component({
@@ -435,8 +149,8 @@ export class AtmFlowNodeDef {
 
       <!-- World (transformed layer) -->
       <div class="absolute top-0 left-0 origin-top-left" [style.transform]="worldTransform()">
-        <!-- Edges -->
-        <svg class="absolute top-0 left-0 overflow-visible" width="2" height="2" aria-hidden="true">
+        <!-- Edges (z-10: above group rectangles, below regular nodes) -->
+        <svg class="absolute top-0 left-0 z-10 overflow-visible" width="2" height="2" aria-hidden="true">
           <defs>
             @for (m of markerDefs(); track m.id) {
               <marker
@@ -531,7 +245,7 @@ export class AtmFlowNodeDef {
         <!-- Helper (alignment) lines -->
         @if (helperX() !== null) {
           <div
-            class="pointer-events-none absolute w-px bg-primary/70"
+            class="pointer-events-none absolute z-10 w-px bg-primary/70"
             [style.left.px]="helperX()"
             [style.top.px]="worldRect().y"
             [style.height.px]="worldRect().h"
@@ -539,7 +253,7 @@ export class AtmFlowNodeDef {
         }
         @if (helperY() !== null) {
           <div
-            class="pointer-events-none absolute h-px bg-primary/70"
+            class="pointer-events-none absolute z-10 h-px bg-primary/70"
             [style.top.px]="helperY()"
             [style.left.px]="worldRect().x"
             [style.width.px]="worldRect().w"
@@ -559,7 +273,7 @@ export class AtmFlowNodeDef {
           }
         }
 
-        <!-- Nodes -->
+        <!-- Nodes & groups -->
         @for (nv of nodeViews(); track nv.node.id) {
           <div
             #nodeEl
@@ -567,14 +281,33 @@ export class AtmFlowNodeDef {
             [class.cursor-grab]="!locked() && nv.node.draggable !== false"
             [attr.data-flow-node]="nv.node.id"
             [style.transform]="'translate(' + nv.x + 'px,' + nv.y + 'px)'"
-            [style.width.px]="nv.node.width ?? null"
-            [style.height.px]="nv.node.height ?? null"
-            [style.zIndex]="nv.selected ? 30 : 20"
+            [style.width.px]="nv.w"
+            [style.height.px]="nv.h"
+            [style.zIndex]="nv.z"
             (pointerdown)="onNodePointerDown(nv.node, $event)"
             (dblclick)="onNodeDblClick(nv.node, $event)"
             (contextmenu)="onNodeContextMenu(nv.node, $event)"
           >
-            @if (nv.template) {
+            @if (nv.isGroup) {
+              <div
+                class="h-full w-full rounded-atm-lg border transition-colors"
+                [class.border-2]="nv.selected || dropGroupId() === nv.node.id"
+                [style.background]="dropGroupId() === nv.node.id ? nv.groupBgActive : nv.groupBg"
+                [style.borderColor]="
+                  nv.selected || dropGroupId() === nv.node.id ? nv.groupAccent : nv.groupBorder
+                "
+              >
+                @if (nv.node.label) {
+                  <span
+                    class="absolute top-1.5 left-2.5 max-w-[calc(100%-20px)] truncate text-[11px] font-semibold
+                      select-none"
+                    [style.color]="nv.groupAccent"
+                  >
+                    {{ nv.node.label }}
+                  </span>
+                }
+              </div>
+            } @else if (nv.template) {
               <ng-container
                 [ngTemplateOutlet]="nv.template"
                 [ngTemplateOutletContext]="{ $implicit: nv.node, selected: nv.selected, zoom: viewport().zoom }"
@@ -602,7 +335,7 @@ export class AtmFlowNodeDef {
             }
 
             <!-- Handles -->
-            @if (nv.node.connectable !== false) {
+            @if (!nv.isGroup && nv.node.connectable !== false) {
               @for (h of nv.handles; track h.key) {
                 <span
                   class="absolute size-2.5 rounded-full border-2 border-surface bg-ink-faint transition-transform
@@ -623,8 +356,8 @@ export class AtmFlowNodeDef {
               }
             }
 
-            <!-- Resize grip -->
-            @if (nv.selected && nv.node.resizable && !locked()) {
+            <!-- Resize grip (groups are resizable by default) -->
+            @if (nv.selected && !locked() && (nv.node.resizable ?? nv.isGroup)) {
               <span
                 class="absolute -right-1 -bottom-1 size-3 cursor-nwse-resize rounded-xs border border-surface
                   bg-primary"
@@ -693,7 +426,7 @@ export class AtmFlowNodeDef {
             [attr.height]="r.h"
             [attr.rx]="mmView().rx"
             [attr.fill]="r.color"
-            [attr.opacity]="r.sel ? 0.95 : 0.4"
+            [attr.opacity]="r.op"
           />
         }
         <rect
@@ -756,6 +489,12 @@ export class AtmFlow {
   readonly cullingThreshold = input(250);
   /** Fit the graph on first render. */
   readonly autoFit = input(true);
+  /**
+   * Modifier held while dropping a node to move it into/out of a group.
+   * Without it, members dragged around never leave their group — the group
+   * auto-grows to keep containing them.
+   */
+  readonly groupModifier = input<'ctrl' | 'alt' | 'shift'>('ctrl');
 
   readonly nodeClick = output<AtmFlowNodeEvent>();
   readonly nodeDoubleClick = output<AtmFlowNodeEvent>();
@@ -773,6 +512,8 @@ export class AtmFlow {
   readonly viewportChange = output<AtmFlowViewport>();
   readonly contextMenu = output<AtmFlowContextMenuEvent>();
   readonly deleted = output<AtmFlowDeleteEvent>();
+  /** Fired when a node enters/leaves a group (Ctrl+drop or via API). */
+  readonly groupChange = output<AtmFlowGroupChange>();
 
   /* ---------------------------------------------------------------- */
   /* State                                                             */
@@ -802,13 +543,14 @@ export class AtmFlow {
   protected readonly helperX = signal<number | null>(null);
   protected readonly helperY = signal<number | null>(null);
   protected readonly reconnectingId = signal<string | null>(null);
+  /** Group highlighted as drop target while dragging a node with Ctrl held. */
+  protected readonly dropGroupId = signal<string | null>(null);
 
   private nodeRo: ResizeObserver | null = null;
   private readonly roReady = signal(false);
   private observed = new Map<HTMLElement, string>();
 
-  private past: { nodes: AtmFlowNode[]; edges: AtmFlowEdge[] }[] = [];
-  private future: { nodes: AtmFlowNode[]; edges: AtmFlowEdge[] }[] = [];
+  private readonly history = new FlowHistory();
   private clipboard: { nodes: AtmFlowNode[]; edges: AtmFlowEdge[] } | null = null;
   private pasteCount = 0;
   private lastNudge = 0;
@@ -818,7 +560,7 @@ export class AtmFlow {
   private pinch: { dist: number; center: AtmFlowPoint; vp: AtmFlowViewport } | null = null;
 
   /** Live <atm-flow-handle> elements and their measured info per node. */
-  private readonly customHandleEls = new Map<HTMLElement, { nodeId: string; handle: AtmFlowNodeHandle }>();
+  private readonly customHandleEls = new Map<HTMLElement, { nodeId: string; handle: FlowHandleRef }>();
   private readonly customHandles = signal(new Map<string, CustomHandleInfo[]>());
 
   /* ---------------------------------------------------------------- */
@@ -899,8 +641,8 @@ export class AtmFlow {
     const r = this.cullRect();
     const dims = this.dims();
     return nodes.filter((n) => {
-      const w = n.width ?? dims.get(n.id)?.w ?? NODE_W;
-      const h = n.height ?? dims.get(n.id)?.h ?? NODE_H;
+      const w = n.width ?? dims.get(n.id)?.w ?? (n.group ? GROUP_W : NODE_W);
+      const h = n.height ?? dims.get(n.id)?.h ?? (n.group ? GROUP_H : NODE_H);
       return n.position.x + w >= r.x0 && n.position.x <= r.x1 && n.position.y + h >= r.y0 && n.position.y <= r.y1;
     });
   });
@@ -933,18 +675,29 @@ export class AtmFlow {
     const defs = this.nodeDefs();
     const custom = this.customHandles();
     return this.visibleNodes().map((node) => {
-      const template = node.type
-        ? (defs.find((d) => d.type() === node.type)?.template ?? null)
-        : null;
+      const isGroup = !!node.group;
+      const template =
+        !isGroup && node.type ? (defs.find((d) => d.type() === node.type)?.template ?? null) : null;
       // Nodes com <atm-flow-handle> no template não recebem os handles default.
       const hasCustom = !!custom.get(node.id)?.length;
+      const selected = sel.has(node.id);
+      const accent = node.color ?? 'var(--atm-primary)';
       return {
         node,
         x: f(node.position.x),
         y: f(node.position.y),
-        selected: sel.has(node.id),
+        w: node.width ?? (isGroup ? GROUP_W : null),
+        h: node.height ?? (isGroup ? GROUP_H : null),
+        z: isGroup ? (selected ? 1 : 0) : selected ? 30 : 20,
+        selected,
         template,
-        handles: hasCustom ? [] : this.handlesOf(node).map((h, i) => this.handleView(node.id, h, i)),
+        handles:
+          isGroup || hasCustom ? [] : this.handlesOf(node).map((h, i) => this.handleView(node.id, h, i)),
+        isGroup,
+        groupBg: isGroup ? `color-mix(in srgb, ${accent} 8%, transparent)` : null,
+        groupBgActive: isGroup ? `color-mix(in srgb, ${accent} 16%, transparent)` : null,
+        groupBorder: isGroup ? `color-mix(in srgb, ${accent} 45%, transparent)` : null,
+        groupAccent: isGroup ? accent : null,
       };
     });
   });
@@ -1015,8 +768,8 @@ export class AtmFlow {
     let x1 = -Infinity;
     let y1 = -Infinity;
     for (const n of nodes) {
-      const w = n.width ?? dims.get(n.id)?.w ?? NODE_W;
-      const h = n.height ?? dims.get(n.id)?.h ?? NODE_H;
+      const w = n.width ?? dims.get(n.id)?.w ?? (n.group ? GROUP_W : NODE_W);
+      const h = n.height ?? dims.get(n.id)?.h ?? (n.group ? GROUP_H : NODE_H);
       if (n.position.x < x0) x0 = n.position.x;
       if (n.position.y < y0) y0 = n.position.y;
       if (n.position.x + w > x1) x1 = n.position.x + w;
@@ -1044,10 +797,10 @@ export class AtmFlow {
         id: n.id,
         x: f(n.position.x),
         y: f(n.position.y),
-        w: f(n.width ?? dims.get(n.id)?.w ?? NODE_W),
-        h: f(n.height ?? dims.get(n.id)?.h ?? NODE_H),
+        w: f(n.width ?? dims.get(n.id)?.w ?? (n.group ? GROUP_W : NODE_W)),
+        h: f(n.height ?? dims.get(n.id)?.h ?? (n.group ? GROUP_H : NODE_H)),
         color: sel.has(n.id) ? 'var(--atm-primary)' : (n.color ?? 'var(--atm-ink-faint)'),
-        sel: sel.has(n.id),
+        op: n.group ? 0.15 : sel.has(n.id) ? 0.95 : 0.4,
       }));
     return {
       vb: `${f(x)} ${f(y)} ${f(w)} ${f(h)}`,
@@ -1141,7 +894,7 @@ export class AtmFlow {
   /* ---------------------------------------------------------------- */
 
   /** @internal */
-  registerCustomHandle(el: HTMLElement, handle: AtmFlowNodeHandle): void {
+  registerCustomHandle(el: HTMLElement, handle: FlowHandleRef): void {
     const nodeId = el.closest<HTMLElement>('[data-flow-node]')?.dataset['flowNode'];
     if (!nodeId) return;
     this.customHandleEls.set(el, { nodeId, handle });
@@ -1190,7 +943,7 @@ export class AtmFlow {
     });
   }
 
-  private measureCustomHandle(el: HTMLElement, nodeId: string, handle: AtmFlowNodeHandle): void {
+  private measureCustomHandle(el: HTMLElement, nodeId: string, handle: FlowHandleRef): void {
     const nodeEl = el.closest<HTMLElement>('[data-flow-node]');
     if (!nodeEl) return;
     const zoom = this.viewport().zoom;
@@ -1306,6 +1059,13 @@ export class AtmFlow {
     else requestAnimationFrame(() => this.fitView());
   }
 
+  /** Patches a node by id (position, color, label…). Undo-able. */
+  updateNode(id: string, patch: Partial<AtmFlowNode>): void {
+    if (!this.nodeMap().has(id)) return;
+    this.snapshot();
+    this.patchNodes(new Map([[id, patch]]));
+  }
+
   selectAll(): void {
     this.select(
       this.nodes().map((n) => n.id),
@@ -1332,33 +1092,40 @@ export class AtmFlow {
     this.snapshot();
     const removedNodes = this.nodes().filter((n) => doomed.has(n.id));
     const removedEdges = this.edges().filter(edgeDoomed);
-    this.nodes.update((ns) => ns.filter((n) => !doomed.has(n.id)));
+    // Children of deleted groups survive — they just leave the group.
+    this.nodes.update((ns) =>
+      ns
+        .filter((n) => !doomed.has(n.id))
+        .map((n) => (n.parentId && doomed.has(n.parentId) ? { ...n, parentId: undefined } : n)),
+    );
     this.edges.update((es) => es.filter((e) => !edgeDoomed(e)));
     this.select([], []);
     this.deleted.emit({ nodes: removedNodes, edges: removedEdges });
   }
 
   undo(): void {
-    const prev = this.past.pop();
+    const prev = this.history.undo(this.cloneState());
     if (!prev) return;
-    this.future.push(this.cloneState());
     this.nodes.set(prev.nodes);
     this.edges.set(prev.edges);
     this.select([], []);
   }
 
   redo(): void {
-    const next = this.future.pop();
+    const next = this.history.redo(this.cloneState());
     if (!next) return;
-    this.past.push(this.cloneState());
     this.nodes.set(next.nodes);
     this.edges.set(next.edges);
     this.select([], []);
   }
 
   copySelection(): void {
-    const selN = this.selectedNodes();
+    const selN = new Set(this.selectedNodes());
     if (!selN.size) return;
+    // Copying a group implicitly copies its members.
+    for (const id of [...selN]) {
+      if (this.nodeMap().get(id)?.group) for (const d of this.descendantIds(id)) selN.add(d);
+    }
     this.clipboard = structuredClone({
       nodes: this.nodes().filter((n) => selN.has(n.id)),
       edges: this.edges().filter((e) => selN.has(e.source) && selN.has(e.target)),
@@ -1372,11 +1139,15 @@ export class AtmFlow {
     this.pasteCount++;
     const off = 28 * this.pasteCount;
     const idMap = new Map<string, string>();
-    const nodes = this.clipboard.nodes.map((n) => {
-      const id = atmUid('atm-n');
-      idMap.set(n.id, id);
-      return structuredClone({ ...n, id, position: { x: n.position.x + off, y: n.position.y + off } });
-    });
+    for (const n of this.clipboard.nodes) idMap.set(n.id, atmUid('atm-n'));
+    const nodes = this.clipboard.nodes.map((n) =>
+      structuredClone({
+        ...n,
+        id: idMap.get(n.id)!,
+        parentId: n.parentId ? idMap.get(n.parentId) : undefined,
+        position: { x: n.position.x + off, y: n.position.y + off },
+      }),
+    );
     const edges = this.clipboard.edges.map((e) =>
       structuredClone({ ...e, id: atmUid('atm-e'), source: idMap.get(e.source)!, target: idMap.get(e.target)! }),
     );
@@ -1387,96 +1158,265 @@ export class AtmFlow {
 
   /**
    * Layered auto layout (Sugiyama-style: longest-path ranks + barycenter
-   * ordering). Fits the view afterwards.
+   * ordering). Group-aware: members are organized inside their group, the
+   * group participates in the global layout as a single block and is resized
+   * to wrap its content. Fits the view afterwards.
    */
   autoLayout(direction: AtmFlowLayoutDirection = this.direction()): void {
     const nodes = this.nodes();
     if (!nodes.length) return;
     this.snapshot();
-    const dims = this.dims();
-    const sizeOf = (n: AtmFlowNode) => ({
-      w: n.width ?? dims.get(n.id)?.w ?? NODE_W,
-      h: n.height ?? dims.get(n.id)?.h ?? NODE_H,
-    });
-    const ids = new Set(nodes.map((n) => n.id));
-    const outAdj = new Map<string, string[]>();
-    const inAdj = new Map<string, string[]>();
-    const indeg = new Map<string, number>();
-    for (const n of nodes) {
-      outAdj.set(n.id, []);
-      inAdj.set(n.id, []);
-      indeg.set(n.id, 0);
-    }
-    for (const e of this.edges()) {
-      if (!ids.has(e.source) || !ids.has(e.target) || e.source === e.target) continue;
-      outAdj.get(e.source)!.push(e.target);
-      inAdj.get(e.target)!.push(e.source);
-      indeg.set(e.target, indeg.get(e.target)! + 1);
-    }
-    // Longest-path ranking (Kahn); cyclic leftovers land on rank 0.
-    const rank = new Map<string, number>();
-    const queue = nodes.filter((n) => indeg.get(n.id) === 0).map((n) => n.id);
-    for (const id of queue) rank.set(id, 0);
-    const deg = new Map(indeg);
-    while (queue.length) {
-      const id = queue.shift()!;
-      for (const m of outAdj.get(id)!) {
-        rank.set(m, Math.max(rank.get(m) ?? 0, rank.get(id)! + 1));
-        deg.set(m, deg.get(m)! - 1);
-        if (deg.get(m) === 0) queue.push(m);
-      }
-    }
-    for (const n of nodes) if (!rank.has(n.id)) rank.set(n.id, 0);
-    // Group per rank, then refine ordering by neighbor barycenter.
-    const maxRank = Math.max(...rank.values());
-    const ranks: string[][] = Array.from({ length: maxRank + 1 }, () => []);
-    for (const n of nodes) ranks[rank.get(n.id)!].push(n.id);
-    const orderIdx = new Map<string, number>();
-    const reindex = () => ranks.forEach((r) => r.forEach((id, i) => orderIdx.set(id, i)));
-    reindex();
-    const bary = (id: string, neigh: string[]) =>
-      neigh.length
-        ? neigh.reduce((acc, m) => acc + (orderIdx.get(m) ?? 0), 0) / neigh.length
-        : (orderIdx.get(id) ?? 0);
-    for (let pass = 0; pass < 2; pass++) {
-      for (let r = 1; r <= maxRank; r++) {
-        ranks[r].sort((a, b) => bary(a, inAdj.get(a)!) - bary(b, inAdj.get(b)!));
-        reindex();
-      }
-      for (let r = maxRank - 1; r >= 0; r--) {
-        ranks[r].sort((a, b) => bary(a, outAdj.get(a)!) - bary(b, outAdj.get(b)!));
-        reindex();
-      }
-    }
-    // Coordinates.
-    const nodeMap = this.nodeMap();
-    const RANK_GAP = 90;
-    const NODE_GAP = 32;
-    const positions = new Map<string, AtmFlowPoint>();
-    let main = 0;
-    for (const r of ranks) {
-      if (!r.length) continue;
-      const sizes = r.map((id) => sizeOf(nodeMap.get(id)!));
-      const rankThickness = Math.max(...sizes.map((s) => (direction === 'LR' ? s.w : s.h)));
-      const crossTotal =
-        sizes.reduce((acc, s) => acc + (direction === 'LR' ? s.h : s.w), 0) + NODE_GAP * (r.length - 1);
-      let cross = -crossTotal / 2;
-      r.forEach((id, i) => {
-        const s = sizes[i];
-        if (direction === 'LR') {
-          positions.set(id, { x: main + (rankThickness - s.w) / 2, y: cross });
-          cross += s.h + NODE_GAP;
-        } else {
-          positions.set(id, { x: cross, y: main + (rankThickness - s.h) / 2 });
-          cross += s.w + NODE_GAP;
-        }
-      });
-      main += rankThickness + RANK_GAP;
-    }
+    const { positions, groupSizes } = computeFlowLayoutWithGroups(
+      nodes,
+      this.edges(),
+      (n) => this.sizeOf(n),
+      direction,
+    );
     this.nodes.update((ns) =>
-      ns.map((n) => (positions.has(n.id) ? { ...n, position: positions.get(n.id)! } : n)),
+      ns.map((n) => {
+        const p = positions.get(n.id);
+        const s = groupSizes.get(n.id);
+        if (!p && !s) return n;
+        return {
+          ...n,
+          ...(p ? { position: p } : {}),
+          ...(s ? { width: s.w, height: s.h } : {}),
+        };
+      }),
     );
     requestAnimationFrame(() => this.fitView());
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Groups                                                            */
+  /* ---------------------------------------------------------------- */
+
+  /**
+   * Creates a group node. With `nodeIds`, the group wraps their bounding box
+   * (with padding) and the nodes become members; without, an empty group is
+   * placed at the viewport center. @returns the new group id.
+   */
+  createGroup(nodeIds: string[] = [], opts: { label?: string; color?: string } = {}): string {
+    const nodeMap = this.nodeMap();
+    const members = nodeIds
+      .map((id) => nodeMap.get(id))
+      .filter((n): n is AtmFlowNode => !!n && !n.group);
+    this.snapshot();
+    const id = atmUid('atm-g');
+    let position: AtmFlowPoint;
+    let width = GROUP_W;
+    let height = GROUP_H;
+    if (members.length) {
+      const PAD = 36;
+      let x0 = Infinity;
+      let y0 = Infinity;
+      let x1 = -Infinity;
+      let y1 = -Infinity;
+      for (const n of members) {
+        const { w, h } = this.sizeOf(n);
+        x0 = Math.min(x0, n.position.x);
+        y0 = Math.min(y0, n.position.y);
+        x1 = Math.max(x1, n.position.x + w);
+        y1 = Math.max(y1, n.position.y + h);
+      }
+      position = { x: x0 - PAD, y: y0 - PAD };
+      width = Math.round(x1 - x0 + PAD * 2);
+      height = Math.round(y1 - y0 + PAD * 2);
+    } else {
+      const r = this.worldRect();
+      position = { x: r.x + r.w / 2 - GROUP_W / 2, y: r.y + r.h / 2 - GROUP_H / 2 };
+    }
+    const memberIds = new Set(members.map((n) => n.id));
+    const group: AtmFlowNode = {
+      id,
+      group: true,
+      label: opts.label ?? 'Grupo',
+      color: opts.color,
+      position,
+      width,
+      height,
+    };
+    this.nodes.update((ns) => [group, ...ns.map((n) => (memberIds.has(n.id) ? { ...n, parentId: id } : n))]);
+    for (const n of members) this.groupChange.emit({ node: { ...n, parentId: id }, group });
+    this.select([id], []);
+    return id;
+  }
+
+  /** Dissolves a group: removes the rectangle, children stay where they are. */
+  ungroup(groupId: string): void {
+    const group = this.nodeMap().get(groupId);
+    if (!group?.group) return;
+    this.snapshot();
+    const freed = this.nodes().filter((n) => n.parentId === groupId);
+    this.nodes.update((ns) =>
+      ns
+        .filter((n) => n.id !== groupId)
+        .map((n) => (n.parentId === groupId ? { ...n, parentId: undefined } : n)),
+    );
+    const nextSel = new Set(this.selectedNodes());
+    nextSel.delete(groupId);
+    this.select([...nextSel], [...this.selectedEdges()]);
+    for (const n of freed) this.groupChange.emit({ node: { ...n, parentId: undefined }, group: null });
+  }
+
+  /** Adds nodes to an existing group (no visual reposition — membership only). */
+  addToGroup(nodeIds: string[], groupId: string): void {
+    const group = this.nodeMap().get(groupId);
+    if (!group?.group) return;
+    const patch = new Map<string, Partial<AtmFlowNode>>();
+    const changed: AtmFlowNode[] = [];
+    for (const id of nodeIds) {
+      const n = this.nodeMap().get(id);
+      if (!n || n.group || n.parentId === groupId) continue;
+      patch.set(id, { parentId: groupId });
+      changed.push(n);
+    }
+    if (!patch.size) return;
+    this.snapshot();
+    this.patchNodes(patch);
+    for (const n of changed) this.groupChange.emit({ node: { ...n, parentId: groupId }, group });
+  }
+
+  /** Removes nodes from whatever group they belong to. */
+  removeFromGroup(nodeIds: string[]): void {
+    const patch = new Map<string, Partial<AtmFlowNode>>();
+    const changed: AtmFlowNode[] = [];
+    for (const id of nodeIds) {
+      const n = this.nodeMap().get(id);
+      if (!n?.parentId) continue;
+      patch.set(id, { parentId: undefined });
+      changed.push(n);
+    }
+    if (!patch.size) return;
+    this.snapshot();
+    this.patchNodes(patch);
+    for (const n of changed) this.groupChange.emit({ node: { ...n, parentId: undefined }, group: null });
+  }
+
+  /** Ids of every node inside a group (recursively, defensive against cycles). */
+  private descendantIds(rootId: string): string[] {
+    const out: string[] = [];
+    const seen = new Set([rootId]);
+    const stack = [rootId];
+    const nodes = this.nodes();
+    while (stack.length) {
+      const id = stack.pop()!;
+      for (const n of nodes) {
+        if (n.parentId === id && !seen.has(n.id)) {
+          seen.add(n.id);
+          out.push(n.id);
+          stack.push(n.id);
+        }
+      }
+    }
+    return out;
+  }
+
+  /** Topmost group whose bounds contain `pt` (excluding dragged ids). */
+  private groupAt(pt: AtmFlowPoint, exclude: { has(id: string): boolean }): AtmFlowNode | null {
+    const nodes = this.nodes();
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      if (!n.group || exclude.has(n.id)) continue;
+      const { w, h } = this.sizeOf(n);
+      if (pt.x >= n.position.x && pt.x <= n.position.x + w && pt.y >= n.position.y && pt.y <= n.position.y + h) {
+        return n;
+      }
+    }
+    return null;
+  }
+
+  /** True when the configured `groupModifier` is held. */
+  private hasGroupModifier(ev: PointerEvent | MouseEvent): boolean {
+    switch (this.groupModifier()) {
+      case 'alt':
+        return ev.altKey;
+      case 'shift':
+        return ev.shiftKey;
+      default:
+        return ev.ctrlKey || ev.metaKey;
+    }
+  }
+
+  /** Highlights the group under the dragged node while the modifier is held. */
+  private trackDropGroup(ev: PointerEvent, node: AtmFlowNode, dragged: Map<string, AtmFlowPoint>): void {
+    if (node.group || !this.hasGroupModifier(ev)) {
+      this.dropGroupId.set(null);
+      return;
+    }
+    const cur = this.nodeMap().get(node.id) ?? node;
+    const { w, h } = this.sizeOf(cur);
+    const g = this.groupAt({ x: cur.position.x + w / 2, y: cur.position.y + h / 2 }, dragged);
+    this.dropGroupId.set(g?.id ?? null);
+  }
+
+  /**
+   * Ctrl+drop: each dragged node joins the group under its center — or leaves
+   * its current group when dropped outside of any.
+   */
+  private applyGroupMembership(dragged: Map<string, AtmFlowPoint>): void {
+    const patch = new Map<string, Partial<AtmFlowNode>>();
+    const events: AtmFlowGroupChange[] = [];
+    for (const id of dragged.keys()) {
+      const n = this.nodeMap().get(id);
+      if (!n || n.group) continue;
+      const { w, h } = this.sizeOf(n);
+      const g = this.groupAt({ x: n.position.x + w / 2, y: n.position.y + h / 2 }, dragged);
+      const next = g?.id;
+      if ((n.parentId ?? null) === (next ?? null)) continue;
+      patch.set(id, { parentId: next });
+      events.push({ node: { ...n, parentId: next }, group: g });
+    }
+    if (!patch.size) return;
+    this.patchNodes(patch);
+    for (const e of events) this.groupChange.emit(e);
+  }
+
+  /**
+   * Grows parent groups so dragged members never visually escape them —
+   * leaving a group is only possible while holding the `groupModifier`.
+   */
+  private fitGroupsAround(dragged: { keys(): IterableIterator<string>; has(id: string): boolean }): void {
+    const nodeMap = this.nodeMap();
+    const PAD = 12;
+    const PAD_TOP = 30; // extra room for the group label
+    const bounds = new Map<string, { x0: number; y0: number; x1: number; y1: number }>();
+    for (const id of dragged.keys()) {
+      const n = nodeMap.get(id);
+      if (!n?.parentId || n.group) continue;
+      // Group moving along with the node → keeps its size.
+      if (dragged.has(n.parentId)) continue;
+      const g = nodeMap.get(n.parentId);
+      if (!g?.group) continue;
+      let b = bounds.get(g.id);
+      if (!b) {
+        const gs = this.sizeOf(g);
+        b = { x0: g.position.x, y0: g.position.y, x1: g.position.x + gs.w, y1: g.position.y + gs.h };
+        bounds.set(g.id, b);
+      }
+      const s = this.sizeOf(n);
+      b.x0 = Math.min(b.x0, n.position.x - PAD);
+      b.y0 = Math.min(b.y0, n.position.y - PAD_TOP);
+      b.x1 = Math.max(b.x1, n.position.x + s.w + PAD);
+      b.y1 = Math.max(b.y1, n.position.y + s.h + PAD);
+    }
+    const patch = new Map<string, Partial<AtmFlowNode>>();
+    for (const [gid, b] of bounds) {
+      const g = nodeMap.get(gid)!;
+      const { w, h } = this.sizeOf(g);
+      const unchanged =
+        Math.abs(b.x0 - g.position.x) < 0.5 &&
+        Math.abs(b.y0 - g.position.y) < 0.5 &&
+        Math.abs(b.x1 - b.x0 - w) < 0.5 &&
+        Math.abs(b.y1 - b.y0 - h) < 0.5;
+      if (unchanged) continue;
+      patch.set(gid, {
+        position: { x: b.x0, y: b.y0 },
+        width: Math.round(b.x1 - b.x0),
+        height: Math.round(b.y1 - b.y0),
+      });
+    }
+    this.patchNodes(patch);
   }
 
   /* ---------------------------------------------------------------- */
@@ -1582,8 +1522,8 @@ export class AtmFlow {
         const dims = this.dims();
         const hit = this.nodes()
           .filter((n) => {
-            const w = n.width ?? dims.get(n.id)?.w ?? NODE_W;
-            const h = n.height ?? dims.get(n.id)?.h ?? NODE_H;
+            const w = n.width ?? dims.get(n.id)?.w ?? (n.group ? GROUP_W : NODE_W);
+            const h = n.height ?? dims.get(n.id)?.h ?? (n.group ? GROUP_H : NODE_H);
             return n.position.x + w >= wx0 && n.position.x <= wx1 && n.position.y + h >= wy0 && n.position.y <= wy1;
           })
           .map((n) => n.id);
@@ -1613,6 +1553,14 @@ export class AtmFlow {
     for (const id of this.selectedNodes()) {
       const n = this.nodeMap().get(id);
       if (n && n.draggable !== false) dragged.set(id, { ...n.position });
+    }
+    // Dragging a group carries every node inside it.
+    for (const id of [...dragged.keys()]) {
+      if (!this.nodeMap().get(id)?.group) continue;
+      for (const childId of this.descendantIds(id)) {
+        const c = this.nodeMap().get(childId);
+        if (c && c.draggable !== false && !dragged.has(childId)) dragged.set(childId, { ...c.position });
+      }
     }
     let moved = false;
     this.beginDrag(
@@ -1656,10 +1604,14 @@ export class AtmFlow {
           patch.set(id, { position: { x: pos.x + dx, y: pos.y + dy } });
         }
         this.patchNodes(patch);
+        this.trackDropGroup(ev, node, dragged);
+        // Without the modifier, members can't escape: the group grows instead.
+        if (!this.hasGroupModifier(ev)) this.fitGroupsAround(dragged);
       },
       (ev) => {
         this.helperX.set(null);
         this.helperY.set(null);
+        this.dropGroupId.set(null);
         if (!moved) {
           if (wasSelected && multi) {
             const next = new Set(this.selectedNodes());
@@ -1668,6 +1620,8 @@ export class AtmFlow {
           }
           this.nodeClick.emit({ node, event: ev });
         } else {
+          if (this.hasGroupModifier(ev)) this.applyGroupMembership(dragged);
+          else this.fitGroupsAround(dragged);
           const nodeMap = this.nodeMap();
           this.nodeDragStop.emit({
             node: nodeMap.get(node.id) ?? node,
@@ -1713,6 +1667,8 @@ export class AtmFlow {
     e.stopPropagation();
     e.preventDefault();
     const start = { x: e.clientX, y: e.clientY, ...this.sizeOf(node) };
+    const minW = node.group ? 120 : 60;
+    const minH = node.group ? 80 : 32;
     let moved = false;
     this.beginDrag((ev) => {
       if (!moved) {
@@ -1720,8 +1676,8 @@ export class AtmFlow {
         this.snapshot();
       }
       const zoom = this.viewport().zoom;
-      let w = Math.max(60, start.w + (ev.clientX - start.x) / zoom);
-      let h = Math.max(32, start.h + (ev.clientY - start.y) / zoom);
+      let w = Math.max(minW, start.w + (ev.clientX - start.x) / zoom);
+      let h = Math.max(minH, start.h + (ev.clientY - start.y) / zoom);
       if (this.snapToGrid()) {
         const g = this.gridSize();
         w = Math.round(w / g) * g;
@@ -1883,6 +1839,8 @@ export class AtmFlow {
     if (!nodeId || nodeId === fixedNodeId) return null;
     const target = this.nodeMap().get(nodeId);
     if (!target || target.connectable === false) return null;
+    // Groups only participate in connections when explicitly connectable.
+    if (target.group && target.connectable !== true) return null;
     // Handles custom do node alvo.
     const custom = this.customHandles().get(nodeId)?.filter((x) => x.type === wanted) ?? [];
     if (custom.length) {
@@ -2098,14 +2056,20 @@ export class AtmFlow {
       const now = Date.now();
       if (now - this.lastNudge > 800) this.snapshot();
       this.lastNudge = now;
+      // Nudging a group carries its members along.
+      const ids = new Set(this.selectedNodes());
+      for (const id of [...ids]) {
+        if (this.nodeMap().get(id)?.group) for (const d of this.descendantIds(id)) ids.add(d);
+      }
       const patch = new Map<string, Partial<AtmFlowNode>>();
-      for (const id of this.selectedNodes()) {
+      for (const id of ids) {
         const n = this.nodeMap().get(id);
         if (n && n.draggable !== false) {
           patch.set(id, { position: { x: n.position.x + dx, y: n.position.y + dy } });
         }
       }
       this.patchNodes(patch);
+      this.fitGroupsAround(ids);
     }
   }
 
@@ -2177,12 +2141,16 @@ export class AtmFlow {
 
   private sizeOf(node: AtmFlowNode): { w: number; h: number } {
     const d = this.dims().get(node.id);
-    return { w: node.width ?? d?.w ?? NODE_W, h: node.height ?? d?.h ?? NODE_H };
+    return {
+      w: node.width ?? d?.w ?? (node.group ? GROUP_W : NODE_W),
+      h: node.height ?? d?.h ?? (node.group ? GROUP_H : NODE_H),
+    };
   }
 
   private handlesOf(node: AtmFlowNode): AtmFlowHandle[] {
     // `handles: []` significa "sem handles default" (ex.: nodes que usam <atm-flow-handle>).
     if (node.handles) return node.handles;
+    if (node.group) return [];
     return this.direction() === 'TB' ? DEFAULT_HANDLES_TB : DEFAULT_HANDLES_LR;
   }
 
@@ -2262,84 +2230,6 @@ export class AtmFlow {
   }
 
   private snapshot(): void {
-    this.past.push(this.cloneState());
-    if (this.past.length > 60) this.past.shift();
-    this.future = [];
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/* atm-flow-handle                                                     */
-/* ------------------------------------------------------------------ */
-
-/**
- * Connection port to be placed **inside a custom node template** — the
- * equivalent of Foundation Flow's `fNodeInput`/`fNodeOutput`. Position it
- * freely with utility classes; edges anchor to its real rendered position.
- *
- * ```html
- * <atm-flow [(nodes)]="nodes" [(edges)]="edges">
- *   <ng-template atmFlowNode="send-message" let-node let-selected="selected">
- *     <node-send-message [nodeId]="node.id" [nodeData]="node.data" [selected]="selected" />
- *   </ng-template>
- * </atm-flow>
- *
- * <!-- dentro do template de node-send-message: -->
- * <div class="relative ...">
- *   ...
- *   <atm-flow-handle type="target" position="left" class="top-1/2 -left-[5px] -translate-y-1/2" />
- *   <atm-flow-handle type="source" id="sent" position="right" class="-right-[5px] bottom-3" />
- * </div>
- * ```
- *
- * Use `handles: []` no node para remover os handles default das bordas.
- */
-@Component({
-  selector: 'atm-flow-handle',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class:
-      'absolute z-10 block size-2.5 rounded-full border-2 border-surface bg-ink-faint transition-transform hover:scale-125 hover:bg-primary',
-    '[class.cursor-crosshair]': '!flow?.locked()',
-    '[class.bg-primary]': 'isCandidate()',
-    '[class.scale-125]': 'isCandidate()',
-    '[attr.data-flow-handle]': 'id() ?? ""',
-    '[attr.data-flow-handle-type]': 'type()',
-    '[attr.data-flow-key]': 'key',
-    '(pointerdown)': 'onPointerDown($event)',
-  },
-  template: '',
-})
-export class AtmFlowNodeHandle {
-  readonly type = input<AtmFlowHandleType>('source');
-  /** Necessário quando o node tem vários handles do mesmo tipo. */
-  readonly id = input<string | undefined>(undefined);
-  /** Lado por onde a edge entra/sai. Inferido da posição no node se omitido. */
-  readonly position = input<AtmFlowHandlePosition | undefined>(undefined);
-  /** Tipo do port — só conecta em ports compatíveis (ver compatibleTypes do atm-flow). */
-  readonly dataType = input<string | undefined>(undefined);
-
-  /** @internal */
-  readonly key = atmUid('atm-fh');
-  protected readonly flow = inject(AtmFlow, { optional: true });
-  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-
-  protected readonly isCandidate = computed(() => this.flow?.candidateKey() === this.key);
-
-  constructor() {
-    afterNextRender(() => this.flow?.registerCustomHandle(this.el, this));
-    // Re-measure when inputs change after registration.
-    effect(() => {
-      this.type();
-      this.id();
-      this.position();
-      this.dataType();
-      untracked(() => this.flow?.refreshCustomHandle(this.el));
-    });
-    inject(DestroyRef).onDestroy(() => this.flow?.unregisterCustomHandle(this.el));
-  }
-
-  protected onPointerDown(e: PointerEvent): void {
-    this.flow?.startCustomConnection(this.el, e);
+    this.history.push(this.cloneState());
   }
 }
