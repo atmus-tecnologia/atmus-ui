@@ -61,6 +61,8 @@ export interface EdgeView {
   sy: number;
   tx: number;
   ty: number;
+  /** Reroute points (edge.points) already rounded for rendering. */
+  waypoints: AtmFlowPoint[];
 }
 
 export interface MarkerDef {

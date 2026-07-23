@@ -186,7 +186,7 @@ const MENU: MenuGroup[] = [
     <div class="flex min-h-screen">
       <!-- Sidebar -->
       <aside
-        class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-line bg-surface
+        class="fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-line bg-surface
           transition-transform duration-300 max-lg:shadow-atm-lg"
         [class.max-lg:-translate-x-full]="!sidebarOpen()"
       >

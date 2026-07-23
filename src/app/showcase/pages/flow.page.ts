@@ -85,7 +85,7 @@ export class NodeSendMessage {
       <demo-section
         id="flow-custom"
         title="Nodes customizados & tipos de edge"
-        description="Use <ng-template atmFlowNode='tipo'> para renderizar qualquer conteúdo dentro do node. Edges suportam bezier, smoothstep, step e straight, com label, cor, tracejado, animação e marcadores. Nodes com resizable ganham alça de redimensionar quando selecionados."
+        description="Use <ng-template atmFlowNode='tipo'> para renderizar qualquer conteúdo dentro do node. Edges suportam bezier, smoothstep, step e straight, com label, cor, tracejado, animação e marcadores. Duplo clique em um edge cria um ponto de reroute (bolinha): arraste para organizar o traçado; Delete ou duplo clique na bolinha remove só o ponto, sem apagar a conexão. Nodes com resizable ganham alça de redimensionar quando selecionados."
         [code]="customCode"
       >
         <atm-flow class="w-full" [(nodes)]="customNodes" [(edges)]="customEdges" [height]="500">
@@ -490,7 +490,8 @@ export class FlowPage {
     { id: 'te1', source: 't1', target: 't5', type: 'bezier', markerEnd: 'arrow' },
     { id: 'te2', source: 't2', target: 't5', type: 'smoothstep', markerEnd: 'dot' },
     { id: 'te3', source: 't3', target: 't5', type: 'step', dashed: true },
-    { id: 'te4', source: 't4', target: 't5', type: 'straight', color: '#8b5cf6' },
+    // points = reroute: o edge passa pelas bolinhas (duplo clique no fio cria uma)
+    { id: 'te4', source: 't4', target: 't5', type: 'straight', color: '#8b5cf6', points: [{ x: 250, y: 480 }] },
   ]);
 
   /* -------------------------- grupos -------------------------- */
@@ -912,6 +913,10 @@ export class FlowPage {
 { id: 'ce3', source: 'c2', target: 'c4', targetHandle: 'a', type: 'smoothstep' }
 { id: 'te1', source: 't1', target: 't5', type: 'bezier', markerEnd: 'arrow' }
 { id: 'te3', source: 't3', target: 't5', type: 'step', dashed: true }
+
+// Pontos de reroute: duplo clique no fio cria; arraste para mover;
+// Delete (ou duplo clique na bolinha) remove só o ponto.
+{ id: 'te4', source: 't4', target: 't5', points: [{ x: 250, y: 480 }] }
 
 // Redimensionável:
 { id: 't5', label: '...', resizable: true, width: 220, height: 70 }`;

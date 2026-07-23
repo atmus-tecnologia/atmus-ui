@@ -90,6 +90,13 @@ export interface AtmFlowEdge<T = any> {
   markerStart?: AtmFlowMarker;
   markerEnd?: AtmFlowMarker;
   deletable?: boolean;
+  /**
+   * Reroute points (waypoints) the edge passes through, in flow coordinates.
+   * Double-click on the wire adds one at that spot; drag the dot to move it;
+   * Delete (or double-click on the dot) removes the point without deleting
+   * the edge itself.
+   */
+  points?: AtmFlowPoint[];
   data?: T;
 }
 

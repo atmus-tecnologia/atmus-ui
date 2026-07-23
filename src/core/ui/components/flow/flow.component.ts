@@ -32,6 +32,7 @@ import {
   SELECTED_COLOR,
   anchorOf,
   bezierPath,
+  closestSegment,
   edgePath,
   f,
 } from './flow-geometry';
@@ -228,6 +229,26 @@ import {
                   stroke-width="1.5"
                   (pointerdown)="onReconnectPointerDown(ev.edge, 'target', $event)"
                 />
+              }
+            }
+          }
+          <!-- Reroute points (waypoints) on selected edges -->
+          @if (!locked()) {
+            @for (ev of edgeViews(); track 'w' + ev.edge.id) {
+              @if (ev.selected && !ev.dimmed) {
+                @for (wp of ev.waypoints; track $index) {
+                  <circle
+                    class="cursor-move"
+                    [attr.cx]="wp.x"
+                    [attr.cy]="wp.y"
+                    [attr.r]="isActiveWaypoint(ev.edge.id, $index) ? 6 : 4.5"
+                    fill="var(--atm-primary)"
+                    stroke="var(--atm-surface)"
+                    [attr.stroke-width]="isActiveWaypoint(ev.edge.id, $index) ? 2 : 1.5"
+                    (pointerdown)="onWaypointPointerDown(ev.edge, $index, $event)"
+                    (dblclick)="onWaypointDblClick(ev.edge, $index, $event)"
+                  />
+                }
               }
             }
           }
@@ -543,6 +564,8 @@ export class AtmFlow {
   protected readonly helperX = signal<number | null>(null);
   protected readonly helperY = signal<number | null>(null);
   protected readonly reconnectingId = signal<string | null>(null);
+  /** Waypoint highlighted after click/insert — Delete removes it (not the edge). */
+  protected readonly activeWaypoint = signal<{ edgeId: string; index: number } | null>(null);
   /** Group highlighted as drop target while dragging a node with Ctrl held. */
   protected readonly dropGroupId = signal<string | null>(null);
 
@@ -732,7 +755,7 @@ export class AtmFlow {
       if (!sn || !tn) continue;
       const s = this.resolveHandle(sn, 'source', edge.sourceHandle);
       const t = this.resolveHandle(tn, 'target', edge.targetHandle);
-      const { d, mid } = edgePath(s.pt, s.pos, t.pt, t.pos, edge.type ?? defType);
+      const { d, mid } = edgePath(s.pt, s.pos, t.pt, t.pos, edge.type ?? defType, edge.points);
       const selected = selE.has(edge.id);
       const color = selected ? SELECTED_COLOR : (edge.color ?? EDGE_COLOR);
       const ms = edge.markerStart ?? 'none';
@@ -754,6 +777,7 @@ export class AtmFlow {
         sy: f(s.pt.y + DIR[s.pos][1] * 11),
         tx: f(t.pt.x + DIR[t.pos][0] * 11),
         ty: f(t.pt.y + DIR[t.pos][1] * 11),
+        waypoints: (edge.points ?? []).map((p) => ({ x: f(p.x), y: f(p.y) })),
       });
     }
     return out;
@@ -1064,6 +1088,39 @@ export class AtmFlow {
     if (!this.nodeMap().has(id)) return;
     this.snapshot();
     this.patchNodes(new Map([[id, patch]]));
+  }
+
+  /**
+   * Inserts a reroute point on the edge, at the segment closest to `pt`
+   * (what the double-click on a wire does). Undo-able.
+   */
+  addWaypoint(edgeId: string, pt: AtmFlowPoint): void {
+    const edge = this.edges().find((e) => e.id === edgeId);
+    if (!edge) return;
+    const sn = this.nodeMap().get(edge.source);
+    const tn = this.nodeMap().get(edge.target);
+    if (!sn || !tn) return;
+    const s = this.resolveHandle(sn, 'source', edge.sourceHandle);
+    const t = this.resolveHandle(tn, 'target', edge.targetHandle);
+    const idx = closestSegment([s.pt, ...(edge.points ?? []), t.pt], pt);
+    this.snapshot();
+    const points = [...(edge.points ?? [])];
+    points.splice(idx, 0, this.snapPoint(pt));
+    this.edges.update((es) => es.map((e) => (e.id === edgeId ? { ...e, points } : e)));
+    this.select([], [edgeId]);
+    this.activeWaypoint.set({ edgeId, index: idx });
+  }
+
+  /** Removes one reroute point of an edge (the edge itself survives). Undo-able. */
+  removeWaypoint(edgeId: string, index: number): void {
+    const edge = this.edges().find((e) => e.id === edgeId);
+    if (!edge?.points || index < 0 || index >= edge.points.length) return;
+    this.snapshot();
+    const points = edge.points.filter((_, i) => i !== index);
+    this.edges.update((es) =>
+      es.map((e) => (e.id === edgeId ? { ...e, points: points.length ? points : undefined } : e)),
+    );
+    this.activeWaypoint.set(null);
   }
 
   selectAll(): void {
@@ -1960,6 +2017,47 @@ export class AtmFlow {
     this.edgeClick.emit({ edge, event: e });
   }
 
+  protected isActiveWaypoint(edgeId: string, index: number): boolean {
+    const wp = this.activeWaypoint();
+    return !!wp && wp.edgeId === edgeId && wp.index === index;
+  }
+
+  protected onWaypointPointerDown(edge: AtmFlowEdge, index: number, e: PointerEvent): void {
+    if (e.button !== 0 || this.locked()) return;
+    e.stopPropagation();
+    e.preventDefault();
+    this.activeWaypoint.set({ edgeId: edge.id, index });
+    const origin = edge.points?.[index];
+    if (!origin) return;
+    const start = { ...origin };
+    const startClient = { x: e.clientX, y: e.clientY };
+    const startFlow = this.screenToFlow(startClient);
+    let moved = false;
+    this.beginDrag((ev) => {
+      if (!moved && Math.hypot(ev.clientX - startClient.x, ev.clientY - startClient.y) < 3) return;
+      if (!moved) {
+        moved = true;
+        this.snapshot();
+      }
+      const pt = this.screenToFlow({ x: ev.clientX, y: ev.clientY });
+      const next = this.snapPoint({ x: start.x + pt.x - startFlow.x, y: start.y + pt.y - startFlow.y });
+      this.edges.update((es) =>
+        es.map((x) => {
+          if (x.id !== edge.id || !x.points) return x;
+          const points = [...x.points];
+          points[index] = next;
+          return { ...x, points };
+        }),
+      );
+    });
+  }
+
+  protected onWaypointDblClick(edge: AtmFlowEdge, index: number, e: MouseEvent): void {
+    e.stopPropagation();
+    if (this.locked()) return;
+    this.removeWaypoint(edge.id, index);
+  }
+
   protected onMinimapPointerDown(e: PointerEvent): void {
     e.preventDefault();
     e.stopPropagation();
@@ -2000,6 +2098,9 @@ export class AtmFlow {
 
   protected onEdgeDblClick(edge: AtmFlowEdge, e: MouseEvent): void {
     e.stopPropagation();
+    if (!this.locked()) {
+      this.addWaypoint(edge.id, this.screenToFlow({ x: e.clientX, y: e.clientY }));
+    }
     this.edgeDoubleClick.emit({ edge, event: e });
   }
 
@@ -2031,6 +2132,8 @@ export class AtmFlow {
     const key = e.key.toLowerCase();
     if (key === 'delete' || key === 'backspace') {
       e.preventDefault();
+      // An active reroute point takes priority: only the point is removed.
+      if (this.removeActiveWaypoint()) return;
       this.deleteSelection();
     } else if (mod && key === 'z' && !e.shiftKey) {
       e.preventDefault();
@@ -2131,7 +2234,28 @@ export class AtmFlow {
     if (same) return;
     this.selectedNodes.set(n);
     this.selectedEdges.set(eSet);
+    const wp = this.activeWaypoint();
+    if (wp && !eSet.has(wp.edgeId)) this.activeWaypoint.set(null);
     this.selectionChange.emit({ nodes: [...n], edges: [...eSet] });
+  }
+
+  /** Deletes the highlighted waypoint. @returns false when there is none. */
+  private removeActiveWaypoint(): boolean {
+    const wp = this.activeWaypoint();
+    if (!wp || this.locked()) return false;
+    const edge = this.edges().find((e) => e.id === wp.edgeId);
+    if (!edge?.points?.[wp.index]) {
+      this.activeWaypoint.set(null);
+      return false;
+    }
+    this.removeWaypoint(wp.edgeId, wp.index);
+    return true;
+  }
+
+  private snapPoint(p: AtmFlowPoint): AtmFlowPoint {
+    if (!this.snapToGrid()) return { x: p.x, y: p.y };
+    const g = this.gridSize();
+    return { x: Math.round(p.x / g) * g, y: Math.round(p.y / g) * g };
   }
 
   private patchNodes(patch: Map<string, Partial<AtmFlowNode>>): void {
