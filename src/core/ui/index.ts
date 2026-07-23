@@ -14,6 +14,7 @@ export * from './services/toast.service';
 export * from './services/dialog.service';
 export * from './services/alert-dialog.service';
 export * from './services/rest.service';
+export * from './services/assistant.service';
 
 // Utils
 export * from './utils/position';
@@ -33,6 +34,7 @@ export * from './components/input/textarea.component';
 export * from './components/input/number-field.component';
 export * from './components/input/search-field.component';
 export * from './components/input/input-otp.component';
+export * from './components/rich-text/rich-text.component';
 export * from './components/file-input/file-input.component';
 export * from './components/image-crop/image-crop.component';
 export * from './components/checkbox/checkbox.component';

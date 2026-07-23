@@ -91,6 +91,17 @@ const MENU: MenuGroup[] = [
     ],
   },
   {
+    label: 'Editor de texto',
+    icon: 'icofont-fountain-pen',
+    items: [
+      { label: 'Rich Text', link: '/editor', fragment: 'rich-text', badge: 'novo' },
+      { label: 'Assistente IA', link: '/editor', fragment: 'rich-text-assistant', badge: 'IA' },
+      { label: 'Highlights', link: '/editor', fragment: 'rich-text-highlights', badge: 'novo' },
+      { label: 'Altura & scroll', link: '/editor', fragment: 'rich-text-scroll' },
+      { label: 'Tamanhos & estados', link: '/editor', fragment: 'rich-text-states' },
+    ],
+  },
+  {
     label: 'Upload',
     icon: 'icofont-cloud-upload',
     items: [
