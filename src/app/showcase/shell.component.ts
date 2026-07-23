@@ -155,6 +155,7 @@ const MENU: MenuGroup[] = [
       { label: 'Dynamic Dialog', link: '/overlays', fragment: 'dynamic-dialog', badge: 'novo' },
       { label: 'AlertDialog', link: '/overlays', fragment: 'alert-dialog' },
       { label: 'Drawer', link: '/overlays', fragment: 'drawer' },
+      { label: 'Drawer em container', link: '/overlays', fragment: 'drawer-in-container', badge: 'novo' },
       { label: 'Popover', link: '/overlays', fragment: 'popover' },
       { label: 'Tooltip', link: '/overlays', fragment: 'tooltip' },
       { label: 'Toast', link: '/overlays', fragment: 'toast' },

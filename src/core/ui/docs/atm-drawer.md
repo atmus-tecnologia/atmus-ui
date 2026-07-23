@@ -21,9 +21,18 @@ Slide-in panel:  <atm-drawer [(open)]="showDrawer" header="Filters" position="r
 | Name | Type | Required | Default |
 | --- | --- | --- | --- |
 | `header` | string | no | '' |
+| `description` | string | no | '' |
 | `position` | AtmDrawerPosition | no | 'right' |
 | `size` | string | no | '24rem' |
+| `width` | string | no | '32rem' |
+| `container` | 'viewport' \| 'parent' | no | 'viewport' |
 | `dismissable` | boolean | no | true |
+
+Notes:
+- `size` = largura (left/right) ou altura (top/bottom).
+- `width` só vale para top/bottom: o sheet fica centralizado; use `'100%'` para ocupar a borda toda.
+- `container="parent"` ancora o drawer no ancestral posicionado mais próximo (ex.: dentro de um `atm-modal`) em vez da viewport.
+- Entrada e saída animam com slide na direção da borda; Escape fecha quando `dismissable`.
 
 ## Outputs
 
