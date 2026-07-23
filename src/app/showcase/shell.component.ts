@@ -184,6 +184,16 @@ const MENU: MenuGroup[] = [
     ],
   },
   {
+    label: 'Áudio',
+    icon: 'icofont-mic',
+    items: [
+      { label: 'Player com URL', link: '/audio', fragment: 'audio-url', badge: 'novo' },
+      { label: 'Três estilos', link: '/audio', fragment: 'audio-styles', badge: 'novo' },
+      { label: 'Gravador (mic)', link: '/audio', fragment: 'audio-recorder', badge: 'novo' },
+      { label: 'Cores & tamanhos', link: '/audio', fragment: 'audio-colors', badge: 'novo' },
+    ],
+  },
+  {
     label: 'Cores',
     icon: 'icofont-color-picker',
     items: [

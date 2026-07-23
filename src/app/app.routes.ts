@@ -20,6 +20,7 @@ export const routes: Routes = [
       { path: 'data', loadComponent: () => import('./showcase/pages/data.page').then((m) => m.DataPage) },
       { path: 'charts', loadComponent: () => import('./showcase/pages/charts.page').then((m) => m.ChartsPage) },
       { path: 'flow', loadComponent: () => import('./showcase/pages/flow.page').then((m) => m.FlowPage) },
+      { path: 'audio', loadComponent: () => import('./showcase/pages/audio.page').then((m) => m.AudioPage) },
       { path: 'colors', loadComponent: () => import('./showcase/pages/colors.page').then((m) => m.ColorsPage) },
     ],
   },

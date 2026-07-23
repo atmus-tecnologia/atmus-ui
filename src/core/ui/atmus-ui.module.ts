@@ -71,6 +71,7 @@ import {
   AtmColorSwatchPicker,
 } from './components/color/color.components';
 import { AtmChart } from './components/chart/chart.component';
+import { AtmAudioVisualizer } from './components/audio-visualizer/audio-visualizer.component';
 import { AtmFlow } from './components/flow/flow.component';
 import { AtmFlowNodeHandle } from './components/flow/flow-handle.component';
 import { AtmFlowNodeDef } from './components/flow/flow-node-def.directive';
@@ -146,6 +147,7 @@ const COMPONENTS = [
   AtmColorSwatchPicker,
   AtmColorField,
   AtmChart,
+  AtmAudioVisualizer,
   AtmFlow,
   AtmFlowNodeDef,
   AtmFlowNodeHandle,
