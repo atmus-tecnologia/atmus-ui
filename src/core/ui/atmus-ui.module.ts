@@ -58,6 +58,7 @@ import { AtmToggleButton, AtmToggleButtonGroup } from './components/toggle/toggl
 import { AtmTagGroup } from './components/tag-group/tag-group.component';
 import { AtmTags } from './components/tags/tags.component';
 import { AtmToolbar } from './components/toolbar/toolbar.component';
+import { AtmActionBar } from './components/action-bar/action-bar.component';
 import {
   AtmKbd,
   AtmLink,
@@ -144,6 +145,7 @@ const COMPONENTS = [
   AtmTagGroup,
   AtmTags,
   AtmToolbar,
+  AtmActionBar,
   AtmSeparator,
   AtmKbd,
   AtmLink,

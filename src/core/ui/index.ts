@@ -75,6 +75,7 @@ export * from './components/toggle/toggle-button.component';
 export * from './components/tag-group/tag-group.component';
 export * from './components/tags/tags.component';
 export * from './components/toolbar/toolbar.component';
+export * from './components/action-bar/action-bar.component';
 export * from './components/misc/misc.components';
 export * from './components/calendar/calendar.component';
 export * from './components/datepicker/date-presets';

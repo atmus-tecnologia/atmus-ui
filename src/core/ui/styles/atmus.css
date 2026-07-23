@@ -135,6 +135,7 @@
   --animate-atm-fade: atm-fade 0.15s ease-out;
   --animate-atm-pop: atm-pop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-atm-slide-up: atm-slide-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-atm-slide-down: atm-slide-down 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ------------------------------------------------------------------ */
@@ -272,6 +273,16 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+@keyframes atm-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @keyframes atm-slide-up {

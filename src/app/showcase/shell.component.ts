@@ -193,6 +193,7 @@ const MENU: MenuGroup[] = [
       { label: 'Pagination', link: '/data', fragment: 'pagination' },
       { label: 'Breadcrumbs', link: '/data', fragment: 'breadcrumbs' },
       { label: 'Toolbar', link: '/data', fragment: 'toolbar' },
+      { label: 'ActionBar', link: '/data', fragment: 'action-bar', badge: 'novo' },
       { label: 'Typography', link: '/display', fragment: 'typography' },
       { label: 'Kbd & Link', link: '/display', fragment: 'misc' },
       { label: 'Separator', link: '/display', fragment: 'separator' },

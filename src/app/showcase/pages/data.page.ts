@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
+  AtmActionBar,
   AtmBreadcrumbs,
   AtmButton,
   AtmPagination,
@@ -44,6 +45,7 @@ const USERS: User[] = [
   selector: 'data-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AtmActionBar,
     AtmTable,
     AtmPagination,
     AtmBreadcrumbs,
@@ -184,6 +186,59 @@ const USERS: User[] = [
           </div>
         </atm-toolbar>
       </demo-section>
+
+      <demo-section
+        id="action-bar"
+        title="ActionBar"
+        description="Barra flutuante de ações contextuais. Aparece centralizada embaixo (ou em cima, via position) da tela — ou do container com container='parent'. count mostra o total selecionado; o X e a tecla Esc emitem (closed)."
+        [code]="actionBarCode"
+      >
+        <div class="relative w-full pb-20">
+          <atm-table
+            [columns]="columns"
+            [rows]="users.slice(0, 6)"
+            [selectable]="true"
+            [(selection)]="barSelection"
+          />
+          <atm-action-bar
+            container="parent"
+            [open]="barSelection().length > 0"
+            [count]="barSelection().length"
+            (closed)="barSelection.set([])"
+          >
+            <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
+            <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
+            <atm-button size="slim" variant="ghost" color="neutral" icon="box">Arquivar</atm-button>
+            <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+          </atm-action-bar>
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="action-bar-viewport"
+        title="ActionBar — Tela inteira"
+        description="Sem container='parent' a barra fica fixa na viewport (padrão). position controla a borda: bottom ou top."
+        [code]="actionBarViewportCode"
+      >
+        <div class="flex gap-2">
+          <atm-button size="slim" variant="outline" color="neutral" (clicked)="viewportBar.set('bottom')">
+            Mostrar embaixo
+          </atm-button>
+          <atm-button size="slim" variant="outline" color="neutral" (clicked)="viewportBar.set('top')">
+            Mostrar em cima
+          </atm-button>
+        </div>
+        <atm-action-bar
+          [open]="viewportBar() !== null"
+          [position]="viewportBar() ?? 'bottom'"
+          [count]="3"
+          (closed)="viewportBar.set(null)"
+        >
+          <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
+          <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
+          <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+        </atm-action-bar>
+      </demo-section>
     </demo-page>
   `,
 })
@@ -195,6 +250,8 @@ export class DataPage {
   readonly tableLoading = signal(false);
   readonly users = USERS;
   readonly selection = signal<User[]>([]);
+  readonly barSelection = signal<User[]>([]);
+  readonly viewportBar = signal<'bottom' | 'top' | null>(null);
 
   readonly columns: AtmTableColumn<User>[] = [
     { key: 'id', header: '#', sortable: true, width: '60px' },
@@ -372,6 +429,31 @@ export class UsersService extends AtmRestService<User> {
     { label: 'Usuários' },
   ]"
 />`;
+
+  readonly actionBarCode = `<!-- container='parent': posiciona dentro do container mais próximo com position: relative -->
+<div class="relative">
+  <atm-table [columns]="columns" [rows]="users" [selectable]="true" [(selection)]="selection" />
+
+  <atm-action-bar
+    container="parent"
+    [open]="selection().length > 0"
+    [count]="selection().length"
+    (closed)="selection.set([])"
+  >
+    <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
+    <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
+    <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+  </atm-action-bar>
+</div>`;
+
+  readonly actionBarViewportCode = `<!-- padrão: fixa na viewport, centralizada embaixo -->
+<atm-action-bar [open]="open()" position="top" [count]="3" (closed)="open.set(false)">
+  <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
+  <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+</atm-action-bar>
+
+<!-- inputs: open, position (bottom|top), container (viewport|parent),
+     size (large|medium|slim), count, showClose, ariaLabel · output: closed -->`;
 
   readonly toolbarCode = `<atm-toolbar>
   <div start><atm-button size="slim" icon="plus">Novo</atm-button></div>

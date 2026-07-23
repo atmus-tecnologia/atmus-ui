@@ -45,12 +45,18 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       <demo-section
         id="color-field"
         title="ColorField / ColorPicker"
-        description="Hex digitável + seletor nativo no swatch."
+        description="Hex digitável + popup próprio com cores sugeridas, área de saturação/brilho e slider de matiz."
         [code]="fieldCode"
       >
-        <div class="w-full max-w-xs">
-          <atm-label>Cor da marca</atm-label>
-          <atm-color-field [(ngModel)]="brandColor" />
+        <div class="flex w-full max-w-xs flex-col gap-4">
+          <div>
+            <atm-label>Cor da marca</atm-label>
+            <atm-color-field [(ngModel)]="brandColor" />
+          </div>
+          <div>
+            <atm-label>Sem sugestões</atm-label>
+            <atm-color-field [(ngModel)]="brandColor" [presets]="[]" size="slim" />
+          </div>
         </div>
       </demo-section>
 
@@ -88,7 +94,9 @@ export class ColorsPage {
 
   readonly pickerCode = `<atm-color-swatch-picker [colors]="['#ef4444', '#6366f1', ...]" [(ngModel)]="color" />`;
 
-  readonly fieldCode = `<atm-color-field [(ngModel)]="brandColor" />`;
+  readonly fieldCode = `<atm-color-field [(ngModel)]="brandColor" />
+<!-- presets customizados ou [] para esconder a linha de sugestões -->
+<atm-color-field [(ngModel)]="brandColor" [presets]="['#1655BA', '#4DD186']" />`;
 
   readonly tokensCode = `:root {
   --atm-primary: #6366f1;
