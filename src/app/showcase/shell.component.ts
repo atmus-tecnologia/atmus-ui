@@ -76,6 +76,7 @@ const MENU: MenuGroup[] = [
       { label: 'ListBox', link: '/selects', fragment: 'listbox' },
       { label: 'Autocomplete', link: '/selects', fragment: 'autocomplete' },
       { label: 'Tags', link: '/selects', fragment: 'tags' },
+      { label: 'ComboBox User', link: '/selects', fragment: 'combobox-user', badge: 'novo' },
       { label: 'Dropdown', link: '/dropdowns', fragment: 'dropdown' },
       { label: 'ContextMenu', link: '/dropdowns', fragment: 'context-menu', badge: 'novo' },
       { label: 'Dropdown Remote', link: '/dropdowns', fragment: 'dropdown-remote', badge: 'API' },

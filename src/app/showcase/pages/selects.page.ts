@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import {
   AtmAutocomplete,
+  AtmComboboxUser,
+  AtmComboboxUserOption,
   AtmLabel,
   AtmListbox,
   AtmSelect,
@@ -17,6 +19,14 @@ interface Tech {
   name: string;
 }
 
+interface DemoUser {
+  id: number;
+  name: string;
+  email: string;
+  photo?: string;
+  role: { name: string };
+}
+
 @Component({
   selector: 'selects-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +36,7 @@ interface Tech {
     AtmListbox,
     AtmAutocomplete,
     AtmTags,
+    AtmComboboxUser,
     AtmLabel,
     DemoPage,
     DemoSection,
@@ -120,6 +131,43 @@ interface Tech {
           </div>
         </div>
       </demo-section>
+
+      <demo-section
+        id="combobox-user"
+        title="ComboBox User"
+        description="Variante do combobox para pessoas: opções com avatar (foto ou iniciais), abas geradas por um path do objeto (groupBy) e modo single ou multiselect — no multi a seleção vira chips com a foto. Use [tabs] para nomear/ordenar as abas."
+        [code]="comboboxUserCode"
+      >
+        <div class="grid w-full gap-4 sm:grid-cols-2">
+          <div>
+            <atm-label>Responsável (single, abas por role.name)</atm-label>
+            <atm-combobox-user
+              [options]="userOptions"
+              [(ngModel)]="owner"
+              [compareWith]="compareUserById"
+              groupBy="role.name"
+              placeholder="Selecione um responsável..."
+            />
+          </div>
+          <div>
+            <atm-label>Participantes (multiple + abas nomeadas)</atm-label>
+            <atm-combobox-user
+              [options]="userOptions"
+              [multiple]="true"
+              [(ngModel)]="members"
+              [compareWith]="compareUserById"
+              groupBy="role.name"
+              [tabs]="userTabs"
+              allTabLabel="Todo mundo"
+              placeholder="Pesquise pessoas..."
+              [hasActionButton]="true"
+              actionButtonLabel="Convidar pessoa"
+              (actionClick)="toast.info('Ação!', 'Abriria um modal de convite aqui.')"
+            />
+            <span class="mt-1 block text-xs text-ink-muted">valor: {{ membersJson() }}</span>
+          </div>
+        </div>
+      </demo-section>
     </demo-page>
   `,
 })
@@ -149,6 +197,41 @@ export class SelectsPage {
 
   techsJson(): string {
     return JSON.stringify(this.techs());
+  }
+
+  /** Usuários como viriam do backend (role aninhado para o groupBy). */
+  readonly users: DemoUser[] = [
+    { id: 1, name: 'Ana Souza', email: 'ana@atmus.dev', photo: 'https://i.pravatar.cc/64?img=1', role: { name: 'Design' } },
+    { id: 2, name: 'Bruno Lima', email: 'bruno@atmus.dev', photo: 'https://i.pravatar.cc/64?img=12', role: { name: 'Engenharia' } },
+    { id: 3, name: 'Carla Mendes', email: 'carla@atmus.dev', role: { name: 'Engenharia' } },
+    { id: 4, name: 'Diego Rocha', email: 'diego@atmus.dev', photo: 'https://i.pravatar.cc/64?img=14', role: { name: 'Produto' } },
+    { id: 5, name: 'Elisa Prado', email: 'elisa@atmus.dev', photo: 'https://i.pravatar.cc/64?img=5', role: { name: 'Design' } },
+    { id: 6, name: 'Fábio Nunes', email: 'fabio@atmus.dev', role: { name: 'Produto' } },
+    { id: 7, name: 'Gabriela Reis', email: 'gabi@atmus.dev', photo: 'https://i.pravatar.cc/64?img=9', role: { name: 'Engenharia' } },
+  ];
+
+  readonly userOptions: AtmComboboxUserOption<DemoUser>[] = this.users.map((u) => ({
+    label: u.name,
+    value: u,
+    avatar: u.photo,
+    description: u.email,
+  }));
+
+  /** Abas explícitas: nome próprio + valor casado com o path do groupBy. */
+  readonly userTabs = [
+    { label: 'Devs', value: 'Engenharia' },
+    { label: 'Designers', value: 'Design' },
+    { label: 'PMs', value: 'Produto' },
+  ];
+
+  readonly owner = signal<DemoUser | null>(null);
+  readonly members = signal<DemoUser[]>([this.users[1]]);
+
+  readonly compareUserById = (a: unknown, b: unknown) =>
+    a === b || (a as DemoUser)?.id === (b as DemoUser)?.id;
+
+  membersJson(): string {
+    return JSON.stringify(this.members().map((u) => u.id));
   }
 
   readonly statusOptions: AtmSelectOption[] = [
@@ -199,4 +282,38 @@ compareById = (a: unknown, b: unknown) => (a as Tech)?.id === (b as Tech)?.id;
 
 <!-- texto livre vira tag (string por padrão; customize com [createTag]) -->
 <atm-tags [options]="techOptions" [allowCustom]="true" [maxTags]="6" [(ngModel)]="freeTags" />`;
+
+  readonly comboboxUserCode = `// opções com avatar; value pode ser o objeto inteiro do backend
+userOptions: AtmComboboxUserOption<User>[] = users.map((u) => ({
+  label: u.name,
+  value: u,
+  avatar: u.photo,       // sem foto → iniciais com cor determinística
+  description: u.email,
+}));
+
+<!-- abas geradas automaticamente pelos valores distintos do path -->
+<atm-combobox-user
+  [options]="userOptions"
+  [(ngModel)]="owner"
+  [compareWith]="compareById"
+  groupBy="role.name"
+/>
+
+<!-- multiselect (chips com foto) + abas com nome customizado -->
+<atm-combobox-user
+  [options]="userOptions"
+  [multiple]="true"
+  [(ngModel)]="members"
+  [compareWith]="compareById"
+  groupBy="role.name"
+  [tabs]="[
+    { label: 'Devs', value: 'Engenharia' },
+    { label: 'Designers', value: 'Design' },
+    { label: 'PMs', value: 'Produto' },
+  ]"
+  allTabLabel="Todo mundo"
+  [hasActionButton]="true"
+  actionButtonLabel="Convidar pessoa"
+  (actionClick)="openInviteModal()"
+/>`;
 }

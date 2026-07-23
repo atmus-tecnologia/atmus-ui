@@ -43,6 +43,7 @@ export * from './components/slider/slider.component';
 export * from './components/select/select.component';
 export * from './components/listbox/listbox.component';
 export * from './components/autocomplete/autocomplete.component';
+export * from './components/combobox-user/combobox-user.component';
 export * from './components/dropdown/dropdown.component';
 export * from './components/dropdown/dropdown-remote.component';
 export * from './components/context-menu/context-menu.component';
