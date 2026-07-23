@@ -67,6 +67,7 @@ import {
   AtmColorSwatch,
   AtmColorSwatchPicker,
 } from './components/color/color.components';
+import { AtmChart } from './components/chart/chart.component';
 
 const COMPONENTS = [
   AtmIcon,
@@ -133,6 +134,7 @@ const COMPONENTS = [
   AtmColorSwatch,
   AtmColorSwatchPicker,
   AtmColorField,
+  AtmChart,
 ];
 
 /**

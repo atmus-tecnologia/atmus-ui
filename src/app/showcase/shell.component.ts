@@ -132,6 +132,26 @@ const MENU: MenuGroup[] = [
     ],
   },
   {
+    label: 'Gráficos',
+    icon: 'icofont-chart-bar-graph',
+    items: [
+      { label: 'Linhas & Área', link: '/charts', fragment: 'chart-line', badge: 'novo' },
+      { label: 'Colunas & Barras', link: '/charts', fragment: 'chart-bar' },
+      { label: 'Empilhado', link: '/charts', fragment: 'chart-bar-stacked' },
+      { label: 'Misto', link: '/charts', fragment: 'chart-mixed' },
+      { label: 'Range Bar', link: '/charts', fragment: 'chart-range', badge: 'novo' },
+      { label: 'Scatter', link: '/charts', fragment: 'chart-scatter', badge: 'novo' },
+      { label: 'Colunas de pontos', link: '/charts', fragment: 'chart-dots', badge: 'novo' },
+      { label: 'Progresso segmentado', link: '/charts', fragment: 'chart-segments', badge: 'novo' },
+      { label: 'Pie & Donut', link: '/charts', fragment: 'chart-pie' },
+      { label: 'Radar', link: '/charts', fragment: 'chart-radar' },
+      { label: 'Radial & Gauge', link: '/charts', fragment: 'chart-radial', badge: 'novo' },
+      { label: 'Funnel', link: '/charts', fragment: 'chart-funnel', badge: 'novo' },
+      { label: 'Sparklines', link: '/charts', fragment: 'chart-sparkline' },
+      { label: 'Configurações', link: '/charts', fragment: 'chart-config' },
+    ],
+  },
+  {
     label: 'Cores',
     icon: 'icofont-color-picker',
     items: [

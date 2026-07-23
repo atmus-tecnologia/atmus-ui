@@ -17,6 +17,7 @@ export const routes: Routes = [
       { path: 'feedback', loadComponent: () => import('./showcase/pages/feedback.page').then((m) => m.FeedbackPage) },
       { path: 'display', loadComponent: () => import('./showcase/pages/display.page').then((m) => m.DisplayPage) },
       { path: 'data', loadComponent: () => import('./showcase/pages/data.page').then((m) => m.DataPage) },
+      { path: 'charts', loadComponent: () => import('./showcase/pages/charts.page').then((m) => m.ChartsPage) },
       { path: 'colors', loadComponent: () => import('./showcase/pages/colors.page').then((m) => m.ColorsPage) },
     ],
   },
