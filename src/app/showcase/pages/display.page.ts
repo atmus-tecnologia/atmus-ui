@@ -10,6 +10,7 @@ import {
   AtmChip,
   AtmKbd,
   AtmLink,
+  AtmQrcode,
   AtmScrollShadow,
   AtmSeparator,
   AtmSurface,
@@ -36,6 +37,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     AtmTypography,
     AtmKbd,
     AtmLink,
+    AtmQrcode,
     AtmSeparator,
     AtmScrollShadow,
     AtmButton,
@@ -82,6 +84,51 @@ import { DemoPage, DemoSection } from '../demo-section.component';
         }
         <atm-chip color="success" size="large">Large</atm-chip>
         <atm-chip size="slim">Slim</atm-chip>
+      </demo-section>
+
+      <demo-section
+        id="qrcode"
+        title="QRCode"
+        description="Encoder embutido (sem dependências). Tamanho em px, cores customizadas e três estilos de pontos: square, rounded e dots."
+        [code]="qrcodeCode"
+      >
+        <div class="flex w-full flex-wrap items-center justify-center gap-8">
+          <atm-qrcode value="https://atmus.dev" [size]="120" />
+          <atm-qrcode value="https://atmus.dev" [size]="120" dotStyle="rounded" color="#7c3aed" />
+          <atm-qrcode value="https://atmus.dev" [size]="120" dotStyle="dots" color="#0891b2" />
+          <atm-qrcode
+            value="https://atmus.dev"
+            [size]="120"
+            color="#ffffff"
+            background="#312e81"
+          />
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="qrcode-custom"
+        title="QRCode — Logo & moldura"
+        description="Logo central (correção de erro sobe para H automaticamente) e moldura decorativa nos 4 cantos via [frame]. logoSize, logoPadding e frameColor ajustam o visual."
+        [code]="qrcodeCustomCode"
+      >
+        <div class="flex w-full flex-wrap items-center justify-center gap-10">
+          <atm-qrcode
+            value="https://atmus.dev/components"
+            [size]="180"
+            dotStyle="rounded"
+            color="#7c3aed"
+            [logo]="qrLogo"
+            [frame]="true"
+          />
+          <atm-qrcode
+            value="https://atmus.dev/components"
+            [size]="180"
+            [logo]="qrLogo"
+            [logoSize]="0.26"
+            [frame]="true"
+            frameColor="#0891b2"
+          />
+        </div>
       </demo-section>
 
       <demo-section id="card" title="Card" [code]="cardCode">
@@ -259,6 +306,31 @@ export class DisplayPage {
   readonly chipCode = `<atm-chip color="primary" icon="tag" [removable]="true" (removed)="remove(tag)">
   {{ tag }}
 </atm-chip>`;
+
+  /** Logo de exemplo (SVG inline — em produção use a URL da sua marca). */
+  readonly qrLogo =
+    'data:image/svg+xml,' +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#7c3aed"/><text x="24" y="33" font-family="Arial, sans-serif" font-size="26" font-weight="900" fill="#fff" text-anchor="middle">A</text></svg>`,
+    );
+
+  readonly qrcodeCode = `<atm-qrcode value="https://atmus.dev" [size]="120" />
+<atm-qrcode value="..." dotStyle="rounded" color="#7c3aed" />
+<atm-qrcode value="..." dotStyle="dots" color="#0891b2" />
+<atm-qrcode value="..." color="#ffffff" background="#312e81" />`;
+
+  readonly qrcodeCustomCode = `<atm-qrcode
+  value="https://atmus.dev/components"
+  [size]="180"
+  dotStyle="rounded"
+  color="#7c3aed"
+  [logo]="logoUrl"
+  [logoSize]="0.22"
+  [frame]="true"
+  frameColor="#0891b2"
+/>
+
+<!-- Exportar: viewChild + qr.download('qrcode.png') ou qr.toDataUrl() -->`;
 
   readonly cardCode = `<atm-card header="Título" subheader="Descrição" [hoverable]="true">
   conteúdo

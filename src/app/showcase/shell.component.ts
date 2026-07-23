@@ -180,6 +180,8 @@ const MENU: MenuGroup[] = [
       { label: 'Avatar múltiplo', link: '/display', fragment: 'avatar-group', badge: 'novo' },
       { label: 'Badge', link: '/display', fragment: 'badge' },
       { label: 'Chip', link: '/display', fragment: 'chip' },
+      { label: 'QRCode', link: '/display', fragment: 'qrcode', badge: 'novo' },
+      { label: 'QRCode — Logo & moldura', link: '/display', fragment: 'qrcode-custom', badge: 'novo' },
       { label: 'Card', link: '/display', fragment: 'card' },
       { label: 'Surface', link: '/display', fragment: 'surface' },
       { label: 'Accordion', link: '/display', fragment: 'accordion' },
