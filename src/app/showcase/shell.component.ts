@@ -126,6 +126,7 @@ const MENU: MenuGroup[] = [
     icon: 'icofont-eye-alt',
     items: [
       { label: 'Avatar', link: '/display', fragment: 'avatar' },
+      { label: 'Avatar múltiplo', link: '/display', fragment: 'avatar-group', badge: 'novo' },
       { label: 'Badge', link: '/display', fragment: 'badge' },
       { label: 'Chip', link: '/display', fragment: 'chip' },
       { label: 'Card', link: '/display', fragment: 'card' },

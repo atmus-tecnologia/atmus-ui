@@ -3,6 +3,7 @@ import {
   AtmAccordion,
   AtmAccordionItem,
   AtmAvatar,
+  AtmAvatarGroup,
   AtmBadge,
   AtmButton,
   AtmCard,
@@ -23,6 +24,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AtmAvatar,
+    AtmAvatarGroup,
     AtmBadge,
     AtmChip,
     AtmCard,
@@ -52,6 +54,16 @@ import { DemoPage, DemoSection } from '../demo-section.component';
         <atm-avatar size="slim" name="Carla Dias" />
         <atm-avatar name="Retrato" src="https://i.pravatar.cc/80?img=5" status="away" />
         <atm-avatar name="Quadrado" [square]="true" />
+      </demo-section>
+
+      <demo-section
+        id="avatar-group"
+        title="Avatar múltiplo"
+        description="Lista empilhada com limite visível e bolha +N. Use tooltipKey para o texto do hover."
+        [code]="avatarGroupCode"
+      >
+        <atm-avatar-group [items]="team" [max]="4" tooltipKey="name" />
+        <atm-avatar-group [items]="team" [max]="3" size="slim" tooltipKey="name" />
       </demo-section>
 
       <demo-section id="badge" title="Badge" [code]="badgeCode">
@@ -221,6 +233,24 @@ export class DisplayPage {
   readonly avatarCode = `<atm-avatar size="large" name="Ana Souza" status="online" />
 <atm-avatar name="Retrato" src="https://..." />
 <atm-avatar name="Quadrado" [square]="true" />`;
+
+  readonly team = [
+    { name: 'Ana Souza', src: 'https://i.pravatar.cc/80?img=1' },
+    { name: 'Bruno Costa', src: 'https://i.pravatar.cc/80?img=3' },
+    { name: 'Carla Dias', src: 'https://i.pravatar.cc/80?img=5' },
+    { name: 'Diego Melo', src: 'https://i.pravatar.cc/80?img=8' },
+    { name: 'Elena Reis' },
+    { name: 'Fábio Nunes' },
+    { name: 'Gabi Rocha' },
+    { name: 'Hugo Lima' },
+    { name: 'Iris Prado' },
+    { name: 'João Alves' },
+  ];
+
+  readonly avatarGroupCode = `<atm-avatar-group [items]="team" [max]="4" tooltipKey="name" />
+
+// team: { name: string; src?: string }[]
+// srcKey / nameKey / tooltipKey aceitam caminhos aninhados (ex.: "user.name")`;
 
   readonly badgeCode = `<atm-badge color="success" [dot]="true">Ativo</atm-badge>
 <atm-badge color="danger" variant="solid">9+</atm-badge>

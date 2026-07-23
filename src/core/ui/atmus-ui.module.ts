@@ -39,6 +39,7 @@ import { AtmToastContainer } from './components/toast/toast-container.component'
 import { AtmBadge } from './components/badge/badge.component';
 import { AtmChip } from './components/chip/chip.component';
 import { AtmAvatar } from './components/avatar/avatar.component';
+import { AtmAvatarGroup } from './components/avatar/avatar-group.component';
 import { AtmAlert } from './components/alert/alert.component';
 import { AtmCard } from './components/card/card.component';
 import { AtmSurface } from './components/surface/surface.component';
@@ -117,6 +118,7 @@ const COMPONENTS = [
   AtmBadge,
   AtmChip,
   AtmAvatar,
+  AtmAvatarGroup,
   AtmAlert,
   AtmCard,
   AtmSurface,

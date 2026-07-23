@@ -55,6 +55,7 @@ export * from './components/toast/toast-container.component';
 export * from './components/badge/badge.component';
 export * from './components/chip/chip.component';
 export * from './components/avatar/avatar.component';
+export * from './components/avatar/avatar-group.component';
 export * from './components/alert/alert.component';
 export * from './components/card/card.component';
 export * from './components/surface/surface.component';

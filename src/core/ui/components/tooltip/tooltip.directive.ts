@@ -106,7 +106,7 @@ export class AtmTooltip implements OnDestroy {
 
   readonly atmTooltip = input('');
   readonly tooltipPlacement = input<AtmTooltipPlacement>('top');
-  readonly tooltipDelay = input(150);
+  readonly tooltipDelay = input(0);
 
   private panelRef: ReturnType<typeof createComponent<AtmTooltipPanel>> | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
