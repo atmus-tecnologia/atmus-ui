@@ -1,59 +1,63 @@
-# AtmusUi
+# Atmus UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.32.
+Biblioteca de componentes Angular (standalone, signals, OnPush) com Tailwind CSS 4 e IcoFont, feita para ser **copiada entre projetos**: toda a lib vive em `src/core/ui`.
 
-## Development server
-
-To start a local development server, run:
+## Rodando o showcase
 
 ```bash
-ng serve
+npm install
+npm start
+# http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O app principal é uma vitrine com todos os componentes, exemplos e código de uso, separados por menu.
 
-## Code scaffolding
+## Usando em outro projeto
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Copie a pasta `src/core/ui` para o novo projeto.
+2. Instale as dependências de estilo:
+   ```bash
+   npm install tailwindcss @tailwindcss/postcss postcss @icon/icofont
+   ```
+   E crie o `.postcssrc.json`:
+   ```json
+   { "plugins": { "@tailwindcss/postcss": {} } }
+   ```
+3. No `styles.css` global:
+   ```css
+   @import '@icon/icofont/icofont.css';
+   @import 'tailwindcss';
+   @import './core/ui/styles/atmus.css';
+   ```
+4. No `app.config.ts`:
+   ```ts
+   import { provideAtmusUi } from './core/ui';
 
-```bash
-ng generate component component-name
-```
+   providers: [
+     provideHttpClient(withFetch()),
+     provideAtmusUi({
+       theme: 'system', // 'light' | 'dark' | 'system'
+       serverUrl: environment.serverUrl, // usado pelo atm-dropdown-remote
+     }),
+   ]
+   ```
+5. Importe os componentes individualmente (tree-shaking) ou o `AtmusUiModule` inteiro.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Padrões
 
-```bash
-ng generate --help
-```
+- **Prefixo**: `atm-` em todos os seletores.
+- **Tamanhos**: todo componente aceita `[size]="'large' | 'medium' | 'slim'"` (h-12 / h-10 / h-8).
+- **Tema**: cores definidas como tokens CSS em `:root` (`--atm-primary`, `--atm-surface`, ...) — o dark mode troca os tokens pela classe `.dark` no `<html>` (gerenciada pelo `AtmThemeService`).
+- **Forms**: campos implementam ControlValueAccessor (funcionam com `ngModel` e Reactive Forms).
+- **Overlays**: dropdowns/popovers/pickers detectam o espaço na viewport e abrem para cima quando necessário.
 
-## Building
+## Destaques
 
-To build the project run:
+- `atm-dropdown-remote` — dropdown alimentado por API (padrão nest-paginator): passe um service que estenda `AtmRestService`, busca server-side com debounce, máx. 10 registros por página, `[hasActionButton]` para o botão de "adicionar novo" no footer.
+- `AtmDialogService` — dynamic dialog estilo PrimeNG: `dialog.open(MeuComponente, { header, width, data })` retorna ref com `onClose`. Todo modal tem botão de expandir para 90% da viewport.
+- `AtmAlertDialogService` — confirmações por Promise: `await alertDialog.confirm({...})`.
+- `AtmToastService` — toasts com severidades (`<atm-toast-container />` uma vez no App).
 
-```bash
-ng build
-```
+## Criando novos componentes
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Use a skill do Cursor em `.cursor/skills/atmus-component/SKILL.md` — ela descreve o design system, as classes utilitárias compartilhadas e as receitas (campo de formulário, overlay, componente remoto).

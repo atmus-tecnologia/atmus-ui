@@ -1,0 +1,339 @@
+/* =========================================================================
+   Atmus UI — Design tokens, dark theme and shared component styles.
+   This file lives inside src/core/ui so the whole library can be copied
+   to another project as a single folder. Import it from your styles.css:
+
+     @import 'tailwindcss';
+     @import './core/ui/styles/atmus.css';
+   ========================================================================= */
+
+/* Dark mode is class-based: AtmThemeService toggles `.dark` on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Theme tokens                                                        */
+/* ------------------------------------------------------------------ */
+:root {
+  /* Brand */
+  --atm-primary: #6366f1;
+  --atm-primary-hover: #4f46e5;
+  --atm-primary-active: #4338ca;
+  --atm-primary-soft: #eef2ff;
+  --atm-primary-contrast: #ffffff;
+
+  /* Status */
+  --atm-success: #10b981;
+  --atm-success-soft: #ecfdf5;
+  --atm-warning: #f59e0b;
+  --atm-warning-soft: #fffbeb;
+  --atm-danger: #ef4444;
+  --atm-danger-soft: #fef2f2;
+  --atm-info: #0ea5e9;
+  --atm-info-soft: #f0f9ff;
+
+  /* Surfaces */
+  --atm-bg: #f8fafc;
+  --atm-surface: #ffffff;
+  --atm-surface-alt: #f1f5f9;
+  --atm-surface-raised: #ffffff;
+
+  /* Lines & text */
+  --atm-line: #e2e8f0;
+  --atm-line-strong: #cbd5e1;
+  --atm-ink: #0f172a;
+  --atm-ink-muted: #64748b;
+  --atm-ink-faint: #94a3b8;
+
+  /* Shape */
+  --atm-radius: 0.625rem;
+  --atm-radius-lg: 1rem;
+
+  /* Effects */
+  --atm-ring: color-mix(in srgb, var(--atm-primary) 35%, transparent);
+  --atm-overlay: rgb(15 23 42 / 0.55);
+  --atm-shadow:
+    0 1px 2px rgb(15 23 42 / 0.06),
+    0 4px 12px rgb(15 23 42 / 0.08);
+  --atm-shadow-lg:
+    0 8px 20px rgb(15 23 42 / 0.1),
+    0 20px 48px rgb(15 23 42 / 0.14);
+}
+
+.dark {
+  --atm-primary: #818cf8;
+  --atm-primary-hover: #6d78f6;
+  --atm-primary-active: #6366f1;
+  --atm-primary-soft: rgb(99 102 241 / 0.16);
+  --atm-primary-contrast: #0f172a;
+
+  --atm-success: #34d399;
+  --atm-success-soft: rgb(16 185 129 / 0.14);
+  --atm-warning: #fbbf24;
+  --atm-warning-soft: rgb(245 158 11 / 0.14);
+  --atm-danger: #f87171;
+  --atm-danger-soft: rgb(239 68 68 / 0.14);
+  --atm-info: #38bdf8;
+  --atm-info-soft: rgb(14 165 233 / 0.14);
+
+  --atm-bg: #020617;
+  --atm-surface: #0f172a;
+  --atm-surface-alt: #1e293b;
+  --atm-surface-raised: #16213b;
+
+  --atm-line: #1e293b;
+  --atm-line-strong: #334155;
+  --atm-ink: #f1f5f9;
+  --atm-ink-muted: #94a3b8;
+  --atm-ink-faint: #64748b;
+
+  --atm-overlay: rgb(2 6 23 / 0.7);
+  --atm-shadow:
+    0 1px 2px rgb(0 0 0 / 0.4),
+    0 4px 12px rgb(0 0 0 / 0.45);
+  --atm-shadow-lg:
+    0 8px 20px rgb(0 0 0 / 0.5),
+    0 20px 48px rgb(0 0 0 / 0.55);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme mapping — enables utility classes such as            */
+/* bg-primary, text-ink, border-line, bg-surface, rounded-atm...       */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-primary: var(--atm-primary);
+  --color-primary-hover: var(--atm-primary-hover);
+  --color-primary-active: var(--atm-primary-active);
+  --color-primary-soft: var(--atm-primary-soft);
+  --color-primary-contrast: var(--atm-primary-contrast);
+
+  --color-success: var(--atm-success);
+  --color-success-soft: var(--atm-success-soft);
+  --color-warning: var(--atm-warning);
+  --color-warning-soft: var(--atm-warning-soft);
+  --color-danger: var(--atm-danger);
+  --color-danger-soft: var(--atm-danger-soft);
+  --color-info: var(--atm-info);
+  --color-info-soft: var(--atm-info-soft);
+
+  --color-app: var(--atm-bg);
+  --color-surface: var(--atm-surface);
+  --color-surface-alt: var(--atm-surface-alt);
+  --color-surface-raised: var(--atm-surface-raised);
+
+  --color-line: var(--atm-line);
+  --color-line-strong: var(--atm-line-strong);
+  --color-ink: var(--atm-ink);
+  --color-ink-muted: var(--atm-ink-muted);
+  --color-ink-faint: var(--atm-ink-faint);
+
+  --radius-atm: var(--atm-radius);
+  --radius-atm-lg: var(--atm-radius-lg);
+
+  --shadow-atm: var(--atm-shadow);
+  --shadow-atm-lg: var(--atm-shadow-lg);
+
+  --animate-atm-fade: atm-fade 0.15s ease-out;
+  --animate-atm-pop: atm-pop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-atm-slide-up: atm-slide-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+/* IcoFont ships the font-family only on the `.icofont` base class; the
+   `.icofont-*` classes carry just the glyph content. Apply the font to any
+   icofont-* class so `<i class="icofont-star">` works without the base class. */
+[class^='icofont-'],
+[class*=' icofont-'] {
+  font-family: 'icofont' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-app text-ink;
+    font-family:
+      'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Neutralize the browser autofill highlight (Chrome/Edge/Safari) so
+     autofilled fields keep the theme surface color in light and dark. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--atm-surface) inset;
+    -webkit-text-fill-color: var(--atm-ink);
+    caret-color: var(--atm-ink);
+    transition: background-color 9999s ease-out 0s;
+  }
+  input:autofill {
+    box-shadow: 0 0 0 1000px var(--atm-surface) inset;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--atm-primary) 25%, transparent);
+  }
+
+  /* Slim, theme-aware scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--atm-line-strong) transparent;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared component helpers                                            */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Consistent focus ring used by every interactive Atmus control */
+  .atm-focus {
+    @apply outline-none;
+  }
+  .atm-focus:focus-visible {
+    box-shadow: 0 0 0 3px var(--atm-ring);
+    border-color: var(--atm-primary);
+  }
+
+  /* Field shell shared by inputs / selects / triggers */
+  .atm-field {
+    @apply w-full rounded-atm border border-line bg-surface text-ink
+      transition-[border-color,box-shadow,background-color] duration-200 outline-none;
+  }
+  .atm-field:hover:not(:disabled):not(.atm-field--disabled) {
+    @apply border-line-strong;
+  }
+  .atm-field:focus-within,
+  .atm-field:focus {
+    border-color: var(--atm-primary) !important;
+    box-shadow: 0 0 0 3px var(--atm-ring);
+  }
+  .atm-field--invalid {
+    border-color: var(--atm-danger) !important;
+  }
+  .atm-field--invalid:focus-within,
+  .atm-field--invalid:focus {
+    border-color: var(--atm-danger) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--atm-danger) 30%, transparent);
+  }
+  .atm-field--disabled,
+  .atm-field:disabled {
+    @apply cursor-not-allowed bg-surface-alt opacity-60;
+  }
+
+  /* Floating panel (dropdowns, popovers, menus, pickers) */
+  .atm-panel {
+    @apply rounded-atm border border-line bg-surface-raised shadow-atm-lg;
+  }
+
+  /* Interactive option row inside panels */
+  .atm-option {
+    @apply flex w-full cursor-pointer items-center gap-2 rounded-[calc(var(--atm-radius)-4px)]
+      px-2.5 text-left text-sm text-ink transition-colors duration-100 outline-none select-none;
+  }
+  .atm-option:hover,
+  .atm-option--active {
+    @apply bg-surface-alt;
+  }
+  .atm-option--selected {
+    @apply bg-primary-soft font-medium text-primary;
+  }
+  .atm-option--disabled {
+    @apply pointer-events-none opacity-45;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Animations                                                          */
+/* ------------------------------------------------------------------ */
+@keyframes atm-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes atm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes atm-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes atm-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes atm-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes atm-progress-slide {
+  0% {
+    margin-left: -33%;
+  }
+  100% {
+    margin-left: 100%;
+  }
+}
+@keyframes atm-drawer-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes atm-drawer-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes atm-drawer-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes atm-drawer-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

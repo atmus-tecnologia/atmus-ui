@@ -1,0 +1,287 @@
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  AtmAccordion,
+  AtmAccordionItem,
+  AtmAvatar,
+  AtmBadge,
+  AtmButton,
+  AtmCard,
+  AtmChip,
+  AtmKbd,
+  AtmLink,
+  AtmScrollShadow,
+  AtmSeparator,
+  AtmSurface,
+  AtmTab,
+  AtmTabs,
+  AtmTypography,
+} from '../../../core/ui';
+import { DemoPage, DemoSection } from '../demo-section.component';
+
+@Component({
+  selector: 'display-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AtmAvatar,
+    AtmBadge,
+    AtmChip,
+    AtmCard,
+    AtmSurface,
+    AtmAccordion,
+    AtmAccordionItem,
+    AtmTabs,
+    AtmTab,
+    AtmTypography,
+    AtmKbd,
+    AtmLink,
+    AtmSeparator,
+    AtmScrollShadow,
+    AtmButton,
+    DemoPage,
+    DemoSection,
+  ],
+  template: `
+    <demo-page
+      title="Exibição"
+      description="Componentes de apresentação de conteúdo."
+      importCode="import { AtmAvatar, AtmBadge, AtmChip, AtmCard, AtmAccordion, AtmTabs, ... } from 'src/core/ui';"
+    >
+      <demo-section id="avatar" title="Avatar" description="Iniciais com cor determinística pelo nome." [code]="avatarCode">
+        <atm-avatar size="large" name="Ana Souza" status="online" />
+        <atm-avatar name="Bruno Costa" status="busy" />
+        <atm-avatar size="slim" name="Carla Dias" />
+        <atm-avatar name="Retrato" src="https://i.pravatar.cc/80?img=5" status="away" />
+        <atm-avatar name="Quadrado" [square]="true" />
+      </demo-section>
+
+      <demo-section id="badge" title="Badge" [code]="badgeCode">
+        <atm-badge>Padrão</atm-badge>
+        <atm-badge color="success" [dot]="true">Ativo</atm-badge>
+        <atm-badge color="danger" variant="solid">9+</atm-badge>
+        <atm-badge color="warning" variant="outline">Pendente</atm-badge>
+        <atm-badge color="neutral" size="slim">slim</atm-badge>
+      </demo-section>
+
+      <demo-section id="chip" title="Chip" [code]="chipCode">
+        @for (tag of chips(); track tag) {
+          <atm-chip color="primary" icon="tag" [removable]="true" (removed)="removeChip(tag)">
+            {{ tag }}
+          </atm-chip>
+        }
+        <atm-chip color="success" size="large">Large</atm-chip>
+        <atm-chip size="slim">Slim</atm-chip>
+      </demo-section>
+
+      <demo-section id="card" title="Card" [code]="cardCode">
+        <div class="grid w-full gap-4 sm:grid-cols-2">
+          <atm-card header="Título do card" subheader="Descrição de apoio">
+            <p class="text-sm text-ink-muted">Conteúdo do card com padding padrão.</p>
+            <div footer class="flex justify-end">
+              <atm-button size="slim" variant="soft">Ação</atm-button>
+            </div>
+          </atm-card>
+          <atm-card header="Hoverable" subheader="Passe o mouse" [hoverable]="true">
+            <p class="text-sm text-ink-muted">Elevação suave ao passar o mouse.</p>
+          </atm-card>
+        </div>
+      </demo-section>
+
+      <demo-section id="surface" title="Surface" [code]="surfaceCode">
+        <div class="grid w-full gap-4 sm:grid-cols-3">
+          <atm-surface><span class="text-sm">default</span></atm-surface>
+          <atm-surface variant="alt"><span class="text-sm">alt</span></atm-surface>
+          <atm-surface variant="raised"><span class="text-sm">raised</span></atm-surface>
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="accordion"
+        title="Accordion / Disclosure"
+        description="Exclusivo por padrão; [multiple]=true permite vários abertos."
+        [code]="accordionCode"
+      >
+        <atm-accordion class="w-full">
+          <atm-accordion-item header="O que é o Atmus UI?" [expanded]="true">
+            Uma biblioteca de componentes Angular pensada para ser copiada entre projetos.
+          </atm-accordion-item>
+          <atm-accordion-item header="Como funciona o tema escuro?">
+            A classe .dark no html troca os tokens CSS; os componentes não precisam saber de nada.
+          </atm-accordion-item>
+          <atm-accordion-item header="Posso customizar as cores?" icon="paint">
+            Sim — basta sobrescrever as variáveis --atm-* no :root do seu projeto.
+          </atm-accordion-item>
+        </atm-accordion>
+      </demo-section>
+
+      <demo-section id="tabs" title="Tabs" description="Conteúdo lazy — só a tab ativa renderiza." [code]="tabsCode">
+        <div class="w-full">
+          <atm-tabs>
+            <atm-tab label="Geral" icon="gear">
+              <p class="text-sm text-ink-muted">Configurações gerais do sistema.</p>
+            </atm-tab>
+            <atm-tab label="Notificações" icon="notification" [badge]="3">
+              <p class="text-sm text-ink-muted">Preferências de notificação.</p>
+            </atm-tab>
+            <atm-tab label="Bloqueada" [disabled]="true">
+              <p class="text-sm text-ink-muted">Nunca renderiza.</p>
+            </atm-tab>
+          </atm-tabs>
+          <div class="mt-6">
+            <atm-tabs variant="pill">
+              <atm-tab label="Pill 1"><p class="text-sm text-ink-muted">Variante pill.</p></atm-tab>
+              <atm-tab label="Pill 2"><p class="text-sm text-ink-muted">Conteúdo 2.</p></atm-tab>
+            </atm-tabs>
+          </div>
+          <div class="mt-6">
+            <atm-tabs variant="segmented">
+              <atm-tab label="Ativa"><p class="text-sm text-ink-muted">Variante segmented — trilho arredondado.</p></atm-tab>
+              <atm-tab label="Desabilitada" [disabled]="true"><p class="text-sm text-ink-muted">Nunca renderiza.</p></atm-tab>
+              <atm-tab label="Disponível"><p class="text-sm text-ink-muted">Esta tab também está disponível.</p></atm-tab>
+            </atm-tabs>
+          </div>
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="tabs-overflow"
+        title="Tabs — Overflow"
+        description="Quando as tabs excedem a largura disponível, chevrons de rolagem com bordas esmaecidas aparecem automaticamente (em qualquer variante). Setas do teclado também navegam."
+        [code]="tabsOverflowCode"
+      >
+        <div class="flex w-full flex-col gap-6">
+          <div class="max-w-[420px]">
+            <atm-tabs variant="segmented">
+              @for (item of overflowTabs; track item) {
+                <atm-tab [label]="item">
+                  <p class="text-sm text-ink-muted">Conteúdo do painel {{ item }}.</p>
+                </atm-tab>
+              }
+            </atm-tabs>
+          </div>
+          <div class="max-w-[420px]">
+            <atm-tabs variant="line">
+              @for (item of overflowTabs; track item) {
+                <atm-tab [label]="item">
+                  <p class="text-sm text-ink-muted">Conteúdo do painel {{ item }}.</p>
+                </atm-tab>
+              }
+            </atm-tabs>
+          </div>
+        </div>
+      </demo-section>
+
+      <demo-section id="typography" title="Typography" [code]="typographyCode">
+        <div class="flex w-full flex-col gap-2">
+          <atm-typography variant="h1">Heading 1</atm-typography>
+          <atm-typography variant="h3">Heading 3</atm-typography>
+          <atm-typography variant="body">Texto de corpo padrão para parágrafos.</atm-typography>
+          <atm-typography variant="muted">Texto secundário muted.</atm-typography>
+          <atm-typography variant="code">const x = 'inline code';</atm-typography>
+        </div>
+      </demo-section>
+
+      <demo-section id="misc" title="Kbd & Link" [code]="miscCode">
+        <span class="flex items-center gap-1 text-sm text-ink-muted">
+          Pressione <atm-kbd>Ctrl</atm-kbd> + <atm-kbd>K</atm-kbd> para buscar
+        </span>
+        <atm-separator [vertical]="true" />
+        <atm-link href="https://angular.dev" [external]="true">Documentação Angular</atm-link>
+      </demo-section>
+
+      <demo-section id="separator" title="Separator" [code]="separatorCode">
+        <div class="flex w-full flex-col gap-4">
+          <atm-separator />
+          <atm-separator label="ou" />
+        </div>
+      </demo-section>
+
+      <demo-section
+        id="scroll-shadow"
+        title="ScrollShadow"
+        description="Máscara de gradiente indica conteúdo rolável."
+        [code]="scrollCode"
+      >
+        <atm-scroll-shadow maxHeight="10rem" class="w-full max-w-sm">
+          @for (i of lines; track i) {
+            <p class="py-1.5 text-sm text-ink-muted">Linha de conteúdo {{ i }}</p>
+          }
+        </atm-scroll-shadow>
+      </demo-section>
+    </demo-page>
+  `,
+})
+export class DisplayPage {
+  readonly chips = signal(['design', 'frontend']);
+  readonly lines = Array.from({ length: 20 }, (_, i) => i + 1);
+
+  removeChip(tag: string): void {
+    this.chips.update((list) => list.filter((t) => t !== tag));
+  }
+
+  readonly avatarCode = `<atm-avatar size="large" name="Ana Souza" status="online" />
+<atm-avatar name="Retrato" src="https://..." />
+<atm-avatar name="Quadrado" [square]="true" />`;
+
+  readonly badgeCode = `<atm-badge color="success" [dot]="true">Ativo</atm-badge>
+<atm-badge color="danger" variant="solid">9+</atm-badge>
+<atm-badge color="warning" variant="outline">Pendente</atm-badge>`;
+
+  readonly chipCode = `<atm-chip color="primary" icon="tag" [removable]="true" (removed)="remove(tag)">
+  {{ tag }}
+</atm-chip>`;
+
+  readonly cardCode = `<atm-card header="Título" subheader="Descrição" [hoverable]="true">
+  conteúdo
+  <div footer>ações</div>
+</atm-card>`;
+
+  readonly surfaceCode = `<atm-surface variant="alt">conteúdo</atm-surface>`;
+
+  readonly accordionCode = `<atm-accordion [multiple]="false">
+  <atm-accordion-item header="Pergunta 1" [expanded]="true">Resposta 1</atm-accordion-item>
+  <atm-accordion-item header="Pergunta 2">Resposta 2</atm-accordion-item>
+</atm-accordion>`;
+
+  readonly tabsCode = `<!-- variant: line | pill | enclosed | segmented -->
+<atm-tabs variant="line">
+  <atm-tab label="Geral" icon="gear">...</atm-tab>
+  <atm-tab label="Notificações" [badge]="3">...</atm-tab>
+</atm-tabs>
+
+<atm-tabs variant="segmented">
+  <atm-tab label="Ativa">...</atm-tab>
+  <atm-tab label="Desabilitada" [disabled]="true">...</atm-tab>
+</atm-tabs>`;
+
+  readonly overflowTabs = [
+    'Visão geral',
+    'Analytics',
+    'Relatórios',
+    'Performance',
+    'Integrações',
+    'Faturamento',
+    'Equipe',
+    'Configurações',
+  ];
+
+  readonly tabsOverflowCode = `<!-- Overflow automático: basta limitar a largura do container -->
+<div class="max-w-[420px]">
+  <atm-tabs variant="segmented">
+    @for (item of items; track item) {
+      <atm-tab [label]="item">...</atm-tab>
+    }
+  </atm-tabs>
+</div>`;
+
+  readonly typographyCode = `<atm-typography variant="h1">Heading 1</atm-typography>
+<atm-typography variant="muted">Texto secundário</atm-typography>`;
+
+  readonly miscCode = `<atm-kbd>Ctrl</atm-kbd> + <atm-kbd>K</atm-kbd>
+<atm-link href="https://angular.dev" [external]="true">Docs</atm-link>`;
+
+  readonly separatorCode = `<atm-separator />
+<atm-separator label="ou" />
+<atm-separator [vertical]="true" />`;
+
+  readonly scrollCode = `<atm-scroll-shadow maxHeight="10rem">conteúdo longo...</atm-scroll-shadow>`;
+}
