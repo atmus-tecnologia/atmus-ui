@@ -19,6 +19,12 @@ export interface AtmFlowHandle {
   position: AtmFlowHandlePosition;
   /** 0..1 offset along the side (default 0.5 = centered). */
   offset?: number;
+  /**
+   * Port data type. When both source and target declare one, they must be
+   * compatible (equal, or allowed by the flow-level `compatibleTypes` map) —
+   * otherwise the connection is silently rejected and `connectInvalid` fires.
+   */
+  dataType?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,6 +152,18 @@ export interface AtmFlowReconnectEvent {
 export interface AtmFlowDeleteEvent {
   nodes: AtmFlowNode[];
   edges: AtmFlowEdge[];
+}
+
+/** Why a dropped connection was rejected. */
+export type AtmFlowInvalidReason = 'type-mismatch' | 'duplicate' | 'cycle' | 'validator' | 'invalid';
+
+/** Emitted when the user drops a connection on a handle/node but it is rejected. */
+export interface AtmFlowConnectInvalid {
+  connection: AtmFlowConnection;
+  reason: AtmFlowInvalidReason;
+  /** dataType of the source/target ports (when declared). */
+  sourceType?: string;
+  targetType?: string;
 }
 
 export type AtmFlowLayoutDirection = 'LR' | 'TB';

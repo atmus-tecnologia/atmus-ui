@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal, viewChild } from '@angular/core';
 import {
   AtmButton,
   AtmFlow,
@@ -7,15 +7,59 @@ import {
   AtmFlowEdge,
   AtmFlowNode,
   AtmFlowNodeDef,
+  AtmFlowNodeHandle,
   AtmToastService,
   atmUid,
 } from '../../../core/ui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
+/**
+ * Exemplo de node 100% componentizado — recebe id/data como inputs e
+ * posiciona os próprios <atm-flow-handle> (input à esquerda, dois outputs
+ * nomeados à direita), como o fNodeInput/fNodeOutput da Foundation Flow.
+ */
+@Component({
+  selector: 'node-send-message',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AtmFlowNodeHandle],
+  host: { class: 'block' },
+  template: `
+    <div
+      class="relative w-64 rounded-atm-lg border bg-surface shadow-sm transition-shadow"
+      [class]="selected() ? 'border-primary ring-2 ring-[var(--atm-ring)]' : 'border-line'"
+    >
+      <div class="flex items-center gap-2.5 border-b border-line px-3 py-2.5">
+        <span class="flex size-8 items-center justify-center rounded-lg bg-[#6366f1] text-base text-white">
+          <i class="icofont-speech-comments" aria-hidden="true"></i>
+        </span>
+        <div class="min-w-0">
+          <p class="text-[13px] leading-tight font-semibold text-ink">Enviar Mensagem</p>
+          <p class="text-[10px] leading-tight text-ink-faint">#{{ nodeId() }}</p>
+        </div>
+      </div>
+      <p class="px-3 py-2.5 text-xs leading-snug text-ink-muted">{{ nodeData().message }}</p>
+      <div class="flex flex-col items-end gap-1.5 border-t border-line px-3 py-2 text-[10px] font-medium">
+        <span class="text-success">enviado ✓</span>
+        <span class="text-danger">erro ✕</span>
+      </div>
+
+      <!-- Ports: input à esquerda, outputs nomeados alinhados aos rótulos -->
+      <atm-flow-handle type="target" position="left" class="top-1/2 -left-[5px] -translate-y-1/2" />
+      <atm-flow-handle type="source" id="sent" position="right" class="-right-[5px] bottom-[26px]" />
+      <atm-flow-handle type="source" id="error" position="right" class="-right-[5px] bottom-[8px]" />
+    </div>
+  `,
+})
+export class NodeSendMessage {
+  readonly nodeId = input.required<string>();
+  readonly nodeData = input.required<{ message: string }>();
+  readonly selected = input(false);
+}
+
 @Component({
   selector: 'flow-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AtmFlow, AtmFlowNodeDef, AtmButton, DemoPage, DemoSection],
+  imports: [AtmFlow, AtmFlowNodeDef, AtmButton, DemoPage, DemoSection, NodeSendMessage],
   template: `
     <demo-page
       title="Flow"
@@ -71,6 +115,41 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             </div>
           </ng-template>
         </atm-flow>
+      </demo-section>
+
+      <demo-section
+        id="flow-component-nodes"
+        title="Node como componente próprio"
+        description="Crie um componente Angular normal (ex.: <node-send-message>) e use-o no template do node. Dentro dele, posicione <atm-flow-handle> onde quiser — são os ports de conexão (como fNodeInput/fNodeOutput): input à esquerda e dois outputs nomeados (sent/error) alinhados aos rótulos. Use handles: [] no node para remover os pontos default das bordas."
+        [code]="componentNodesCode"
+      >
+        <atm-flow
+          class="w-full"
+          [(nodes)]="componentNodes"
+          [(edges)]="componentEdges"
+          [height]="420"
+          defaultEdgeType="smoothstep"
+        >
+          <ng-template atmFlowNode="send-message" let-node let-selected="selected">
+            <node-send-message [nodeId]="node.id" [nodeData]="node.data" [selected]="selected" />
+          </ng-template>
+        </atm-flow>
+      </demo-section>
+
+      <demo-section
+        id="flow-types"
+        title="Tipos de conexão (ports tipados)"
+        description="Handles podem declarar um dataType: output 'text' só conecta em input 'text', 'number' com 'number' — tipos diferentes simplesmente não conectam (a linha fica vermelha) e o evento connectInvalid é emitido com o motivo. O mapa compatibleTypes permite exceções: aqui, 'text' e 'number' também são aceitos pelo input 'any' do node Log."
+        [code]="typedCode"
+      >
+        <atm-flow
+          class="w-full"
+          [(nodes)]="typedNodes"
+          [(edges)]="typedEdges"
+          [height]="400"
+          [compatibleTypes]="{ text: ['text', 'any'], number: ['number', 'any'] }"
+          (connectInvalid)="onConnectInvalid($event)"
+        />
       </demo-section>
 
       <demo-section
@@ -182,6 +261,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             (edgeDoubleClick)="log('edgeDoubleClick', $event.edge.id)"
             (edgeReconnect)="log('edgeReconnect', $event.previous.target + ' → ' + $event.edge.target)"
             (connect)="log('connect', $event.source + ' → ' + $event.target)"
+            (connectInvalid)="log('connectInvalid', $event.reason)"
             (paneClick)="log('paneClick', 'x ' + round($event.x) + ', y ' + round($event.y))"
             (selectionChange)="log('selectionChange', $event.nodes.length + ' nodes, ' + $event.edges.length + ' edges')"
             (deleted)="log('deleted', $event.nodes.length + ' nodes, ' + $event.edges.length + ' edges')"
@@ -371,6 +451,105 @@ export class FlowPage {
     { id: 'te3', source: 't3', target: 't5', type: 'step', dashed: true },
     { id: 'te4', source: 't4', target: 't5', type: 'straight', color: '#8b5cf6' },
   ]);
+
+  /* ------------------- node componentizado -------------------- */
+
+  readonly componentNodes = signal<AtmFlowNode[]>([
+    {
+      id: 'cn-trigger',
+      label: 'Gatilho: novo lead',
+      icon: 'icofont-flash',
+      color: 'var(--atm-primary)',
+      position: { x: 0, y: 150 },
+    },
+    {
+      id: 'cn-msg',
+      type: 'send-message',
+      position: { x: 280, y: 70 },
+      handles: [],
+      data: { message: 'Olá {{nome}}! Bem-vindo à Atmus. Como posso te ajudar hoje?' },
+    },
+    {
+      id: 'cn-next',
+      label: 'Próximo passo',
+      icon: 'icofont-check-circled',
+      color: 'var(--atm-success)',
+      position: { x: 660, y: 90 },
+    },
+    {
+      id: 'cn-err',
+      label: 'Tratar falha',
+      icon: 'icofont-warning',
+      color: 'var(--atm-danger)',
+      position: { x: 660, y: 250 },
+    },
+  ]);
+
+  readonly componentEdges = signal<AtmFlowEdge[]>([
+    { id: 'cne1', source: 'cn-trigger', target: 'cn-msg', animated: true },
+    { id: 'cne2', source: 'cn-msg', sourceHandle: 'sent', target: 'cn-next', color: 'var(--atm-success)' },
+    { id: 'cne3', source: 'cn-msg', sourceHandle: 'error', target: 'cn-err', color: 'var(--atm-danger)', dashed: true },
+  ]);
+
+  /* --------------------- ports tipados ------------------------ */
+
+  readonly typedNodes = signal<AtmFlowNode[]>([
+    {
+      id: 'ty-text',
+      label: 'Origem: texto',
+      icon: 'icofont-file-text',
+      color: 'var(--atm-info)',
+      position: { x: 0, y: 40 },
+      handles: [{ type: 'source', position: 'right', dataType: 'text' }],
+    },
+    {
+      id: 'ty-num',
+      label: 'Origem: número',
+      icon: 'icofont-calculator',
+      color: 'var(--atm-warning)',
+      position: { x: 0, y: 220 },
+      handles: [{ type: 'source', position: 'right', dataType: 'number' }],
+    },
+    {
+      id: 'ty-upper',
+      label: 'Uppercase — aceita texto',
+      color: 'var(--atm-info)',
+      position: { x: 340, y: 0 },
+      handles: [
+        { type: 'target', position: 'left', dataType: 'text' },
+        { type: 'source', position: 'right', dataType: 'text' },
+      ],
+    },
+    {
+      id: 'ty-sum',
+      label: 'Somar — aceita número',
+      color: 'var(--atm-warning)',
+      position: { x: 340, y: 130 },
+      handles: [
+        { type: 'target', position: 'left', dataType: 'number' },
+        { type: 'source', position: 'right', dataType: 'number' },
+      ],
+    },
+    {
+      id: 'ty-log',
+      label: 'Log — aceita qualquer (any)',
+      icon: 'icofont-eye-alt',
+      position: { x: 340, y: 260 },
+      handles: [{ type: 'target', position: 'left', dataType: 'any' }],
+    },
+  ]);
+
+  readonly typedEdges = signal<AtmFlowEdge[]>([
+    { id: 'tye1', source: 'ty-text', target: 'ty-upper', color: 'var(--atm-info)' },
+  ]);
+
+  onConnectInvalid(e: { reason: string; sourceType?: string; targetType?: string }): void {
+    if (e.reason === 'type-mismatch') {
+      this.toast.warning(`Tipos incompatíveis: ${e.sourceType} → ${e.targetType}`, 'Conexão rejeitada');
+    } else {
+      this.toast.warning(`Motivo: ${e.reason}`, 'Conexão rejeitada');
+    }
+  }
 
   /* ----------------------- interações ------------------------ */
 
@@ -628,6 +807,72 @@ export class FlowPage {
 
 // Redimensionável:
 { id: 't5', label: '...', resizable: true, width: 220, height: 70 }`;
+
+  readonly componentNodesCode = `<!-- 1. Seu componente de node: um componente Angular comum -->
+@Component({
+  selector: 'node-send-message',
+  imports: [AtmFlowNodeHandle],
+  template: \`
+    <div class="relative w-64 rounded-atm-lg border bg-surface"
+         [class]="selected() ? 'border-primary' : 'border-line'">
+      <!-- ...header, corpo, rótulos... -->
+
+      <!-- 2. Ports de conexão posicionados livremente (como fNodeInput/fNodeOutput) -->
+      <atm-flow-handle type="target" position="left"
+        class="top-1/2 -left-[5px] -translate-y-1/2" />
+      <atm-flow-handle type="source" id="sent" position="right"
+        class="-right-[5px] bottom-[26px]" />
+      <atm-flow-handle type="source" id="error" position="right"
+        class="-right-[5px] bottom-[8px]" />
+    </div>
+  \`,
+})
+export class NodeSendMessage {
+  readonly nodeId = input.required<string>();
+  readonly nodeData = input.required<{ message: string }>();
+  readonly selected = input(false);
+}
+
+<!-- 3. Registre o componente como renderer do tipo 'send-message' -->
+<atm-flow [(nodes)]="nodes" [(edges)]="edges">
+  <ng-template atmFlowNode="send-message" let-node let-selected="selected">
+    <node-send-message [nodeId]="node.id" [nodeData]="node.data" [selected]="selected" />
+  </ng-template>
+</atm-flow>
+
+// 4. Node usa o tipo + handles: [] (remove os pontos default da borda)
+{ id: 'msg-1', type: 'send-message', position: { x: 280, y: 70 },
+  handles: [], data: { message: 'Olá!' } }
+
+// 5. Edges podem apontar para um port específico pelo id
+{ id: 'e1', source: 'msg-1', sourceHandle: 'sent', target: 'proximo' }
+{ id: 'e2', source: 'msg-1', sourceHandle: 'error', target: 'falha' }`;
+
+  readonly typedCode = `<atm-flow
+  [(nodes)]="nodes"
+  [(edges)]="edges"
+  [compatibleTypes]="{ text: ['text', 'any'], number: ['number', 'any'] }"
+  (connectInvalid)="onConnectInvalid($event)"
+/>
+
+// Handles declaram dataType (dados ou <atm-flow-handle dataType="text" />):
+{ id: 'origem', label: 'Origem: texto', position: { x: 0, y: 40 },
+  handles: [{ type: 'source', position: 'right', dataType: 'text' }] }
+
+{ id: 'upper', label: 'Uppercase', position: { x: 340, y: 0 },
+  handles: [
+    { type: 'target', position: 'left', dataType: 'text' },
+    { type: 'source', position: 'right', dataType: 'text' },
+  ] }
+
+// Regras:
+// - ambos com dataType → precisam ser compatíveis (igual, ou via compatibleTypes)
+// - port sem dataType → conecta com qualquer um
+// - incompatível → linha vermelha, NÃO conecta e emite (connectInvalid):
+onConnectInvalid(e: AtmFlowConnectInvalid) {
+  // e.reason: 'type-mismatch' | 'duplicate' | 'cycle' | 'validator'
+  // e.sourceType / e.targetType: os dataTypes envolvidos
+}`;
 
   readonly interactionCode = `<atm-flow
   #flow

@@ -23,6 +23,7 @@ import {
 import { atmUid } from '../../types';
 import {
   AtmFlowConnectEnd,
+  AtmFlowConnectInvalid,
   AtmFlowConnection,
   AtmFlowContextMenuEvent,
   AtmFlowDeleteEvent,
@@ -33,6 +34,7 @@ import {
   AtmFlowHandlePosition,
   AtmFlowHandleType,
   AtmFlowJson,
+  AtmFlowInvalidReason,
   AtmFlowLayoutDirection,
   AtmFlowMarker,
   AtmFlowNode,
@@ -313,6 +315,18 @@ interface Candidate {
   key: string;
   anchor: AtmFlowPoint;
   position: AtmFlowHandlePosition;
+}
+
+/** Measured info of an <atm-flow-handle> placed inside a custom node. */
+interface CustomHandleInfo {
+  key: string;
+  id: string | undefined;
+  type: AtmFlowHandleType;
+  position: AtmFlowHandlePosition;
+  dataType: string | undefined;
+  /** Center offset relative to the node's top-left corner (flow units). */
+  x: number;
+  y: number;
 }
 
 /* ------------------------------------------------------------------ */
@@ -732,6 +746,12 @@ export class AtmFlow {
   readonly preventCycles = input(false);
   /** Custom connection validation (connection limit, typing rules…). */
   readonly connectionValidator = input<AtmFlowValidator | null>(null);
+  /**
+   * Compatibility map for typed ports: source `dataType` → allowed target
+   * `dataType`s (ex.: `{ text: ['text', 'any'] }`). Types absent from the map
+   * require an exact match. Ports without `dataType` connect to anything.
+   */
+  readonly compatibleTypes = input<Record<string, string[]> | null>(null);
   /** Above this node count only the visible viewport slice is rendered. */
   readonly cullingThreshold = input(250);
   /** Fit the graph on first render. */
@@ -747,6 +767,8 @@ export class AtmFlow {
   readonly paneClick = output<AtmFlowPoint>();
   readonly connect = output<AtmFlowConnection>();
   readonly connectEnd = output<AtmFlowConnectEnd>();
+  /** Fired when a connection is dropped on a handle/node but rejected (type mismatch, ciclo…). */
+  readonly connectInvalid = output<AtmFlowConnectInvalid>();
   readonly selectionChange = output<AtmFlowSelection>();
   readonly viewportChange = output<AtmFlowViewport>();
   readonly contextMenu = output<AtmFlowContextMenuEvent>();
@@ -775,7 +797,8 @@ export class AtmFlow {
   protected readonly panning = signal(false);
   protected readonly selectBox = signal<{ x: number; y: number; w: number; h: number } | null>(null);
   protected readonly connLine = signal<{ d: string; valid: boolean | null } | null>(null);
-  protected readonly candidateKey = signal<string | null>(null);
+  /** @internal — read by AtmFlowNodeHandle to highlight itself as drop target. */
+  readonly candidateKey = signal<string | null>(null);
   protected readonly helperX = signal<number | null>(null);
   protected readonly helperY = signal<number | null>(null);
   protected readonly reconnectingId = signal<string | null>(null);
@@ -793,6 +816,10 @@ export class AtmFlow {
 
   private readonly pointers = new Map<number, AtmFlowPoint>();
   private pinch: { dist: number; center: AtmFlowPoint; vp: AtmFlowViewport } | null = null;
+
+  /** Live <atm-flow-handle> elements and their measured info per node. */
+  private readonly customHandleEls = new Map<HTMLElement, { nodeId: string; handle: AtmFlowNodeHandle }>();
+  private readonly customHandles = signal(new Map<string, CustomHandleInfo[]>());
 
   /* ---------------------------------------------------------------- */
   /* Derived state                                                     */
@@ -904,17 +931,20 @@ export class AtmFlow {
   protected readonly nodeViews = computed<NodeView[]>(() => {
     const sel = this.selectedNodes();
     const defs = this.nodeDefs();
+    const custom = this.customHandles();
     return this.visibleNodes().map((node) => {
       const template = node.type
         ? (defs.find((d) => d.type() === node.type)?.template ?? null)
         : null;
+      // Nodes com <atm-flow-handle> no template não recebem os handles default.
+      const hasCustom = !!custom.get(node.id)?.length;
       return {
         node,
         x: f(node.position.x),
         y: f(node.position.y),
         selected: sel.has(node.id),
         template,
-        handles: this.handlesOf(node).map((h, i) => this.handleView(node.id, h, i)),
+        handles: hasCustom ? [] : this.handlesOf(node).map((h, i) => this.handleView(node.id, h, i)),
       };
     });
   });
@@ -1096,6 +1126,115 @@ export class AtmFlow {
       this.didAutoFit = true;
       requestAnimationFrame(() => this.fitView());
     });
+
+    // Re-measure <atm-flow-handle> offsets whenever node sizes change.
+    effect(() => {
+      this.dims();
+      untracked(() => {
+        for (const [el, reg] of this.customHandleEls) this.measureCustomHandle(el, reg.nodeId, reg.handle);
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Custom handle registry (@internal — used by AtmFlowNodeHandle)    */
+  /* ---------------------------------------------------------------- */
+
+  /** @internal */
+  registerCustomHandle(el: HTMLElement, handle: AtmFlowNodeHandle): void {
+    const nodeId = el.closest<HTMLElement>('[data-flow-node]')?.dataset['flowNode'];
+    if (!nodeId) return;
+    this.customHandleEls.set(el, { nodeId, handle });
+    el.dataset['flowHandleNode'] = nodeId;
+    this.measureCustomHandle(el, nodeId, handle);
+  }
+
+  /** @internal */
+  refreshCustomHandle(el: HTMLElement): void {
+    const reg = this.customHandleEls.get(el);
+    if (reg) this.measureCustomHandle(el, reg.nodeId, reg.handle);
+  }
+
+  /** @internal */
+  unregisterCustomHandle(el: HTMLElement): void {
+    const reg = this.customHandleEls.get(el);
+    this.customHandleEls.delete(el);
+    if (!reg) return;
+    const map = new Map(this.customHandles());
+    const list = (map.get(reg.nodeId) ?? []).filter((i) => i.key !== reg.handle.key);
+    if (list.length) map.set(reg.nodeId, list);
+    else map.delete(reg.nodeId);
+    this.customHandles.set(map);
+  }
+
+  /** @internal */
+  startCustomConnection(el: HTMLElement, e: PointerEvent): void {
+    const reg = this.customHandleEls.get(el);
+    if (!reg || e.button !== 0 || this.locked()) return;
+    const node = this.nodeMap().get(reg.nodeId);
+    if (!node || node.connectable === false) return;
+    const info = this.customHandles()
+      .get(reg.nodeId)
+      ?.find((h) => h.key === reg.handle.key);
+    if (!info) return;
+    e.stopPropagation();
+    e.preventDefault();
+    this.startConnectionDrag({
+      fixedNodeId: node.id,
+      fixedHandleId: info.id,
+      fixedType: info.type,
+      from: { x: node.position.x + info.x, y: node.position.y + info.y },
+      fromPos: info.position,
+      startClient: { x: e.clientX, y: e.clientY },
+      onDrop: this.makeConnectDrop(node.id, info.id),
+    });
+  }
+
+  private measureCustomHandle(el: HTMLElement, nodeId: string, handle: AtmFlowNodeHandle): void {
+    const nodeEl = el.closest<HTMLElement>('[data-flow-node]');
+    if (!nodeEl) return;
+    const zoom = this.viewport().zoom;
+    const nr = nodeEl.getBoundingClientRect();
+    const hr = el.getBoundingClientRect();
+    if (!nr.width || !hr.width) return;
+    const x = (hr.left + hr.width / 2 - nr.left) / zoom;
+    const y = (hr.top + hr.height / 2 - nr.top) / zoom;
+    const w = nr.width / zoom;
+    const h = nr.height / zoom;
+    // Side inferred from the closest node border, unless explicitly set.
+    const dists: [AtmFlowHandlePosition, number][] = [
+      ['left', x],
+      ['right', w - x],
+      ['top', y],
+      ['bottom', h - y],
+    ];
+    dists.sort((a, b) => a[1] - b[1]);
+    const info: CustomHandleInfo = {
+      key: handle.key,
+      id: handle.id(),
+      type: handle.type(),
+      position: handle.position() ?? dists[0][0],
+      dataType: handle.dataType(),
+      x: f(x),
+      y: f(y),
+    };
+    const map = new Map(this.customHandles());
+    const list = (map.get(nodeId) ?? []).filter((i) => i.key !== info.key);
+    list.push(info);
+    map.set(nodeId, list);
+    const prev = this.customHandles().get(nodeId)?.find((i) => i.key === info.key);
+    if (
+      prev &&
+      prev.x === info.x &&
+      prev.y === info.y &&
+      prev.id === info.id &&
+      prev.type === info.type &&
+      prev.position === info.position &&
+      prev.dataType === info.dataType
+    ) {
+      return; // unchanged — avoid signal churn
+    }
+    this.customHandles.set(map);
   }
 
   /* ---------------------------------------------------------------- */
@@ -1604,21 +1743,28 @@ export class AtmFlow {
       from: anchorOf(node.position, w, h, hv.handle),
       fromPos: hv.handle.position,
       startClient: { x: e.clientX, y: e.clientY },
-      onDrop: (conn, pos, moved) => {
-        if (!moved) return;
-        if (conn) {
-          this.snapshot();
-          if (this.autoConnect()) {
-            const edge: AtmFlowEdge = { id: atmUid('atm-e'), ...conn };
-            this.edges.update((es) => [...es, edge]);
-          }
-          this.connect.emit(conn);
-          this.connectEnd.emit({ connection: conn, position: pos, source: node.id, sourceHandle: hv.id });
-        } else {
-          this.connectEnd.emit({ connection: null, position: pos, source: node.id, sourceHandle: hv.id });
-        }
-      },
+      onDrop: this.makeConnectDrop(node.id, hv.id),
     });
+  }
+
+  private makeConnectDrop(
+    fixedNodeId: string,
+    fixedHandleId: string | undefined,
+  ): (conn: AtmFlowConnection | null, pos: AtmFlowPoint, moved: boolean) => void {
+    return (conn, pos, moved) => {
+      if (!moved) return;
+      if (conn) {
+        this.snapshot();
+        if (this.autoConnect()) {
+          const edge: AtmFlowEdge = { id: atmUid('atm-e'), ...conn };
+          this.edges.update((es) => [...es, edge]);
+        }
+        this.connect.emit(conn);
+        this.connectEnd.emit({ connection: conn, position: pos, source: fixedNodeId, sourceHandle: fixedHandleId });
+      } else {
+        this.connectEnd.emit({ connection: null, position: pos, source: fixedNodeId, sourceHandle: fixedHandleId });
+      }
+    };
   }
 
   protected onReconnectPointerDown(edge: AtmFlowEdge, end: 'source' | 'target', e: PointerEvent): void {
@@ -1705,8 +1851,16 @@ export class AtmFlow {
         const pos = this.screenToFlow({ x: ev.clientX, y: ev.clientY });
         this.connLine.set(null);
         this.candidateKey.set(null);
-        const finalConn = conn && this.isValidConnection(conn, opts.excludeEdgeId) ? conn : null;
-        opts.onDrop(finalConn, pos, moved);
+        const reason = conn ? this.validateConnection(conn, opts.excludeEdgeId) : null;
+        if (moved && conn && reason) {
+          this.connectInvalid.emit({
+            connection: conn,
+            reason,
+            sourceType: this.handleDataType(conn.source, 'source', conn.sourceHandle),
+            targetType: this.handleDataType(conn.target, 'target', conn.targetHandle),
+          });
+        }
+        opts.onDrop(conn && !reason ? conn : null, pos, moved);
       },
     );
   }
@@ -1718,15 +1872,32 @@ export class AtmFlow {
     const handleEl = el.closest<HTMLElement>('[data-flow-handle-type]');
     let nodeId: string | null = null;
     let handleId: string | undefined;
+    let elKey: string | null = null;
     if (handleEl && handleEl.dataset['flowHandleType'] === wanted) {
       nodeId = handleEl.dataset['flowHandleNode'] ?? null;
       handleId = handleEl.dataset['flowHandle'] || undefined;
+      elKey = handleEl.dataset['flowKey'] ?? null;
     } else {
       nodeId = el.closest<HTMLElement>('[data-flow-node]')?.dataset['flowNode'] ?? null;
     }
     if (!nodeId || nodeId === fixedNodeId) return null;
     const target = this.nodeMap().get(nodeId);
     if (!target || target.connectable === false) return null;
+    // Handles custom do node alvo.
+    const custom = this.customHandles().get(nodeId)?.filter((x) => x.type === wanted) ?? [];
+    if (custom.length) {
+      const hd =
+        (handleId !== undefined ? custom.find((x) => (x.id ?? '') === handleId) : undefined) ??
+        (elKey ? custom.find((x) => x.key === elKey) : undefined) ??
+        custom[0];
+      return {
+        nodeId,
+        handleId: hd.id,
+        key: hd.key,
+        anchor: { x: target.position.x + hd.x, y: target.position.y + hd.y },
+        position: hd.position,
+      };
+    }
     const handles = this.handlesOf(target);
     const hd =
       (handleId !== undefined
@@ -1737,7 +1908,7 @@ export class AtmFlow {
     return {
       nodeId,
       handleId: hd.id,
-      key: this.handleKeyOf(nodeId, wanted, hd.id, handles.indexOf(hd)),
+      key: elKey ?? this.handleKeyOf(nodeId, wanted, hd.id, handles.indexOf(hd)),
       anchor: resolved.pt,
       position: resolved.pos,
     };
@@ -1755,9 +1926,14 @@ export class AtmFlow {
   }
 
   private isValidConnection(conn: AtmFlowConnection, excludeEdgeId?: string): boolean {
-    if (conn.source === conn.target) return false;
+    return this.validateConnection(conn, excludeEdgeId) === null;
+  }
+
+  /** @returns null when valid, otherwise the rejection reason. */
+  private validateConnection(conn: AtmFlowConnection, excludeEdgeId?: string): AtmFlowInvalidReason | null {
+    if (conn.source === conn.target) return 'invalid';
     const nodeMap = this.nodeMap();
-    if (!nodeMap.has(conn.source) || !nodeMap.has(conn.target)) return false;
+    if (!nodeMap.has(conn.source) || !nodeMap.has(conn.target)) return 'invalid';
     const dup = this.edges().some(
       (e) =>
         e.id !== excludeEdgeId &&
@@ -1766,11 +1942,34 @@ export class AtmFlow {
         (e.sourceHandle ?? '') === (conn.sourceHandle ?? '') &&
         (e.targetHandle ?? '') === (conn.targetHandle ?? ''),
     );
-    if (dup) return false;
-    if (this.preventCycles() && this.createsCycle(conn, excludeEdgeId)) return false;
+    if (dup) return 'duplicate';
+    const st = this.handleDataType(conn.source, 'source', conn.sourceHandle);
+    const tt = this.handleDataType(conn.target, 'target', conn.targetHandle);
+    if (st && tt && !this.typesCompatible(st, tt)) return 'type-mismatch';
+    if (this.preventCycles() && this.createsCycle(conn, excludeEdgeId)) return 'cycle';
     const validator = this.connectionValidator();
-    if (validator && !validator(conn, this.nodes(), this.edges())) return false;
-    return true;
+    if (validator && !validator(conn, this.nodes(), this.edges())) return 'validator';
+    return null;
+  }
+
+  private typesCompatible(sourceType: string, targetType: string): boolean {
+    const map = this.compatibleTypes();
+    if (map && map[sourceType]) return map[sourceType].includes(targetType);
+    return sourceType === targetType;
+  }
+
+  /** dataType do port (custom registry primeiro, depois node.handles). */
+  private handleDataType(nodeId: string, type: AtmFlowHandleType, handleId?: string): string | undefined {
+    const node = this.nodeMap().get(nodeId);
+    if (!node) return undefined;
+    const custom = this.customHandles().get(nodeId)?.filter((h) => h.type === type);
+    if (custom?.length) {
+      const hd = (handleId !== undefined ? custom.find((h) => h.id === handleId) : undefined) ?? custom[0];
+      return hd?.dataType;
+    }
+    const list = this.handlesOf(node).filter((h) => h.type === type);
+    const hd = (handleId !== undefined ? list.find((h) => h.id === handleId) : undefined) ?? list[0];
+    return hd?.dataType;
   }
 
   private createsCycle(conn: AtmFlowConnection, excludeEdgeId?: string): boolean {
@@ -1982,7 +2181,8 @@ export class AtmFlow {
   }
 
   private handlesOf(node: AtmFlowNode): AtmFlowHandle[] {
-    if (node.handles?.length) return node.handles;
+    // `handles: []` significa "sem handles default" (ex.: nodes que usam <atm-flow-handle>).
+    if (node.handles) return node.handles;
     return this.direction() === 'TB' ? DEFAULT_HANDLES_TB : DEFAULT_HANDLES_LR;
   }
 
@@ -2031,6 +2231,16 @@ export class AtmFlow {
     type: AtmFlowHandleType,
     handleId?: string,
   ): { pt: AtmFlowPoint; pos: AtmFlowHandlePosition } {
+    // Handles custom (<atm-flow-handle>) têm precedência: ancoram na posição real medida.
+    const custom = this.customHandles().get(node.id)?.filter((x) => x.type === type);
+    if (custom?.length) {
+      const hd =
+        (handleId !== undefined ? custom.find((x) => x.id === handleId) : undefined) ?? custom[0];
+      return {
+        pt: { x: node.position.x + hd.x, y: node.position.y + hd.y },
+        pos: hd.position,
+      };
+    }
     const { w, h } = this.sizeOf(node);
     const candidates = this.handlesOf(node).filter((x) => x.type === type);
     const fallbackPos: AtmFlowHandlePosition =
@@ -2055,5 +2265,81 @@ export class AtmFlow {
     this.past.push(this.cloneState());
     if (this.past.length > 60) this.past.shift();
     this.future = [];
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* atm-flow-handle                                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Connection port to be placed **inside a custom node template** — the
+ * equivalent of Foundation Flow's `fNodeInput`/`fNodeOutput`. Position it
+ * freely with utility classes; edges anchor to its real rendered position.
+ *
+ * ```html
+ * <atm-flow [(nodes)]="nodes" [(edges)]="edges">
+ *   <ng-template atmFlowNode="send-message" let-node let-selected="selected">
+ *     <node-send-message [nodeId]="node.id" [nodeData]="node.data" [selected]="selected" />
+ *   </ng-template>
+ * </atm-flow>
+ *
+ * <!-- dentro do template de node-send-message: -->
+ * <div class="relative ...">
+ *   ...
+ *   <atm-flow-handle type="target" position="left" class="top-1/2 -left-[5px] -translate-y-1/2" />
+ *   <atm-flow-handle type="source" id="sent" position="right" class="-right-[5px] bottom-3" />
+ * </div>
+ * ```
+ *
+ * Use `handles: []` no node para remover os handles default das bordas.
+ */
+@Component({
+  selector: 'atm-flow-handle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class:
+      'absolute z-10 block size-2.5 rounded-full border-2 border-surface bg-ink-faint transition-transform hover:scale-125 hover:bg-primary',
+    '[class.cursor-crosshair]': '!flow?.locked()',
+    '[class.bg-primary]': 'isCandidate()',
+    '[class.scale-125]': 'isCandidate()',
+    '[attr.data-flow-handle]': 'id() ?? ""',
+    '[attr.data-flow-handle-type]': 'type()',
+    '[attr.data-flow-key]': 'key',
+    '(pointerdown)': 'onPointerDown($event)',
+  },
+  template: '',
+})
+export class AtmFlowNodeHandle {
+  readonly type = input<AtmFlowHandleType>('source');
+  /** Necessário quando o node tem vários handles do mesmo tipo. */
+  readonly id = input<string | undefined>(undefined);
+  /** Lado por onde a edge entra/sai. Inferido da posição no node se omitido. */
+  readonly position = input<AtmFlowHandlePosition | undefined>(undefined);
+  /** Tipo do port — só conecta em ports compatíveis (ver compatibleTypes do atm-flow). */
+  readonly dataType = input<string | undefined>(undefined);
+
+  /** @internal */
+  readonly key = atmUid('atm-fh');
+  protected readonly flow = inject(AtmFlow, { optional: true });
+  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+
+  protected readonly isCandidate = computed(() => this.flow?.candidateKey() === this.key);
+
+  constructor() {
+    afterNextRender(() => this.flow?.registerCustomHandle(this.el, this));
+    // Re-measure when inputs change after registration.
+    effect(() => {
+      this.type();
+      this.id();
+      this.position();
+      this.dataType();
+      untracked(() => this.flow?.refreshCustomHandle(this.el));
+    });
+    inject(DestroyRef).onDestroy(() => this.flow?.unregisterCustomHandle(this.el));
+  }
+
+  protected onPointerDown(e: PointerEvent): void {
+    this.flow?.startCustomConnection(this.el, e);
   }
 }
