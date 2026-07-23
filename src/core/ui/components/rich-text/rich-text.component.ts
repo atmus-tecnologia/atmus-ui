@@ -43,27 +43,12 @@ export interface AtmRichTextConfig {
   highlights?: AtmRichTextHighlight[];
 }
 
-interface BlockFormat {
-  value: string;
-  label: string;
-  icon: string;
-}
-
 interface AiQuickAction {
   id: AtmAssistantAction;
   icon: string;
   label: string;
   divider?: boolean;
 }
-
-const BLOCK_FORMATS: BlockFormat[] = [
-  { value: 'p', label: 'Texto normal', icon: 'icofont-paragraph' },
-  { value: 'h1', label: 'Título 1', icon: 'icofont-heading' },
-  { value: 'h2', label: 'Título 2', icon: 'icofont-heading' },
-  { value: 'h3', label: 'Título 3', icon: 'icofont-heading' },
-  { value: 'blockquote', label: 'Citação', icon: 'icofont-quote-left' },
-  { value: 'pre', label: 'Bloco de código', icon: 'icofont-code' },
-];
 
 const AI_SELECTION_ACTIONS: AiQuickAction[] = [
   { id: 'grammar', icon: 'icofont-check', label: 'Corrigir ortografia e gramática' },
@@ -111,59 +96,27 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
   host: { class: 'block w-full' },
   template: `
     <div
-      class="atm-field flex flex-col"
-      [class.atm-field--invalid]="invalid()"
-      [class.atm-field--disabled]="isDisabled()"
+      class="flex flex-col rounded-atm-lg border bg-surface transition-colors duration-200"
+      [class]="wrapperClass()"
     >
-      <!-- ============================ Toolbar ============================ -->
+      <!-- ============ Toolbar flutuante (pill, sem header demarcado) ============ -->
       <div
-        class="relative flex flex-wrap items-center gap-0.5 rounded-t-[calc(var(--atm-radius)-1px)]
-          border-b border-line bg-surface-alt/50 px-1.5 py-1"
+        class="mx-3 mt-3 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-0.5 self-start
+          rounded-2xl border border-line/70 bg-surface-raised px-1.5 py-1 shadow-atm"
+        role="toolbar"
+        aria-label="Formatação"
       >
-        @if (assistant()) {
-          <button
-            type="button"
-            [class]="assistantPillClass()"
-            [disabled]="isDisabled()"
-            (click)="toggleAiBox()"
-          >
-            <i class="icofont-magic" aria-hidden="true"></i>
-            Assistente
-          </button>
-          <span class="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true"></span>
-        }
+        <!-- Desfazer / refazer -->
+        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Desfazer (Ctrl+Z)"
+          (mousedown)="$event.preventDefault()" (click)="exec('undo')">
+          <i class="icofont-undo" aria-hidden="true"></i>
+        </button>
+        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Refazer"
+          (mousedown)="$event.preventDefault()" (click)="exec('redo')">
+          <i class="icofont-redo" aria-hidden="true"></i>
+        </button>
 
-        <!-- Formato de bloco -->
-        <div class="relative shrink-0">
-          <button
-            type="button"
-            [class]="blockTriggerClass()"
-            [disabled]="isDisabled()"
-            (mousedown)="$event.preventDefault()"
-            (click)="blockMenuOpen.set(!blockMenuOpen())"
-          >
-            {{ blockLabel() }}
-            <i class="icofont-simple-down text-[9px]" aria-hidden="true"></i>
-          </button>
-          @if (blockMenuOpen()) {
-            <div class="atm-panel animate-atm-pop absolute top-full left-0 z-40 mt-1 w-44 p-1">
-              @for (f of blockFormats; track f.value) {
-                <button
-                  type="button"
-                  class="atm-option h-9"
-                  [class.atm-option--selected]="currentBlock() === f.value"
-                  (mousedown)="$event.preventDefault()"
-                  (click)="setBlock(f.value)"
-                >
-                  <i [class]="f.icon + ' w-4 text-center text-ink-faint'" aria-hidden="true"></i>
-                  {{ f.label }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <span class="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true"></span>
+        <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
 
         <!-- Marcações inline -->
         <button type="button" [class]="tbClass('bold')" [disabled]="isDisabled()" atmTooltip="Negrito (Ctrl+B)"
@@ -182,12 +135,52 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
           (mousedown)="$event.preventDefault()" (click)="exec('strikeThrough')">
           <i class="icofont-strike-through" aria-hidden="true"></i>
         </button>
-        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Código inline"
+        <button type="button" [class]="tbCodeClass()" [disabled]="isDisabled()" atmTooltip="Código inline"
           (mousedown)="$event.preventDefault()" (click)="wrapInlineCode()">
           <i class="icofont-code" aria-hidden="true"></i>
         </button>
 
-        <span class="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true"></span>
+        <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
+
+        <!-- Blocos: títulos, citação e código -->
+        <button type="button" [class]="tbBlockClass('h1')" [disabled]="isDisabled()" atmTooltip="Título 1"
+          (mousedown)="$event.preventDefault()" (click)="toggleBlock('h1')">
+          <span class="text-[11px] font-bold">H1</span>
+        </button>
+        <button type="button" [class]="tbBlockClass('h2')" [disabled]="isDisabled()" atmTooltip="Título 2"
+          (mousedown)="$event.preventDefault()" (click)="toggleBlock('h2')">
+          <span class="text-[11px] font-bold">H2</span>
+        </button>
+        <button type="button" [class]="tbBlockClass('h3')" [disabled]="isDisabled()" atmTooltip="Título 3"
+          (mousedown)="$event.preventDefault()" (click)="toggleBlock('h3')">
+          <span class="text-[11px] font-bold">H3</span>
+        </button>
+        <button type="button" [class]="tbBlockClass('blockquote')" [disabled]="isDisabled()" atmTooltip="Citação"
+          (mousedown)="$event.preventDefault()" (click)="toggleBlock('blockquote')">
+          <i class="icofont-quote-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" [class]="tbBlockClass('pre')" [disabled]="isDisabled()" atmTooltip="Bloco de código"
+          (mousedown)="$event.preventDefault()" (click)="toggleBlock('pre')">
+          <span class="text-[11px] font-bold">&#123;&#125;</span>
+        </button>
+
+        <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
+
+        <!-- Listas & link -->
+        <button type="button" [class]="tbClass('insertUnorderedList')" [disabled]="isDisabled()" atmTooltip="Lista"
+          (mousedown)="$event.preventDefault()" (click)="exec('insertUnorderedList')">
+          <i class="icofont-listine-dots" aria-hidden="true"></i>
+        </button>
+        <button type="button" [class]="tbClass('insertOrderedList')" [disabled]="isDisabled()" atmTooltip="Lista numerada"
+          (mousedown)="$event.preventDefault()" (click)="exec('insertOrderedList')">
+          <i class="icofont-listing-number" aria-hidden="true"></i>
+        </button>
+        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Inserir link"
+          (mousedown)="$event.preventDefault()" (click)="setLink()">
+          <i class="icofont-link" aria-hidden="true"></i>
+        </button>
+
+        <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
 
         <!-- Alinhamento -->
         <button type="button" [class]="tbClass('justifyLeft')" [disabled]="isDisabled()" atmTooltip="Alinhar à esquerda"
@@ -203,54 +196,35 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
           <i class="icofont-align-right" aria-hidden="true"></i>
         </button>
 
-        <span class="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true"></span>
+        <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
 
-        <!-- Listas & citação -->
-        <button type="button" [class]="tbClass('insertUnorderedList')" [disabled]="isDisabled()" atmTooltip="Lista"
-          (mousedown)="$event.preventDefault()" (click)="exec('insertUnorderedList')">
-          <i class="icofont-listine-dots" aria-hidden="true"></i>
-        </button>
-        <button type="button" [class]="tbClass('insertOrderedList')" [disabled]="isDisabled()" atmTooltip="Lista numerada"
-          (mousedown)="$event.preventDefault()" (click)="exec('insertOrderedList')">
-          <i class="icofont-listing-number" aria-hidden="true"></i>
-        </button>
-        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Citação"
-          (mousedown)="$event.preventDefault()" (click)="setBlock('blockquote')">
-          <i class="icofont-quote-left" aria-hidden="true"></i>
-        </button>
-
-        <span class="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true"></span>
-
-        <!-- Link & limpar -->
-        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Inserir link"
-          (mousedown)="$event.preventDefault()" (click)="setLink()">
-          <i class="icofont-link" aria-hidden="true"></i>
-        </button>
+        <!-- Limpar & assistente -->
         <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Limpar formatação"
           (mousedown)="$event.preventDefault()" (click)="clearFormatting()">
           <i class="icofont-eraser" aria-hidden="true"></i>
         </button>
-
-        <span class="flex-1"></span>
-
-        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Desfazer (Ctrl+Z)"
-          (mousedown)="$event.preventDefault()" (click)="exec('undo')">
-          <i class="icofont-undo" aria-hidden="true"></i>
-        </button>
-        <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Refazer"
-          (mousedown)="$event.preventDefault()" (click)="exec('redo')">
-          <i class="icofont-redo" aria-hidden="true"></i>
-        </button>
-
-        <!-- ==================== Painel do assistente (documento) ==================== -->
-        @if (aiBoxOpen()) {
-          <div
-            class="atm-panel animate-atm-pop absolute top-[calc(100%+4px)] left-1.5 z-40
-              w-[min(30rem,calc(100%-0.75rem))] overflow-hidden"
+        @if (assistant()) {
+          <button
+            type="button"
+            [class]="assistantBtnClass()"
+            [disabled]="isDisabled()"
+            atmTooltip="Assistente IA"
+            (click)="toggleAiBox()"
           >
+            <i class="icofont-magic" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+
+      <!-- ==================== Painel do assistente (documento) ==================== -->
+      @if (aiBoxOpen()) {
+        <div
+          class="animate-atm-pop mx-3 mt-2 overflow-hidden rounded-2xl border border-line
+            bg-surface-raised shadow-atm"
+        >
             <div
-              class="flex items-center gap-2.5 border-b border-line bg-gradient-to-r from-primary-soft
-                to-info-soft px-3.5 py-2.5"
+              class="flex items-center gap-2.5 bg-gradient-to-r from-primary-soft to-info-soft
+                px-3.5 py-2.5"
             >
               <span
                 class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br
@@ -326,14 +300,13 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
                 </button>
               </div>
             </div>
-          </div>
-        }
-      </div>
+        </div>
+      }
 
       <!-- ============================ Área editável ============================ -->
       <div
         #editor
-        class="atm-rte-content relative w-full overflow-y-auto p-3 text-ink"
+        class="atm-rte-content relative w-full overflow-y-auto px-4 py-3.5 text-ink"
         [class]="contentClasses()"
         [class.atm-rte-empty]="isEmpty()"
         [style.minHeight]="minHeightCss()"
@@ -349,6 +322,13 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         (mouseleave)="hlTooltip.set(null)"
         (keydown.escape)="closeAllOverlays()"
       ></div>
+
+      <!-- Rodapé sutil com contagem (sem demarcação) -->
+      @if (counter()) {
+        <div class="flex items-center justify-end px-4 pb-2.5 text-[11px] text-ink-faint select-none">
+          {{ charCount() }} caracteres · {{ wordCount() }} palavras
+        </div>
+      }
     </div>
 
     <!-- Tooltip dos highlights (fixed: não é clipado pelo scroll do editor) -->
@@ -372,7 +352,8 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
     @if (bubbleVisible()) {
       <div
         #bubble
-        class="atm-panel animate-atm-fade fixed z-[70] p-1"
+        class="animate-atm-fade fixed z-[70] rounded-2xl border border-line/70 bg-surface-raised
+          p-1 shadow-atm-lg"
         role="toolbar"
         aria-label="Formatação rápida"
         [style.top]="bubbleTop()"
@@ -389,8 +370,8 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
             @if (assistant()) {
               <button
                 type="button"
-                class="atm-focus flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-md
-                  px-2 text-[13px] font-semibold text-primary transition-colors hover:bg-primary-soft"
+                class="atm-focus flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full
+                  px-2.5 text-[13px] font-semibold text-primary transition-colors hover:bg-primary-soft"
                 [class.bg-primary-soft]="aiMenuOpen()"
                 (click)="aiMenuOpen.set(!aiMenuOpen())"
               >
@@ -413,7 +394,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
             <button type="button" [class]="bubbleBtn('strikeThrough')" (click)="exec('strikeThrough')" aria-label="Tachado">
               <i class="icofont-strike-through" aria-hidden="true"></i>
             </button>
-            <button type="button" [class]="bubbleBtn()" (click)="wrapInlineCode()" aria-label="Código">
+            <button type="button" [class]="bubbleCodeClass()" (click)="wrapInlineCode()" aria-label="Código">
               <i class="icofont-code" aria-hidden="true"></i>
             </button>
 
@@ -433,7 +414,8 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
           <!-- Menu de ações rápidas de IA sobre a seleção -->
           @if (aiMenuOpen()) {
             <div
-              class="atm-panel animate-atm-pop absolute left-0 z-[71] max-h-72 w-64 overflow-y-auto p-1"
+              class="animate-atm-pop absolute left-0 z-[71] max-h-72 w-64 overflow-y-auto rounded-xl
+                border border-line bg-surface-raised p-1 shadow-atm-lg"
               [class]="bubbleBelow() ? 'bottom-[calc(100%+6px)]' : 'top-[calc(100%+6px)]'"
             >
               @for (action of aiSelectionActions; track action.id) {
@@ -537,9 +519,9 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
       .atm-rte-content.atm-rte-empty::before {
         content: attr(data-placeholder);
         position: absolute;
-        top: 0.75rem;
-        left: 0.75rem;
-        right: 0.75rem;
+        top: 0.875rem;
+        left: 1rem;
+        right: 1rem;
         color: var(--atm-ink-faint);
         pointer-events: none;
       }
@@ -579,6 +561,8 @@ export class AtmRichText extends AtmValueAccessor<string> {
   readonly scrollHeight = input<number | string | null>(null);
   /** Altura mínima da área editável em px. */
   readonly minHeight = input<number | string>(140);
+  /** Exibe o rodapé com contagem de caracteres e palavras. */
+  readonly counter = input(true);
 
   readonly isDisabled = computed(() => this.disabled() || this.disabledByForm());
 
@@ -587,7 +571,8 @@ export class AtmRichText extends AtmValueAccessor<string> {
 
   // --- Estado da UI ---
   readonly isEmpty = signal(true);
-  readonly blockMenuOpen = signal(false);
+  readonly charCount = signal(0);
+  readonly wordCount = signal(0);
   readonly aiBoxOpen = signal(false);
   readonly aiMenuOpen = signal(false);
   readonly aiBusy = signal(false);
@@ -605,7 +590,6 @@ export class AtmRichText extends AtmValueAccessor<string> {
   /** Incrementado a cada mudança de seleção — invalida os estados dos botões. */
   private readonly selTick = signal(0);
 
-  readonly blockFormats = BLOCK_FORMATS;
   readonly aiSelectionActions = AI_SELECTION_ACTIONS;
   readonly aiDocChips = AI_DOC_CHIPS;
 
@@ -616,31 +600,30 @@ export class AtmRichText extends AtmValueAccessor<string> {
   readonly contentClasses = computed(
     () => ({ large: 'text-base', medium: 'text-sm', slim: 'text-sm' })[this.size()],
   );
-  readonly btnHeight = computed(
-    () => ({ large: 'h-9 text-sm', medium: 'h-8 text-[13px]', slim: 'h-7 text-xs' })[this.size()],
-  );
-  readonly pillSize = computed(
-    () => ({ large: 'h-9 text-sm', medium: 'h-8 text-[13px]', slim: 'h-7 text-xs' })[this.size()],
+  readonly btnSize = computed(
+    () =>
+      ({ large: 'size-9 text-[15px]', medium: 'size-8 text-[13px]', slim: 'size-7 text-xs' })[
+        this.size()
+      ],
   );
 
   readonly minHeightCss = computed(() => this.toCss(this.minHeight()));
   readonly scrollHeightCss = computed(() => this.toCss(this.scrollHeight()));
 
-  readonly assistantPillClass = computed(
-    () =>
-      'atm-focus mr-0.5 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg ' +
-      'bg-gradient-to-r from-primary to-info px-2.5 font-semibold text-white shadow-sm ' +
-      'transition-[filter,transform] hover:brightness-110 active:scale-[0.97] ' +
-      'disabled:pointer-events-none disabled:opacity-50 ' +
-      this.pillSize(),
-  );
+  readonly wrapperClass = computed(() => {
+    if (this.isDisabled()) return 'border-line cursor-not-allowed opacity-60';
+    if (this.invalid()) return 'border-danger';
+    return 'border-line focus-within:border-line-strong';
+  });
 
-  readonly blockTriggerClass = computed(
+  /** Botão circular gradiente do assistente (fim da toolbar). */
+  readonly assistantBtnClass = computed(
     () =>
-      'atm-focus inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 font-medium ' +
-      'text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink ' +
-      'disabled:pointer-events-none disabled:opacity-40 ' +
-      this.btnHeight(),
+      'atm-focus ml-0.5 inline-flex shrink-0 cursor-pointer items-center justify-center ' +
+      'rounded-full bg-gradient-to-r from-primary to-info text-white shadow-sm ' +
+      'transition-[filter,transform] hover:brightness-110 active:scale-95 ' +
+      'disabled:pointer-events-none disabled:opacity-50 ' +
+      this.btnSize(),
   );
 
   constructor() {
@@ -653,7 +636,7 @@ export class AtmRichText extends AtmValueAccessor<string> {
       if (!el || document.activeElement === el) return;
       if (el.innerHTML !== value) {
         el.innerHTML = value;
-        this.updateEmpty();
+        this.updateStats();
         this.applyHighlights();
       }
     });
@@ -704,23 +687,24 @@ export class AtmRichText extends AtmValueAccessor<string> {
 
   // ======================= Toolbar / formatação =======================
 
-  /** Classe dos botões da toolbar; `cmd` marca ativo via queryCommandState. */
+  /** Botão circular da toolbar; `cmd` marca ativo via queryCommandState. */
   tbClass(cmd?: string): string {
-    const active = cmd ? this.cmdState(cmd) : false;
-    return (
-      `atm-focus inline-flex w-8 shrink-0 cursor-pointer items-center justify-center rounded-md ` +
-      `transition-colors disabled:pointer-events-none disabled:opacity-40 ${this.btnHeight()} ` +
-      (active
-        ? 'bg-primary-soft text-primary'
-        : 'text-ink-muted hover:bg-surface-alt hover:text-ink')
-    );
+    return this.circleBtn(cmd ? this.cmdState(cmd) : false, this.btnSize());
+  }
+
+  /** Botão circular de bloco (H1, H2, citação...); ativo pelo bloco atual. */
+  tbBlockClass(tag: string): string {
+    return this.circleBtn(this.currentBlock() === tag, this.btnSize());
   }
 
   bubbleBtn(cmd?: string): string {
-    const active = cmd ? this.cmdState(cmd) : false;
+    return this.circleBtn(cmd ? this.cmdState(cmd) : false, 'size-8 text-[13px]');
+  }
+
+  private circleBtn(active: boolean, size: string): string {
     return (
-      'atm-focus flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md ' +
-      'text-[13px] transition-colors ' +
+      `atm-focus inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full ` +
+      `transition-colors disabled:pointer-events-none disabled:opacity-40 ${size} ` +
       (active
         ? 'bg-primary-soft text-primary'
         : 'text-ink-muted hover:bg-surface-alt hover:text-ink')
@@ -741,7 +725,7 @@ export class AtmRichText extends AtmValueAccessor<string> {
       command !== 'undo' && command !== 'redo' && !!el.querySelector('span[data-atm-hl]');
     if (dance) {
       const offsets = this.selectionOffsets(el);
-      el.querySelectorAll('span[data-atm-hl]').forEach((span) => this.unwrapSpan(span));
+      el.querySelectorAll('span[data-atm-hl]').forEach((span) => this.unwrapElement(span));
       el.normalize();
       if (offsets) this.restoreRange(el, offsets.start, offsets.end);
     }
@@ -763,8 +747,12 @@ export class AtmRichText extends AtmValueAccessor<string> {
   }
 
   setBlock(tag: string): void {
-    this.blockMenuOpen.set(false);
     this.exec('formatBlock', tag.toUpperCase());
+  }
+
+  /** Alterna o bloco atual: clicar de novo volta para parágrafo. */
+  toggleBlock(tag: string): void {
+    this.setBlock(this.currentBlock() === tag ? 'p' : tag);
   }
 
   setLink(): void {
@@ -777,11 +765,61 @@ export class AtmRichText extends AtmValueAccessor<string> {
     this.exec('formatBlock', 'P');
   }
 
+  /** Toggle de código inline: dentro de <code> desfaz; com seleção, embrulha. */
   wrapInlineCode(): void {
+    const el = this.editorRef()?.nativeElement;
     const sel = document.getSelection();
-    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
-    const html = this.rangeHtml(sel.getRangeAt(0));
-    this.exec('insertHTML', `<code>${html}</code>`);
+    if (!el || !sel || sel.rangeCount === 0) return;
+
+    // Toggle OFF: cursor ou seleção dentro de um <code> — desfaz o elemento
+    // inteiro, preservando o texto e a seleção (por offsets, texto não muda).
+    const code = this.closestInlineCode();
+    if (code) {
+      const offsets = this.selectionOffsets(el);
+      this.unwrapElement(code);
+      el.normalize();
+      if (offsets) this.restoreRange(el, offsets.start, offsets.end);
+      this.selTick.update((t) => t + 1);
+      this.syncFromDom();
+      return;
+    }
+
+    // Toggle ON: embrulha o texto selecionado (plain text, escapado).
+    if (sel.isCollapsed) return;
+    const text = sel.getRangeAt(0).toString();
+    if (!text.trim()) return;
+    const escaped = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    // O zero-width space depois do </code> dá ao cursor um lugar FORA do
+    // elemento — sem ele, tudo que se digita em seguida vira código também.
+    this.exec('insertHTML', `<code>${escaped}</code>&#8203;`);
+  }
+
+  /** <code> inline (fora de <pre>) que contém a seleção atual, se houver. */
+  private closestInlineCode(): HTMLElement | null {
+    const el = this.editorRef()?.nativeElement;
+    const node = document.getSelection()?.anchorNode;
+    if (!el || !node) return null;
+    const element = node instanceof HTMLElement ? node : node.parentElement;
+    if (element?.closest('pre')) return null;
+    const code = element?.closest('code');
+    return code && el.contains(code) ? code : null;
+  }
+
+  /** Estado ativo do botão de código inline. */
+  inlineCodeActive(): boolean {
+    this.selTick();
+    return this.closestInlineCode() !== null;
+  }
+
+  tbCodeClass(): string {
+    return this.circleBtn(this.inlineCodeActive(), this.btnSize());
+  }
+
+  bubbleCodeClass(): string {
+    return this.circleBtn(this.inlineCodeActive(), 'size-8 text-[13px]');
   }
 
   currentBlock(): string {
@@ -791,11 +829,6 @@ export class AtmRichText extends AtmValueAccessor<string> {
     } catch {
       return 'p';
     }
-  }
-
-  blockLabel(): string {
-    const current = this.currentBlock();
-    return BLOCK_FORMATS.find((f) => f.value === current)?.label ?? 'Texto normal';
   }
 
   private cmdState(command: string): boolean {
@@ -859,25 +892,25 @@ export class AtmRichText extends AtmValueAccessor<string> {
   private syncFromDom(): void {
     const el = this.editorRef()?.nativeElement;
     if (!el) return;
-    this.updateEmpty();
+    this.updateStats();
     this.setValue(el.innerHTML);
   }
 
-  private updateEmpty(): void {
+  private updateStats(): void {
     const el = this.editorRef()?.nativeElement;
     if (!el) return;
-    const empty =
-      (el.textContent ?? '').trim().length === 0 && !el.querySelector('img, hr, li, table');
-    this.isEmpty.set(empty);
+    // Zero-width spaces (usados como "âncora" do cursor) não contam.
+    const text = (el.textContent ?? '').replace(/\u200B/g, '').trim();
+    this.isEmpty.set(text.length === 0 && !el.querySelector('img, hr, li, table'));
+    this.charCount.set(text.length);
+    this.wordCount.set(text ? text.split(/\s+/).length : 0);
   }
 
   closeMenus(): void {
-    this.blockMenuOpen.set(false);
     this.aiMenuOpen.set(false);
   }
 
   closeAllOverlays(): void {
-    this.blockMenuOpen.set(false);
     this.aiMenuOpen.set(false);
     this.aiBoxOpen.set(false);
     this.bubbleVisible.set(false);
@@ -1055,19 +1088,23 @@ export class AtmRichText extends AtmValueAccessor<string> {
     // Nada configurado e nada marcado — sai sem tocar no DOM.
     if (!highlights.length && !el.querySelector('span[data-atm-hl]')) return;
 
-    const caret = document.activeElement === el ? this.caretOffset(el) : null;
+    // Marcador físico na posição do cursor: sobrevive a unwrap/normalize/wrap
+    // sem a ambiguidade de offsets de texto (fim de linha vs. início de uma
+    // linha vazia têm o mesmo offset — era isso que jogava o cursor de volta
+    // para a linha de cima ao dar Enter).
+    const marker = document.activeElement === el ? this.insertCaretMarker(el) : null;
 
     // Remove as marcas antigas (o texto interno é preservado).
-    el.querySelectorAll('span[data-atm-hl]').forEach((span) => this.unwrapSpan(span));
+    el.querySelectorAll('span[data-atm-hl]').forEach((span) => this.unwrapElement(span));
     el.normalize();
 
     for (const highlight of highlights) {
       this.wrapMatches(el, highlight);
     }
 
-    if (caret !== null) this.restoreCaret(el, caret);
+    if (marker) this.restoreCaretFromMarker(marker);
     if (emit) {
-      this.updateEmpty();
+      this.updateStats();
       this.setValue(el.innerHTML);
     }
   }
@@ -1132,15 +1169,15 @@ export class AtmRichText extends AtmValueAccessor<string> {
     if ((span.textContent ?? '').toLowerCase() !== expected) {
       // Sem normalize() aqui: fundir text nodes moveria o cursor no meio da
       // digitação. A varredura completa normaliza depois, com o caret salvo.
-      this.unwrapSpan(span);
+      this.unwrapElement(span);
     }
   }
 
-  private unwrapSpan(span: Element): void {
-    const parent = span.parentNode;
+  private unwrapElement(element: Element): void {
+    const parent = element.parentNode;
     if (!parent) return;
-    while (span.firstChild) parent.insertBefore(span.firstChild, span);
-    parent.removeChild(span);
+    while (element.firstChild) parent.insertBefore(element.firstChild, element);
+    parent.removeChild(element);
   }
 
   /** Início/fim da seleção como offsets de texto dentro do editor. */
@@ -1183,37 +1220,29 @@ export class AtmRichText extends AtmValueAccessor<string> {
     sel.addRange(range);
   }
 
-  private caretOffset(root: HTMLElement): number | null {
+  /** Insere um span vazio invisível exatamente onde o cursor está. */
+  private insertCaretMarker(root: HTMLElement): HTMLElement | null {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0 || !sel.isCollapsed) return null;
     const range = sel.getRangeAt(0);
     if (!root.contains(range.startContainer)) return null;
-    const pre = range.cloneRange();
-    pre.selectNodeContents(root);
-    pre.setEnd(range.startContainer, range.startOffset);
-    return pre.toString().length;
+    const marker = document.createElement('span');
+    marker.setAttribute('data-atm-caret', '');
+    range.insertNode(marker);
+    return marker;
   }
 
-  private restoreCaret(root: HTMLElement, offset: number): void {
+  /** Recoloca o cursor onde o marcador está e o remove do DOM. */
+  private restoreCaretFromMarker(marker: HTMLElement): void {
+    const parent = marker.parentNode;
+    if (!parent) return;
+    const index = Array.prototype.indexOf.call(parent.childNodes, marker);
+    marker.remove();
     const sel = document.getSelection();
     if (!sel) return;
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let remaining = offset;
-    let node: Text | null;
-    while ((node = walker.nextNode() as Text | null)) {
-      if (remaining <= node.length) {
-        const range = document.createRange();
-        range.setStart(node, remaining);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        return;
-      }
-      remaining -= node.length;
-    }
     const range = document.createRange();
-    range.selectNodeContents(root);
-    range.collapse(false);
+    range.setStart(parent, index);
+    range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
   }
