@@ -1,10 +1,8 @@
 /* =========================================================================
    Atmus UI — Design tokens, dark theme and shared component styles.
-   This file lives inside src/core/ui so the whole library can be copied
-   to another project as a single folder. Import it from your styles.css:
-
-     @import 'tailwindcss';
-     @import './core/ui/styles/atmus.css';
+   Not consumed directly — bundled by build-styles.mjs (together with
+   Tailwind's compiled utilities and the icofont CSS) into the single
+   dist/ngui/styles.css published as '@atmus/ngui/styles.css'.
    ========================================================================= */
 
 /* Dark mode is class-based: AtmThemeService toggles `.dark` on <html>. */

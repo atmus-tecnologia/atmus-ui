@@ -5,7 +5,7 @@ import {
   AtmColorSwatch,
   AtmColorSwatchPicker,
   AtmLabel,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -24,7 +24,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Cores"
       description="Componentes de seleção e exibição de cor."
-      importCode="import { AtmColorSwatch, AtmColorSwatchPicker, AtmColorField } from 'src/core/ui';"
+      importCode="import { AtmColorSwatch, AtmColorSwatchPicker, AtmColorField } from '@atmus/ngui';"
     >
       <demo-section id="color-swatch" title="ColorSwatch" [code]="swatchCode">
         <atm-color-swatch color="#6366f1" size="large" />
@@ -101,6 +101,6 @@ export class ColorsPage {
   readonly tokensCode = `:root {
   --atm-primary: #6366f1;
   --atm-radius: 0.625rem;
-  /* ... veja src/core/ui/styles/atmus.css */
+  /* ... veja @atmus/ngui/styles/atmus.css */
 }`;
 }

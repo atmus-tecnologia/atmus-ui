@@ -22,7 +22,7 @@ import {
   AtmTable,
   AtmTableColumn,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { FormsModule } from '@angular/forms';
 
 interface Kpi {

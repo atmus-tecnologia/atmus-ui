@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AtmThemeService } from '../core/ui';
+import { AtmThemeService } from '@atmus/ngui';
 
 @Component({
   selector: 'app-root',

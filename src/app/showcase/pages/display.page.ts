@@ -17,7 +17,7 @@ import {
   AtmTab,
   AtmTabs,
   AtmTypography,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -48,7 +48,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Exibição"
       description="Componentes de apresentação de conteúdo."
-      importCode="import { AtmAvatar, AtmBadge, AtmChip, AtmCard, AtmAccordion, AtmTabs, ... } from 'src/core/ui';"
+      importCode="import { AtmAvatar, AtmBadge, AtmChip, AtmCard, AtmAccordion, AtmTabs, ... } from '@atmus/ngui';"
     >
       <demo-section id="avatar" title="Avatar" description="Iniciais com cor determinística pelo nome." [code]="avatarCode">
         <atm-avatar size="large" name="Ana Souza" status="online" />

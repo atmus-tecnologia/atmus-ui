@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AtmRestService } from '../../core/ui';
+import { AtmRestService } from '@atmus/ngui';
 
 export interface Contact {
   id: number;

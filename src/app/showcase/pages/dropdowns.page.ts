@@ -11,7 +11,7 @@ import {
   AtmDropdownRemote,
   AtmLabel,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { ContactsService } from '../../services/contacts.service';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
@@ -33,7 +33,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Dropdown, Context Menu & Remote"
       description="Menus de ação (por clique ou botão direito) e seleção remota via API. Todos são viewport-aware: reposicionam automaticamente quando não há espaço."
-      importCode="import { AtmDropdown, AtmContextMenu, AtmContextMenuTrigger, AtmDropdownRemote } from 'src/core/ui';"
+      importCode="import { AtmDropdown, AtmContextMenu, AtmContextMenuTrigger, AtmDropdownRemote } from '@atmus/ngui';"
     >
       <demo-section
         id="dropdown"
@@ -231,7 +231,7 @@ menu.open(mouseEvent, { items, header: 'Título', data: alvo });`;
 
   readonly serviceCode = `// contacts.service.ts
 import { Injectable } from '@angular/core';
-import { AtmRestService } from 'src/core/ui';
+import { AtmRestService } from '@atmus/ngui';
 
 export interface Contact {
   id: number;

@@ -6,7 +6,7 @@ import {
   AtmProgressCircle,
   AtmSkeleton,
   AtmSpinner,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -26,7 +26,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Feedback"
       description="Estados de carregamento, progresso e mensagens."
-      importCode="import { AtmAlert, AtmProgressBar, AtmProgressCircle, AtmMeter, AtmSkeleton, AtmSpinner } from 'src/core/ui';"
+      importCode="import { AtmAlert, AtmProgressBar, AtmProgressCircle, AtmMeter, AtmSkeleton, AtmSpinner } from '@atmus/ngui';"
     >
       <demo-section id="alert" title="Alert" [code]="alertCode">
         <div class="flex w-full flex-col gap-3">

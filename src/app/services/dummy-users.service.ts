@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { AtmListQuery, AtmPaginated, AtmRemoteDataSource } from '../../core/ui';
+import { AtmListQuery, AtmPaginated, AtmRemoteDataSource } from '@atmus/ngui';
 
 export interface DummyUser extends Record<string, unknown> {
   id: number;

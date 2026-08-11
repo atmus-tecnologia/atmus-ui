@@ -17,7 +17,7 @@ import {
   AtmSelectOption,
   AtmTimeField,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 
 interface Category {
   id: string;

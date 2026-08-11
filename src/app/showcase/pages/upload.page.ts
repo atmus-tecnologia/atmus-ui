@@ -6,7 +6,7 @@ import {
   AtmImageCrop,
   AtmLabel,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 /** Colorful offline sample image (SVG data URL) for the standalone cropper. */
@@ -34,7 +34,7 @@ const SAMPLE_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='960' height='
     <demo-page
       title="Upload & Crop"
       description="Área de arrastar-e-soltar com preview, múltiplos tipos, envio via FormData e recorte de imagens em diálogo."
-      importCode="import { AtmFileInput, AtmImageCrop, AtmImageCropDialog } from 'src/core/ui';"
+      importCode="import { AtmFileInput, AtmImageCrop, AtmImageCropDialog } from '@atmus/ngui';"
     >
       <!-- Básico -->
       <demo-section

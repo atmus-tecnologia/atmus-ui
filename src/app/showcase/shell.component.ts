@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
-import { AtmThemeService } from '../../core/ui';
-import { AtmToastContainer } from '../../core/ui';
+import { AtmThemeService } from '@atmus/ngui';
+import { AtmToastContainer } from '@atmus/ngui';
 
 interface MenuItem {
   label: string;
@@ -241,6 +241,15 @@ const MENU: MenuGroup[] = [
       { label: 'Flow — Eventos', link: '/flow', fragment: 'flow-events', badge: 'novo' },
       { label: 'Flow — Layout & JSON', link: '/flow', fragment: 'flow-json', badge: 'novo' },
       { label: 'Flow — Stress test', link: '/flow', fragment: 'flow-stress', badge: 'novo' },
+    ],
+  },
+  {
+    label: 'Simulações',
+    icon: 'icofont-building-alt',
+    items: [
+      { label: 'Office — Escritório', link: '/office', fragment: 'office', badge: 'novo' },
+      { label: 'Office — Equipe custom', link: '/office', fragment: 'office-custom', badge: 'novo' },
+      { label: 'Office — API backend', link: '/office', fragment: 'office-api', badge: 'API' },
     ],
   },
   {

@@ -6,7 +6,7 @@ import {
   AtmChartTreeEvent,
   AtmChartTreeNode,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Gráficos"
       description="AtmChart renderiza em canvas HTML5 com animações, tooltip interativo, legenda clicável, dark mode automático e responsividade. Tipos: line, area, bar, bar-horizontal, pie, donut, radar, funnel (horizontal, vertical e pirâmide), heatmap, treemap com drill-down e mistos."
-      importCode="import { AtmChart } from 'src/core/ui';"
+      importCode="import { AtmChart } from '@atmus/ngui';"
     >
       <demo-section
         id="chart-line"

@@ -14,7 +14,7 @@ import {
   AtmToastService,
   AtmTooltip,
   AtmTooltipPlacement,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { FormsModule } from '@angular/forms';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
@@ -80,7 +80,7 @@ export class ProductListDemo {
     <demo-page
       title="Overlays"
       description="Modais, diálogos dinâmicos, drawers, popovers, tooltips e toasts."
-      importCode="import { AtmModal, AtmDialogService, AtmAlertDialogService, AtmDrawer, AtmPopover, AtmTooltip, AtmToastService } from 'src/core/ui';"
+      importCode="import { AtmModal, AtmDialogService, AtmAlertDialogService, AtmDrawer, AtmPopover, AtmTooltip, AtmToastService } from '@atmus/ngui';"
     >
       <demo-section
         id="modal"

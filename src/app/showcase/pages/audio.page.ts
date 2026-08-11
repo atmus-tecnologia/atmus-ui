@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { AtmAudioVisualizer, AtmButton } from '../../../core/ui';
+import { AtmAudioVisualizer, AtmButton } from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 /** Música de demonstração com CORS liberado (necessário para o analyser). */
@@ -14,7 +14,7 @@ const DEMO_URL = 'https://d1j1y3gb82cpmr.cloudfront.net/audio_player/download_so
       title="Áudio"
       description="Visualizador de intensidade de áudio com Web Audio API — toca URLs, reage a
         streams do microfone e anima em três estilos diferentes."
-      importCode="import { AtmAudioVisualizer } from 'src/core/ui';"
+      importCode="import { AtmAudioVisualizer } from '@atmus/ngui';"
     >
       <demo-section
         id="audio-url"

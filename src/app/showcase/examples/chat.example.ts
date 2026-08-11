@@ -27,7 +27,7 @@ import {
   AtmTextarea,
   AtmToastService,
   AtmTooltip,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 
 type Channel = 'whatsapp' | 'email' | 'site';
 

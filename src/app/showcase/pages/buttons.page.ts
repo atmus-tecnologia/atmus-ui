@@ -6,7 +6,7 @@ import {
   AtmToggleButton,
   AtmToggleButtonGroup,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DemoPage, DemoSection } from '../demo-section.component';
@@ -28,7 +28,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Botões"
       description="Ações com variantes solid, soft, outline e ghost, seis cores semânticas e três tamanhos."
-      importCode="import { AtmButton, AtmButtonGroup, AtmCloseButton, AtmToggleButton, AtmToggleButtonGroup } from 'src/core/ui';"
+      importCode="import { AtmButton, AtmButtonGroup, AtmCloseButton, AtmToggleButton, AtmToggleButtonGroup } from '@atmus/ngui';"
     >
       <demo-section id="button" title="Button" description="Variantes e cores." [code]="variantsCode">
         <div class="flex w-full flex-col gap-3">

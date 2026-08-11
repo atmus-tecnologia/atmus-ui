@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtmRichText, AtmRichTextConfig } from '../../../core/ui';
+import { AtmRichText, AtmRichTextConfig } from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 const BASIC_VALUE = `<h2>Bem-vindo ao editor ✍️</h2>
@@ -25,7 +25,7 @@ const HIGHLIGHT_VALUE = `<p>O deploy do serviço <strong>Atmus API</strong> fico
       description="Editor de texto rico com toolbar completa, bubble de formatação ao selecionar,
         assistente de IA opcional (seleção ou documento inteiro), highlights automáticos por
         configuração e altura controlada com scroll. Integra ngModel/formControl — o valor é HTML."
-      importCode="import { AtmRichText } from 'src/core/ui';"
+      importCode="import { AtmRichText } from '@atmus/ngui';"
     >
       <demo-section
         id="rich-text"

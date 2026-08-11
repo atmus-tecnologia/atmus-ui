@@ -8,7 +8,7 @@ import {
   AtmRadioGroup,
   AtmSlider,
   AtmSwitch,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -30,7 +30,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Seleção"
       description="Controles booleanos e de escolha, todos integrados a ngModel / Reactive Forms."
-      importCode="import { AtmCheckbox, AtmCheckboxGroup, AtmRadioGroup, AtmSwitch, AtmSlider } from 'src/core/ui';"
+      importCode="import { AtmCheckbox, AtmCheckboxGroup, AtmRadioGroup, AtmSwitch, AtmSlider } from '@atmus/ngui';"
     >
       <demo-section id="checkbox" title="Checkbox" [code]="checkboxCode">
         <div class="flex flex-col gap-3">

@@ -1,21 +1,21 @@
 ---
 name: atmus-component
-description: Cria novos componentes para a biblioteca Atmus UI (src/core/ui) seguindo o design system do projeto — prefixo atm, sizes large/medium/slim, tokens de tema, dark mode, overlays viewport-aware e integração com forms. Usar sempre que o usuário pedir para criar, alterar ou padronizar um componente de UI neste projeto (ou em projetos que usem a pasta core/ui).
+description: Cria novos componentes para a biblioteca Atmus UI (projects/ngui, publicada no npm como @atmus/ngui) seguindo o design system do projeto — prefixo atm, sizes large/medium/slim, tokens de tema, dark mode, overlays viewport-aware e integração com forms. Usar sempre que o usuário pedir para criar, alterar ou padronizar um componente de UI neste projeto.
 ---
 
 # Criando componentes Atmus UI
 
 ## Regras obrigatórias
 
-1. **Local**: `src/core/ui/components/<nome>/<nome>.component.ts`. A lib inteira precisa continuar portátil (copiar `src/core/ui` para outro projeto deve funcionar). Nunca importe nada de fora de `src/core/ui` dentro da lib.
+1. **Local**: `projects/ngui/src/lib/components/<nome>/<nome>.component.ts`. A lib precisa continuar autocontida (publicável como `@atmus/ngui`). Nunca importe nada de fora de `projects/ngui/src/lib` dentro da lib.
 2. **Seletor**: prefixo `atm-` (ex.: `atm-rating`). Classe `Atm<Nome>` sem sufixo Component.
 3. **Standalone** (sem `standalone: true` — é default), `ChangeDetectionStrategy.OnPush`, `input()`/`output()`/`model()`/`signal()`/`computed()` — nunca decorators, nunca `@HostBinding/@HostListener` (usar `host: {}`).
-4. **Size**: todo componente dimensionável recebe `readonly size = input<AtmSize>('medium')` com `large | medium | slim`. Alturas padrão: large=h-12, medium=h-10, slim=h-8 (constantes `ATM_SIZE_HEIGHT/TEXT/PX` em `src/core/ui/types.ts`).
+4. **Size**: todo componente dimensionável recebe `readonly size = input<AtmSize>('medium')` com `large | medium | slim`. Alturas padrão: large=h-12, medium=h-10, slim=h-8 (constantes `ATM_SIZE_HEIGHT/TEXT/PX` em `projects/ngui/src/lib/types.ts`).
 5. **Cores**: usar apenas classes Tailwind mapeadas para tokens: `bg-primary`, `text-ink`, `text-ink-muted`, `text-ink-faint`, `bg-surface`, `bg-surface-alt`, `border-line`, `bg-success-soft` etc. NUNCA cores fixas (`bg-indigo-500`) — assim o dark mode funciona sozinho. Componentes com cor semântica recebem `color = input<AtmColor>('primary')`.
 6. **Ícones**: icofont via `<i class="icofont-nome">` ou `<atm-icon name="nome" />`. Nunca SVG externo/lib de ícones diferente.
 7. **Template inline** (template: `...`), CSS via Tailwind no template — não criar arquivos .html/.css separados.
-8. **Registrar** o componente em `src/core/ui/index.ts` (export) e em `src/core/ui/atmus-ui.module.ts` (array COMPONENTS).
-9. **Showcase**: adicionar demo na página adequada de `src/app/showcase/pages/` (usar `<demo-section id="..." title="..." [code]="...">`) e o item no menu em `src/app/showcase/shell.component.ts`.
+8. **Registrar** o componente em `projects/ngui/src/public-api.ts` (export) e em `projects/ngui/src/lib/atmus-ui.module.ts` (array COMPONENTS).
+9. **Showcase**: adicionar demo na página adequada de `src/app/showcase/pages/` (usar `<demo-section id="..." title="..." [code]="...">`) e o item no menu em `src/app/showcase/shell.component.ts`. Depois de mudar a lib, rode `npm run build:ngui` para o showcase pegar a versão nova.
 
 ## Classes utilitárias compartilhadas (em atmus.css)
 
@@ -28,7 +28,7 @@ description: Cria novos componentes para a biblioteca Atmus UI (src/core/ui) seg
 ## Receitas por tipo de componente
 
 ### Campo de formulário (integra ngModel/formControl)
-Estenda `AtmValueAccessor<T>` (em `src/core/ui/utils/value-accessor.ts`) e registre o provider:
+Estenda `AtmValueAccessor<T>` (em `projects/ngui/src/lib/utils/value-accessor.ts`) e registre o provider:
 
 ```typescript
 @Component({
@@ -52,7 +52,7 @@ export class AtmRating extends AtmValueAccessor<number> {
 Inputs padrão de campos: `size`, `disabled`, `invalid`, `placeholder` (quando fizer sentido).
 
 ### Overlay (dropdown/popover/painel flutuante)
-Estenda `AtmOverlayBase` (em `src/core/ui/utils/overlay-base.ts`). Ela já resolve:
+Estenda `AtmOverlayBase` (em `projects/ngui/src/lib/utils/overlay-base.ts`). Ela já resolve:
 - posicionamento `position: fixed` com flip automático quando falta espaço na viewport;
 - fechar com Escape / clique fora; reposicionar em scroll/resize (listeners passivos fora do NgZone).
 
@@ -71,7 +71,7 @@ Se precisar de CVA junto (como select), implemente `ControlValueAccessor` manual
 Dropdowns com lista devem aceitar `[hasActionButton]` + `actionButtonLabel` + `(actionClick)` — botão de footer "Adicionar novo" (copiar o bloco de `select.component.ts`).
 
 ### Componente remoto (dados de API)
-Receba `dataSource = input.required<AtmRemoteDataSource>()` (contrato em `src/core/ui/services/rest.service.ts`, padrão nest-paginator: `?sortBy=id:DESC&page=1&search=x`). Busca com `Subject + debounceTime(300) + switchMap`, máx. 10 registros (`limit`), estados `loading/error/empty` visíveis. Referência: `dropdown-remote.component.ts`.
+Receba `dataSource = input.required<AtmRemoteDataSource>()` (contrato em `projects/ngui/src/lib/services/rest.service.ts`, padrão nest-paginator: `?sortBy=id:DESC&page=1&search=x`). Busca com `Subject + debounceTime(300) + switchMap`, máx. 10 registros (`limit`), estados `loading/error/empty` visíveis. Referência: `dropdown-remote.component.ts`.
 
 ### Serviço de overlay imperativo (modal/toast)
 Use `createComponent` + `appRef.attachView` + append no `document.body`. Referências: `dialog.service.ts` (retorna ref com `onClose`), `alert-dialog.service.ts` (retorna Promise). Modais devem ter botão expandir (90vw/90vh com margem) ao lado do fechar.
@@ -82,6 +82,6 @@ Use `createComponent` + `appRef.attachView` + append no `document.body`. Referê
 - [ ] `size` com large/medium/slim usando as constantes de types.ts
 - [ ] Só cores de token (funciona no dark automaticamente — testar com a classe `.dark`)
 - [ ] Acessibilidade: roles, aria-*, foco visível (`.atm-focus`), navegação por teclado em listas
-- [ ] Exportado em `index.ts` + `atmus-ui.module.ts`
+- [ ] Exportado em `public-api.ts` + `atmus-ui.module.ts`
 - [ ] Demo + menu no showcase
-- [ ] `npx ng build` sem erros
+- [ ] `npx ng build ngui` sem erros

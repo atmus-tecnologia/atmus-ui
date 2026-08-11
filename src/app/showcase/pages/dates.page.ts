@@ -8,7 +8,7 @@ import {
   AtmDateRangePicker,
   AtmLabel,
   AtmTimeField,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -28,7 +28,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Datas"
       description="Calendário, pickers de data e período, e campo de hora — pt-BR (dd/mm/aaaa)."
-      importCode="import { AtmCalendar, AtmDatePicker, AtmDateRangePicker, AtmTimeField } from 'src/core/ui';"
+      importCode="import { AtmCalendar, AtmDatePicker, AtmDateRangePicker, AtmTimeField } from '@atmus/ngui';"
     >
       <demo-section id="calendar" title="Calendar" [code]="calendarCode">
         <atm-calendar [(value)]="date" />
@@ -142,7 +142,7 @@ export class DatesPage {
   readonly rangeCalendarCode = `<atm-calendar [range]="true" [(rangeValue)]="range" />`;
   readonly datePickerCode = `<atm-date-picker [(ngModel)]="birthday" placeholder="dd/mm/aaaa" />`;
   readonly editableCode = `<atm-date-picker [editable]="true" [(ngModel)]="issueDate" />`;
-  readonly presetsCode = `import { ATM_DATE_PRESETS } from 'src/core/ui';
+  readonly presetsCode = `import { ATM_DATE_PRESETS } from '@atmus/ngui';
 
 <atm-date-picker [(ngModel)]="deliveryDate" [presets]="datePresets" />
 <!-- ou presets próprios: [{ label: 'Hoje', value: () => new Date() }, ...] -->`;

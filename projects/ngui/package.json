@@ -1,0 +1,21 @@
+{
+  "name": "@atmus/ngui",
+  "version": "0.1.0",
+  "description": "Biblioteca de componentes Angular do Atmus UI.",
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "rxjs": "~7.8.0"
+  },
+  "dependencies": {
+    "@icon/icofont": "^1.0.1-alpha.1",
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "exports": {
+    "./styles.css": "./styles.css"
+  }
+}

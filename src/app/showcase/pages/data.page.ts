@@ -11,7 +11,7 @@ import {
   AtmTableFilter,
   AtmToastService,
   AtmToolbar,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 import { DummyUsersService, DummyUser } from '../../services/dummy-users.service';
 
@@ -59,7 +59,7 @@ const USERS: User[] = [
     <demo-page
       title="Dados & Navegação"
       description="Tabela com ordenação, filtros por coluna, seleção, colunas fixas, scroll, footer e dados via API; paginação, breadcrumbs e toolbar."
-      importCode="import { AtmTable, AtmPagination, AtmBreadcrumbs, AtmToolbar } from 'src/core/ui';"
+      importCode="import { AtmTable, AtmPagination, AtmBreadcrumbs, AtmToolbar } from '@atmus/ngui';"
     >
       <demo-section
         id="table"

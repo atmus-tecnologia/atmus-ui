@@ -19,7 +19,7 @@ import {
   AtmSwitch,
   AtmTextarea,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 
 const TEAM = [
   { name: 'Ana Souza', src: 'https://i.pravatar.cc/80?img=1' },

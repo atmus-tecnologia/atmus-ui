@@ -11,7 +11,7 @@ import {
   AtmTags,
   AtmTagsOption,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 interface Tech {
@@ -45,7 +45,7 @@ interface DemoUser {
     <demo-page
       title="Select, ListBox e Autocomplete"
       description="Seleção de opções locais. O painel detecta o espaço disponível na viewport e abre para cima quando necessário."
-      importCode="import { AtmSelect, AtmListbox, AtmAutocomplete } from 'src/core/ui';"
+      importCode="import { AtmSelect, AtmListbox, AtmAutocomplete } from '@atmus/ngui';"
     >
       <demo-section
         id="select"

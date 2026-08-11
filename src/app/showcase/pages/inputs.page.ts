@@ -15,7 +15,7 @@ import {
   AtmTagGroup,
   AtmTextarea,
   AtmToastService,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 @Component({
@@ -44,7 +44,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     <demo-page
       title="Entradas"
       description="Um único atm-input cobre text, email, password, tel e url via [type]. Senha ganha toggle de visibilidade automático."
-      importCode="import { AtmInput, AtmInputGroup, AtmTextarea, AtmNumberField, AtmSearchField, AtmInputOtp, AtmTagGroup } from 'src/core/ui';"
+      importCode="import { AtmInput, AtmInputGroup, AtmTextarea, AtmNumberField, AtmSearchField, AtmInputOtp, AtmTagGroup } from '@atmus/ngui';"
     >
       <demo-section
         id="input"

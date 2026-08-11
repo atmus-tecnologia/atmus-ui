@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AtmBadge, AtmButton, AtmCard } from '../../../core/ui';
+import { AtmBadge, AtmButton, AtmCard } from '@atmus/ngui';
 import { DemoSection } from '../demo-section.component';
 
 @Component({
@@ -25,21 +25,20 @@ import { DemoSection } from '../demo-section.component';
     </header>
 
     <div class="mb-10 grid gap-4 sm:grid-cols-3">
-      <atm-card header="Portátil" subheader="Copie src/core/ui para qualquer projeto e pronto." />
+      <atm-card header="Instalável" subheader="npm install @atmus/ngui e pronto — sem copiar pastas." />
       <atm-card header="Consistente" subheader="Todos os componentes seguem o mesmo size system." />
       <atm-card header="Temável" subheader="Cores em :root — troque a marca em um lugar só." />
     </div>
 
     <demo-section
       title="Instalação em outro projeto"
-      description="A lib inteira vive em src/core/ui. Para levar para outro projeto:"
+      description="A lib é publicada no npm como @atmus/ngui, com CSS já compilado."
       language="bash"
       [code]="installCode"
     >
       <ol class="list-inside list-decimal space-y-2 text-sm text-ink-muted">
-        <li>Copie a pasta <code class="text-primary">src/core/ui</code> para o novo projeto</li>
-        <li>Instale <code class="text-primary">tailwindcss</code> e <code class="text-primary">&#64;icon/icofont</code></li>
-        <li>Importe <code class="text-primary">atmus.css</code> no styles.css global</li>
+        <li><code class="text-primary">npm install @atmus/ngui</code> (ou yarn/pnpm/bun)</li>
+        <li>Importe <code class="text-primary">@atmus/ngui/styles.css</code> no styles.css global</li>
         <li>Adicione <code class="text-primary">provideAtmusUi()</code> no app.config.ts</li>
       </ol>
     </demo-section>
@@ -71,14 +70,13 @@ import { DemoSection } from '../demo-section.component';
   `,
 })
 export class HomePage {
-  readonly installCode = `# no novo projeto
-npm install tailwindcss @tailwindcss/postcss postcss @icon/icofont
-
-# copie a pasta da lib
-cp -r ../atmus-ui/src/core/ui ./src/core/ui`;
+  readonly installCode = `npm install @atmus/ngui
+# yarn add @atmus/ngui
+# pnpm add @atmus/ngui
+# bun add @atmus/ngui`;
 
   readonly configCode = `// app.config.ts
-import { provideAtmusUi } from './core/ui';
+import { provideAtmusUi } from '@atmus/ngui';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -92,9 +90,7 @@ export const appConfig: ApplicationConfig = {
 };
 
 // styles.css
-@import '@icon/icofont/icofont.css';
-@import 'tailwindcss';
-@import './core/ui/styles/atmus.css';`;
+@import '@atmus/ngui/styles.css';`;
 
   readonly sizeCode = `<atm-button size="large">large · h-12</atm-button>
 <atm-button size="medium">medium · h-10</atm-button>

@@ -14,7 +14,7 @@ import {
   AtmFlowNodeHandle,
   AtmToastService,
   atmUid,
-} from '../../../core/ui';
+} from '@atmus/ngui';
 import { DemoPage, DemoSection } from '../demo-section.component';
 
 /**
@@ -68,7 +68,7 @@ export class NodeSendMessage {
     <demo-page
       title="Flow"
       description="AtmFlow é um editor de fluxogramas estilo React Flow: canvas com pan/zoom, nodes arrastáveis, conexões por drag, nodes customizados via template, grupos (containers coloridos e redimensionáveis), tipos de edge, minimapa, controles, snap, linhas de alinhamento, auto layout, undo/redo (Ctrl+Z), copiar/colar e import/export JSON. Com culling de viewport, aguenta milhares de nodes."
-      importCode="import { AtmFlow, AtmFlowNodeDef } from 'src/core/ui';"
+      importCode="import { AtmFlow, AtmFlowNodeDef } from '@atmus/ngui';"
     >
       <demo-section
         id="flow-basic"

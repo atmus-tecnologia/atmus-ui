@@ -1,0 +1,6 @@
+/* Entry usado só por build-styles.mjs para gerar dist/ngui/styles.css.
+   Não faz parte do pacote publicado nem é importado pela lib em si.
+   O CSS do icofont é injetado à parte pelo script (com os fonts em data URI). */
+@import 'tailwindcss' source(none);
+@source './lib/**/*.ts';
+@import './lib/styles/atmus.css';

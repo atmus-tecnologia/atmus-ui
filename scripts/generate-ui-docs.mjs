@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const ROOT = 'src/core/ui';
-const OUT = path.join(ROOT, 'docs');
+const ROOT = 'projects/ngui/src/lib';
+const OUT = 'projects/ngui/docs';
 fs.mkdirSync(OUT, { recursive: true });
 
 const COMPONENT_FILES = [];
@@ -597,19 +597,19 @@ for (const [slug, d] of bySlug) {
 
 const overview = `# Atmus UI — LLM Catalog
 
-This file is a complete reference for LLMs to correctly use the Atmus UI library (\`src/core/ui\`).
+This file is a complete reference for LLMs to correctly use the Atmus UI library (\`@atmus/ngui\`).
 Prefer importing individual standalone components for tree-shaking, or \`AtmusUiModule\` for prototyping.
 
 ## Setup
 
-1. Copy \`src/core/ui\` into the project (portable — must not import from outside itself).
-2. Import \`atmus.css\` in global styles (after Tailwind).
+1. \`npm install @atmus/ngui\` (or yarn/pnpm/bun).
+2. Import \`@atmus/ngui/styles.css\` in global styles.
 3. Provide config:
 \`\`\`ts
-import { provideAtmusUi } from './core/ui';
+import { provideAtmusUi } from '@atmus/ngui';
 provideAtmusUi({ theme: 'system', serverUrl: environment.serverUrl })
 \`\`\`
-4. Import components or \`AtmusUiModule\`.
+4. Import components or \`AtmusUiModule\` from \`@atmus/ngui\`.
 
 ## Design system conventions
 
