@@ -11,12 +11,14 @@ Este repositório é um Angular workspace com dois projetos:
 
 ```bash
 npm install
-npm run build:ngui   # builda a lib (JS + CSS) para dist/ngui — necessário antes do primeiro serve
+npx ng build ngui   # builda só o JS/tipos da lib para dist/ngui — necessário antes do primeiro serve
 npm start
 # http://localhost:4200
 ```
 
-Ao alterar código em `projects/ngui`, rode `npm run watch:ngui` num terminal separado (rebuild incremental do JS/tipos) e `npm run build:ngui` de novo quando mudar classes Tailwind/CSS, já que o CSS não é observado em modo watch.
+O CSS do showcase é compilado ao vivo pelo Tailwind (escaneando `src/app` e `projects/ngui`), então mudanças de classes aparecem no live-reload normalmente. Só o JS/tipos da lib (`dist/ngui`) precisam de rebuild manual — ao alterar código em `projects/ngui`, rode `npm run watch:ngui` num terminal separado.
+
+`npm run build:ngui` (que também gera o CSS pré-compilado) só é necessário para publicar o pacote — veja "Publicando uma nova versão" abaixo.
 
 ## Instalando em outro projeto
 

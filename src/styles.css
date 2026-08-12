@@ -1,4 +1,7 @@
-/* Atmus UI - global stylesheet */
-/* Dev only: importa o CSS já buildado da lib (rode `npm run build:ngui` antes).
-   Consumidores externos importam '@atmus/ngui/styles.css' via node_modules. */
-@import '../dist/ngui/styles.css';
+/* Atmus UI - global stylesheet (showcase) */
+/* Compila o Tailwind ao vivo escaneando src/app (showcase) + projects/ngui
+   (lib) — cobre as classes usadas nos dois. O CSS pré-compilado publicado
+   em '@atmus/ngui/styles.css' é gerado à parte por build-styles.mjs. */
+@import '@icon/icofont/icofont.css';
+@import 'tailwindcss';
+@import '../projects/ngui/src/lib/styles/atmus.css';
