@@ -1,6 +1,6 @@
 # atm-popover
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/popover/popover.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/popover/popover.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-skeleton
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/skeleton/skeleton.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/skeleton/skeleton.component.ts`
 
 ## Purpose
 

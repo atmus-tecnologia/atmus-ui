@@ -1,6 +1,6 @@
 # AtmToastService
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/toast.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/toast.service.ts`
 
 ## Purpose
 

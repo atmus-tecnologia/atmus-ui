@@ -1,6 +1,6 @@
 # atm-badge
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/badge/badge.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/badge/badge.component.ts`
 
 ## Purpose
 

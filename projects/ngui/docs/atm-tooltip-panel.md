@@ -1,6 +1,6 @@
 # atm-tooltip-panel
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tooltip/tooltip.directive.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tooltip/tooltip.directive.ts`
 
 ## Purpose
 

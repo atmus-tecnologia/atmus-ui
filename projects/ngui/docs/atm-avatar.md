@@ -1,6 +1,6 @@
 # atm-avatar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/avatar/avatar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/avatar/avatar.component.ts`
 
 ## Purpose
 

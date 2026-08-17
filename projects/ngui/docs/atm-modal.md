@@ -1,6 +1,6 @@
 # atm-modal
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/modal/modal.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/modal/modal.component.ts`
 
 ## Purpose
 
@@ -45,7 +45,7 @@ Declarative modal:  <atm-modal [(open)]="showModal" header="Title" [expandable]
 ## Usage example
 
 ```html
-<atm-modal [(open)]="show" title="Detalhes">Conteúdo</atm-modal>
+<atm-modal [(open)]="show" header="Detalhes">Conteúdo</atm-modal>
 ```
 
 ## Tips

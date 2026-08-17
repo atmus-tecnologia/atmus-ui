@@ -1,6 +1,6 @@
 # atm-pagination
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/pagination/pagination.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/pagination/pagination.component.ts`
 
 ## Purpose
 
@@ -36,7 +36,7 @@ Paginação controlada.
 ## Usage example
 
 ```html
-<atm-pagination [page]="page" [total]="total" [pageSize]="10" (pageChange)="page=$event" />
+<atm-pagination [page]="page" [totalItems]="total" [pageSize]="10" (pageChange)="load($event)" />
 ```
 
 ## Conventions

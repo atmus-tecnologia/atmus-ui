@@ -1,6 +1,6 @@
 # ng-template[atmFlowNode]
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/flow/flow-node-def.directive.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/flow/flow-node-def.directive.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-listbox
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/listbox/listbox.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/listbox/listbox.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # flow-types
 
-> Fonte: `src/core/ui/components/flow/flow.types.ts`
+> Fonte: `projects/ngui/src/lib/components/flow/flow.types.ts`
 
 ## Types / interfaces
 

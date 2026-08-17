@@ -1,6 +1,6 @@
 # atm-input-otp
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input-otp.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input-otp.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-accordion
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/accordion/accordion.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/accordion/accordion.component.ts`
 
 ## Purpose
 

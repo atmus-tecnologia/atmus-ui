@@ -1,6 +1,6 @@
 # atm-rich-text
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/rich-text/rich-text.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/rich-text/rich-text.component.ts`
 
 ## Purpose
 

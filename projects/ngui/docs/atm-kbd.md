@@ -1,6 +1,6 @@
 # atm-kbd
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 

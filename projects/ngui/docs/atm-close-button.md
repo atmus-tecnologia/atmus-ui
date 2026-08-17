@@ -1,6 +1,6 @@
 # atm-close-button
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/button/close-button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/button/close-button.component.ts`
 
 ## Purpose
 

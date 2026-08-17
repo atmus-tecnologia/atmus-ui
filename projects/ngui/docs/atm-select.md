@@ -1,6 +1,6 @@
 # atm-select
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/select/select.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/select/select.component.ts`
 
 ## Purpose
 

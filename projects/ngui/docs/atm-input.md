@@ -1,6 +1,6 @@
 # atm-input
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input.component.ts`
 
 ## Purpose
 

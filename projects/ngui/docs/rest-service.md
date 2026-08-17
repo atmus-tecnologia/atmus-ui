@@ -1,6 +1,6 @@
 # rest-service
 
-> Fonte: `src/core/ui/services/rest.service.ts`
+> Fonte: `projects/ngui/src/lib/services/rest.service.ts`
 
 ## Types / interfaces
 

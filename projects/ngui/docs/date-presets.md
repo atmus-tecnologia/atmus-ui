@@ -1,6 +1,6 @@
 # date-presets
 
-> Fonte: `src/core/ui/components/datepicker/date-presets.ts`
+> Fonte: `projects/ngui/src/lib/components/datepicker/date-presets.ts`
 
 ## Types / interfaces
 

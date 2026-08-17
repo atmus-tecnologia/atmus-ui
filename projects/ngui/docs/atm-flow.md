@@ -1,6 +1,6 @@
 # atm-flow
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/flow/flow.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/flow/flow.component.ts`
 
 ## Purpose
 

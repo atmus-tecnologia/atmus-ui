@@ -1,6 +1,6 @@
 # atm-switch
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/switch/switch.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/switch/switch.component.ts`
 
 ## Purpose
 

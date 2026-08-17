@@ -1,6 +1,6 @@
 # types
 
-> Fonte: `src/core/ui/types.ts`
+> Fonte: `projects/ngui/src/lib/types.ts`
 
 ## Types / interfaces
 

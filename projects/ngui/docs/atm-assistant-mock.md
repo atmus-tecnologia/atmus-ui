@@ -1,6 +1,6 @@
 # AtmAssistantMock
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/assistant.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/assistant.service.ts`
 
 ## Purpose
 

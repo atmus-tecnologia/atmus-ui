@@ -1,6 +1,6 @@
 # atm-toolbar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toolbar/toolbar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toolbar/toolbar.component.ts`
 
 ## Purpose
 

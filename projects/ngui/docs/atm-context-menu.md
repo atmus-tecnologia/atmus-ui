@@ -1,6 +1,6 @@
 # atm-context-menu
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/context-menu/context-menu.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/context-menu/context-menu.component.ts`
 
 ## Purpose
 
@@ -116,7 +116,7 @@ export interface AtmContextMenuSelect {
 
 # [atmContextMenu]
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/context-menu/context-menu.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/context-menu/context-menu.component.ts`
 
 ## Purpose
 

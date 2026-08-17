@@ -1,6 +1,6 @@
 # atm-slider
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/slider/slider.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/slider/slider.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-textarea
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/textarea.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/textarea.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-checkbox
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/checkbox/checkbox.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/checkbox/checkbox.component.ts`
 
 ## Purpose
 

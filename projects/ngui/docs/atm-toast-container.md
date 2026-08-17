@@ -1,6 +1,6 @@
 # atm-toast-container
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toast/toast-container.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toast/toast-container.component.ts`
 
 ## Purpose
 

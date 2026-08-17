@@ -1,6 +1,6 @@
 # atm-number-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/number-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/number-field.component.ts`
 
 ## Purpose
 

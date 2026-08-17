@@ -1,6 +1,6 @@
 # atm-alert-dialog
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/alert-dialog.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/alert-dialog.service.ts`
 
 ## Purpose
 

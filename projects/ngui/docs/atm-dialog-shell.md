@@ -1,6 +1,6 @@
 # atm-dialog-shell
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/dialog.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/dialog.service.ts`
 
 ## Purpose
 

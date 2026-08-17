@@ -1,6 +1,6 @@
 # atm-card
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/card/card.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/card/card.component.ts`
 
 ## Purpose
 
@@ -38,7 +38,7 @@ _Nenhum._
 ## Usage example
 
 ```html
-<atm-card title="Título">Corpo</atm-card>
+<atm-card header="Título" subheader="Descrição">Corpo</atm-card>
 ```
 
 ## Conventions

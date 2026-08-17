@@ -1,6 +1,6 @@
 # atm-autocomplete
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/autocomplete/autocomplete.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/autocomplete/autocomplete.component.ts`
 
 ## Purpose
 

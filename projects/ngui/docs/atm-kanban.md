@@ -1,6 +1,6 @@
 # atm-kanban
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/kanban/kanban.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/kanban/kanban.component.ts`
 
 ## Purpose
 

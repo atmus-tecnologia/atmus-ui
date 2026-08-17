@@ -1,6 +1,6 @@
 # atm-time-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/datepicker/time-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/datepicker/time-field.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # AtmThemeService
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/theme.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/theme.service.ts`
 
 ## Purpose
 

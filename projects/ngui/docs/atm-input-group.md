@@ -1,6 +1,6 @@
 # atm-input-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input-group.component.ts`
 
 ## Purpose
 

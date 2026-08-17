@@ -1,6 +1,6 @@
 # atm-error-message
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/field/field.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/field/field.components.ts`
 
 ## Purpose
 

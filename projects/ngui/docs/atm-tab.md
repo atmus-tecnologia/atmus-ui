@@ -1,6 +1,6 @@
 # atm-tab
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tabs/tabs.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tabs/tabs.component.ts`
 
 ## Purpose
 

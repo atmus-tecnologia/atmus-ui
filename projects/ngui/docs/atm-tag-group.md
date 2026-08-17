@@ -1,6 +1,6 @@
 # atm-tag-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tag-group/tag-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tag-group/tag-group.component.ts`
 
 ## Purpose
 

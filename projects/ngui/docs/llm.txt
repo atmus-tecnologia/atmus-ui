@@ -1,18 +1,18 @@
 # Atmus UI — LLM Catalog
 
-This file is a complete reference for LLMs to correctly use the Atmus UI library (`src/core/ui`).
+This file is a complete reference for LLMs to correctly use the Atmus UI library (`@atmus/ngui`).
 Prefer importing individual standalone components for tree-shaking, or `AtmusUiModule` for prototyping.
 
 ## Setup
 
-1. Copy `src/core/ui` into the project (portable — must not import from outside itself).
-2. Import `atmus.css` in global styles (after Tailwind).
+1. `npm install @atmus/ngui` (or yarn/pnpm/bun).
+2. Import `@atmus/ngui/styles.css` in global styles.
 3. Provide config:
 ```ts
-import { provideAtmusUi } from './core/ui';
+import { provideAtmusUi } from '@atmus/ngui';
 provideAtmusUi({ theme: 'system', serverUrl: environment.serverUrl })
 ```
-4. Import components or `AtmusUiModule`.
+4. Import components or `AtmusUiModule` from `@atmus/ngui`.
 
 ## Design system conventions
 
@@ -120,6 +120,7 @@ type AtmVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 - [`atm-meter`](./atm-meter.md) — Medidor com faixas (meter).
 - [`atm-modal`](./atm-modal.md) — Modal declarativo com open, título, expand e slots.
 - [`atm-number-field`](./atm-number-field.md) — Campo numérico com steppers e CVA.
+- [`atm-office`](./atm-office.md) — atm-office
 - [`atm-pagination`](./atm-pagination.md) — Paginação controlada.
 - [`atm-popover`](./atm-popover.md) — Popover/painel flutuante ancorado a um trigger.
 - [`atm-progress-bar`](./atm-progress-bar.md) — Barra de progresso determinada/indeterminada.
@@ -138,7 +139,6 @@ type AtmVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 - [`atm-surface`](./atm-surface.md) — Superfície genérica com tokens de fundo/borda.
 - [`atm-switch`](./atm-switch.md) — Toggle on/off com CVA boolean.
 - [`atm-tab`](./atm-tab.md) — Painel de aba (filho de atm-tabs).
-- [`atm-table`](./atm-table.md) — Tabela rica: sort, filter, seleção, templates, paginação e remote dataSource.
 - [`atm-tabs`](./atm-tabs.md) — Abas com conteúdo projetado via atm-tab.
 - [`atm-tag-group`](./atm-tag-group.md) — Grupo de tags selecionáveis.
 - [`atm-tags`](./atm-tags.md) — Input de tags com criação, grupos e action button.
@@ -173,7 +173,7 @@ Each section below is the full doc for that component. Individual files also liv
 
 # atm-accordion
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/accordion/accordion.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/accordion/accordion.component.ts`
 
 ## Purpose
 
@@ -278,7 +278,7 @@ _Nenhum._
 
 # atm-accordion-item
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/accordion/accordion.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/accordion/accordion.component.ts`
 
 ## Purpose
 
@@ -334,7 +334,7 @@ _Nenhum._
 
 # atm-action-bar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/action-bar/action-bar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/action-bar/action-bar.component.ts`
 
 ## Purpose
 
@@ -396,7 +396,7 @@ _Nenhum._
 
 # atm-alert
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/alert/alert.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/alert/alert.component.ts`
 
 ## Purpose
 
@@ -452,7 +452,7 @@ _Nenhum._
 
 # atm-alert-dialog
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/alert-dialog.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/alert-dialog.service.ts`
 
 ## Purpose
 
@@ -509,7 +509,7 @@ export interface AtmAlertDialogOptions {
 
 # AtmAssistantMock
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/assistant.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/assistant.service.ts`
 
 ## Purpose
 
@@ -617,7 +617,7 @@ export interface AtmAssistantHandler {
 
 # atm-audio-visualizer
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/audio-visualizer/audio-visualizer.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/audio-visualizer/audio-visualizer.component.ts`
 
 ## Purpose
 
@@ -708,7 +708,7 @@ export type AtmAudioVisualizerVariant = 'bars' | 'wave' | 'ring';
 
 # atm-autocomplete
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/autocomplete/autocomplete.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/autocomplete/autocomplete.component.ts`
 
 ## Purpose
 
@@ -766,7 +766,7 @@ _Nenhum._
 
 # atm-avatar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/avatar/avatar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/avatar/avatar.component.ts`
 
 ## Purpose
 
@@ -817,7 +817,7 @@ _Nenhum._
 
 # atm-avatar-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/avatar/avatar-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/avatar/avatar-group.component.ts`
 
 ## Purpose
 
@@ -895,7 +895,7 @@ _Nenhum._
 
 # atm-badge
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/badge/badge.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/badge/badge.component.ts`
 
 ## Purpose
 
@@ -945,7 +945,7 @@ _Nenhum._
 
 # atm-breadcrumbs
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/breadcrumbs/breadcrumbs.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/breadcrumbs/breadcrumbs.component.ts`
 
 ## Purpose
 
@@ -1000,7 +1000,7 @@ export interface AtmBreadcrumb {
 
 # atm-button
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/button/button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/button/button.component.ts`
 
 ## Purpose
 
@@ -1064,7 +1064,7 @@ Prefira color/variant de token. loading desabilita o clique.
 
 # atm-button-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/button/button-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/button/button-group.component.ts`
 
 ## Purpose
 
@@ -1115,7 +1115,7 @@ _Nenhum._
 
 # atm-calendar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/calendar/calendar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/calendar/calendar.component.ts`
 
 ## Purpose
 
@@ -1185,7 +1185,7 @@ export interface AtmCalendarDay {
 
 # atm-card
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/card/card.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/card/card.component.ts`
 
 ## Purpose
 
@@ -1223,7 +1223,7 @@ _Nenhum._
 ## Usage example
 
 ```html
-<atm-card title="Título">Corpo</atm-card>
+<atm-card header="Título" subheader="Descrição">Corpo</atm-card>
 ```
 
 ## Conventions
@@ -1239,7 +1239,7 @@ _Nenhum._
 
 # atm-chart
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/chart/chart.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/chart/chart.component.ts`
 
 ## Purpose
 
@@ -1631,7 +1631,7 @@ export interface AtmChartTreeEvent {
 
 # atm-checkbox
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/checkbox/checkbox.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/checkbox/checkbox.component.ts`
 
 ## Purpose
 
@@ -1692,7 +1692,7 @@ _Nenhum._
 
 # atm-checkbox-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/checkbox/checkbox-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/checkbox/checkbox-group.component.ts`
 
 ## Purpose
 
@@ -1757,7 +1757,7 @@ export interface AtmCheckboxOption {
 
 # atm-chip
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/chip/chip.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/chip/chip.component.ts`
 
 ## Purpose
 
@@ -1814,7 +1814,7 @@ _Nenhum._
 
 # atm-close-button
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/button/close-button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/button/close-button.component.ts`
 
 ## Purpose
 
@@ -1860,7 +1860,7 @@ _Nenhum._
 
 # atm-color-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/color/color.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/color/color.components.ts`
 
 ## Purpose
 
@@ -1975,7 +1975,7 @@ _Nenhum._
 
 # atm-color-swatch
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/color/color.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/color/color.components.ts`
 
 ## Purpose
 
@@ -2023,7 +2023,7 @@ _Nenhum._
 
 # atm-color-swatch-picker
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/color/color.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/color/color.components.ts`
 
 ## Purpose
 
@@ -2097,7 +2097,7 @@ _Nenhum._
 
 # atm-combobox-user
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/combobox-user/combobox-user.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/combobox-user/combobox-user.component.ts`
 
 ## Purpose
 
@@ -2249,7 +2249,7 @@ Options tipicamente com avatar/description.
 
 # atm-context-menu
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/context-menu/context-menu.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/context-menu/context-menu.component.ts`
 
 ## Purpose
 
@@ -2365,7 +2365,7 @@ export interface AtmContextMenuSelect {
 
 # [atmContextMenu]
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/context-menu/context-menu.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/context-menu/context-menu.component.ts`
 
 ## Purpose
 
@@ -2697,7 +2697,7 @@ export interface AtmContextMenuSelect {
 
 # atm-date-picker
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/datepicker/date-picker.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/datepicker/date-picker.component.ts`
 
 ## Purpose
 
@@ -2774,7 +2774,7 @@ _Nenhum._
 
 # atm-date-range-picker
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/datepicker/date-range-picker.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/datepicker/date-range-picker.component.ts`
 
 ## Purpose
 
@@ -2835,7 +2835,7 @@ _Nenhum._
 
 # atm-description
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/field/field.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/field/field.components.ts`
 
 ## Purpose
 
@@ -2902,7 +2902,7 @@ _Nenhum._
 
 # atm-dialog-shell
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/dialog.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/dialog.service.ts`
 
 ## Purpose
 
@@ -2962,7 +2962,7 @@ export interface AtmDialogConfig<D = unknown> {
 
 # atm-drawer
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/drawer/drawer.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/drawer/drawer.component.ts`
 
 ## Purpose
 
@@ -2970,7 +2970,24 @@ Painel lateral (drawer) com posição e open model.
 
 ## Notes from source
 
-Slide-in panel:  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>
+Must match the 0.3s of the .atm-drawer-in/out-* classes in atmus.css. */
+const ANIM_MS = 300;
+
+const ENTER_ANIM: Record<AtmDrawerPosition, string> = {
+  right: 'atm-drawer-in-right',
+  left: 'atm-drawer-in-left',
+  top: 'atm-drawer-in-top',
+  bottom: 'atm-drawer-in-bottom',
+};
+
+const LEAVE_ANIM: Record<AtmDrawerPosition, string> = {
+  right: 'atm-drawer-out-right',
+  left: 'atm-drawer-out-left',
+  top: 'atm-drawer-out-top',
+  bottom: 'atm-drawer-out-bottom',
+};
+
+/**Slide-in panel with enter/exit animation on every edge.Top/bottom render as a centered sheet (grab handle + rounded corners).  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>  <atm-drawer [(open)]="show" position="bottom" header="Preferences" description="...">...</atm-drawer>Inside a container (e.g. a modal — the nearest `relative` + `overflow-hidden` ancestor):  <atm-drawer [(open)]="show" position="bottom" container="parent">...</atm-drawer>
 
 ## Identity
 
@@ -2983,8 +3000,11 @@ Slide-in panel:  <atm-drawer [(open)]="showDrawer" header="Filters" position="r
 | Name | Type | Required | Default |
 | --- | --- | --- | --- |
 | `header` | string | no | '' |
+| `description` | string | no | '' |
 | `position` | AtmDrawerPosition | no | 'right' |
 | `size` | string | no | '24rem' |
+| `width` | string | no | '32rem' |
+| `container` | 'viewport' \| 'parent' | no | 'viewport' |
 | `dismissable` | boolean | no | true |
 
 ## Outputs
@@ -3014,7 +3034,7 @@ export type AtmDrawerPosition = 'left' | 'right' | 'top' | 'bottom';
 ## Usage example
 
 ```html
-<atm-drawer [(open)]="open" position="right" title="Filtros">...</atm-drawer>
+<atm-drawer [(open)]="open" position="right" header="Filtros">...</atm-drawer>
 ```
 
 ## Conventions
@@ -3030,7 +3050,7 @@ export type AtmDrawerPosition = 'left' | 'right' | 'top' | 'bottom';
 
 # atm-dropdown
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/dropdown/dropdown.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/dropdown/dropdown.component.ts`
 
 ## Purpose
 
@@ -3108,7 +3128,7 @@ export interface AtmDropdownItem {
 
 # atm-dropdown-remote
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/dropdown/dropdown-remote.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/dropdown/dropdown-remote.component.ts`
 
 ## Purpose
 
@@ -3177,7 +3197,7 @@ Requer dataSource. Debounce 300ms, limit ~10. serverUrl via provideAtmusUi.
 
 # atm-error-message
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/field/field.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/field/field.components.ts`
 
 ## Purpose
 
@@ -3254,7 +3274,7 @@ _Nenhum._
 
 # atm-event-calendar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/event-calendar/event-calendar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/event-calendar/event-calendar.component.ts`
 
 ## Purpose
 
@@ -3543,7 +3563,7 @@ export interface AtmCalendarEventChange {
 
 # atm-fieldset
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/field/field.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/field/field.components.ts`
 
 ## Purpose
 
@@ -3635,7 +3655,7 @@ _Nenhum._
 
 # atm-file-input
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/file-input/file-input.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/file-input/file-input.component.ts`
 
 ## Purpose
 
@@ -3792,7 +3812,7 @@ CVA tipicamente File[] / itens. Aceita accept, multiple, maxSize.
 
 # atm-flow
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/flow/flow.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/flow/flow.component.ts`
 
 ## Purpose
 
@@ -3891,7 +3911,7 @@ Defina templates de node com ng-template atmFlowNode. Handles via atm-flow-handl
 
 # atm-flow-handle
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/flow/flow-handle.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/flow/flow-handle.component.ts`
 
 ## Purpose
 
@@ -3941,7 +3961,7 @@ _Nenhum._
 
 # ng-template[atmFlowNode]
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/flow/flow-node-def.directive.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/flow/flow-node-def.directive.ts`
 
 ## Purpose
 
@@ -3988,7 +4008,7 @@ _Nenhum._
 
 # atm-icon
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/icon/icon.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/icon/icon.component.ts`
 
 ## Purpose
 
@@ -4040,7 +4060,7 @@ Use names sem o prefixo icofont- (ex.: name="check").
 
 # atm-image-crop
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/image-crop/image-crop.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/image-crop/image-crop.component.ts`
 
 ## Purpose
 
@@ -4121,7 +4141,7 @@ export interface AtmImageCropDialogData {
 
 # atm-image-crop-dialog
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/image-crop/image-crop.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/image-crop/image-crop.component.ts`
 
 ## Purpose
 
@@ -4555,7 +4575,7 @@ export interface AtmImageCropDialogData {
 
 # atm-input
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input.component.ts`
 
 ## Purpose
 
@@ -4650,7 +4670,7 @@ Suporta clearable, password toggle, ícones. Use size large|medium|slim.
 
 # atm-input-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input-group.component.ts`
 
 ## Purpose
 
@@ -4706,7 +4726,7 @@ _Nenhum._
 
 # atm-input-otp
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/input-otp.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/input-otp.component.ts`
 
 ## Purpose
 
@@ -4761,7 +4781,7 @@ _Nenhum._
 
 # atm-kanban
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/kanban/kanban.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/kanban/kanban.component.ts`
 
 ## Purpose
 
@@ -4979,7 +4999,7 @@ export interface AtmKanbanColumnReorderEvent {
 
 # atm-kbd
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 
@@ -5051,7 +5071,7 @@ _Nenhum._
 
 # atm-label
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/field/field.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/field/field.components.ts`
 
 ## Purpose
 
@@ -5103,7 +5123,7 @@ _Nenhum._
 
 # atm-link
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 
@@ -5193,7 +5213,7 @@ _Nenhum._
 
 # atm-listbox
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/listbox/listbox.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/listbox/listbox.component.ts`
 
 ## Purpose
 
@@ -5247,7 +5267,7 @@ _Nenhum._
 
 # atm-meter
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/meter/meter.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/meter/meter.component.ts`
 
 ## Purpose
 
@@ -5299,7 +5319,7 @@ _Nenhum._
 
 # atm-modal
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/modal/modal.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/modal/modal.component.ts`
 
 ## Purpose
 
@@ -5344,7 +5364,7 @@ Declarative modal:  <atm-modal [(open)]="showModal" header="Title" [expandable]
 ## Usage example
 
 ```html
-<atm-modal [(open)]="show" title="Detalhes">Conteúdo</atm-modal>
+<atm-modal [(open)]="show" header="Detalhes">Conteúdo</atm-modal>
 ```
 
 ## Tips
@@ -5364,7 +5384,7 @@ Para abrir componente dinamicamente use AtmDialogService.
 
 # atm-number-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/number-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/number-field.component.ts`
 
 ## Purpose
 
@@ -5417,9 +5437,211 @@ _Nenhum._
 
 ================================================================================
 
+# atm-office
+
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/office/office.component.ts`
+
+## Purpose
+
+Um personagem do escritório virtual. */
+
+## Notes from source
+
+Um personagem do escritório virtual. */
+export interface AtmOfficeAgent {
+  id: string;
+  name: string;
+  /** Cargo exibido na mesa. */
+  role?: string;
+  /** Cor da camiseta (qualquer cor CSS). Padrão: cicla os tokens do tema. */
+  color?: string;
+  /** Chefe: mesa executiva, coroa e cabeceira da sala de reunião. */
+  boss?: boolean;
+}
+
+/** Handle fluente para comandar um agente: office.agent('ana').moveTo('pedro').talk('Oi!') */
+export interface AtmOfficeAgentHandle {
+  /** Anda até ficar ao lado de outro agente. */
+  moveTo(targetId: string): AtmOfficeAgentHandle;
+  /** Anda até um ponto do mundo (0..1000 x 0..640). */
+  goTo(x: number, y: number): AtmOfficeAgentHandle;
+  /** Mostra um balão de fala pelo tempo indicado. */
+  talk(text: string, ms?: number): AtmOfficeAgentHandle;
+  /** Pausa na fila de comandos. */
+  wait(ms: number): AtmOfficeAgentHandle;
+  /** Volta para a própria mesa. */
+  backToDesk(): AtmOfficeAgentHandle;
+  /** Cancela tudo que estava na fila. */
+  stop(): AtmOfficeAgentHandle;
+}
+
+interface Vec {
+  x: number;
+  y: number;
+}
+
+type OfficeCmd =
+  | { kind: 'goto'; to: Vec }
+  | { kind: 'approach'; target: string }
+  | { kind: 'say'; text: string; ms: number; until?: number }
+  | { kind: 'wait'; ms: number; until?: number }
+  | { kind: 'face'; dir: 1 | -1 };
+
+interface SimAgent {
+  id: string;
+  pos: Vec;
+  face: 1 | -1;
+  walking: boolean;
+  queue: OfficeCmd[];
+  bubble: { text: string; start: number; until: number } | null;
+  /** Marca que executou comandos desde o último "idle" (para emitir agentIdle). */
+  wasBusy: boolean;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mundo (coordenadas fixas 1000 x 640)                                */
+/* ------------------------------------------------------------------ */
+
+const WORLD_W = 1000;
+const WORLD_H = 640;
+
+const BOSS_HOME: Vec = { x: 215, y: 208 };
+const BOSS_SEAT: Vec = { x: 698, y: 228 };
+const TABLE_CX = 812;
+
+/** Colunas/linhas das mesas dos funcionários (até 6 no layout largo, até 8 no compacto). */
+const SLOT_ROWS = [392, 560];
+const SLOT_COLS_3 = [145, 315, 485];
+const SLOT_COLS_4 = [110, 258, 406, 554];
+
+const DEFAULT_TEAM: AtmOfficeAgent[] = [
+  { id: 'amelia', name: 'Amelia', role: 'CEO', boss: true },
+  { id: 'lucas', name: 'Lucas', role: 'Dev Backend' },
+  { id: 'mariana', name: 'Mariana', role: 'Dev Frontend' },
+  { id: 'pedro', name: 'Pedro', role: 'QA' },
+  { id: 'ana', name: 'Ana', role: 'Designer' },
+  { id: 'rafael', name: 'Rafael', role: 'DevOps' },
+];
+
+const DEFAULT_PHRASES = [
+  'Pode revisar meu PR?',
+  'O deploy passou na pipeline!',
+  'Achei um bug no drawer, vem ver.',
+  'Bora alinhar a sprint?',
+  'O cliente aprovou o layout!',
+  'CI está verde de novo.',
+  'Te mando o link do Figma.',
+  'Esse endpoint tá lento, vou olhar.',
+  'Fechei a issue do overlay.',
+  'Café? Preciso de 5 minutos.',
+];
+
+const DEFAULT_REPLIES = ['Boa!', 'Show, valeu!', 'Deixa comigo.', 'Perfeito!', 'Pode mandar.', 'Já olho isso.'];
+
+/** Tokens usados como cor de camiseta quando o agente não define `color`. */
+const SHIRT_TOKENS = ['--atm-primary', '--atm-success', '--atm-info', '--atm-warning', '--atm-danger', '--atm-primary-hover'];
+
+/** Arte dos personagens (tons de pele/cabelo — independem do tema, como um sprite). */
+const SKINS = ['#f2c9a2', '#e0ac7e', '#c68e63', '#9c6b45'];
+const HAIRS = ['#2f2a26', '#4a342a', '#1c1c1e', '#5b4632'];
+const PANTS = '#3d3d49';
+
+function pick<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function linspace(a: number, b: number, n: number): number[] {
+  if (n <= 1) return [(a + b) / 2];
+  return Array.from({ length: n }, (_, i) => a + ((b - a) * i) / (n - 1));
+}
+
+/**Escritório virtual animado — personagens que andam entre as mesas, conversamem balões de fala e se reúnem na sala de reunião ao redor do chefe.Pensado para ser controlado por código (ex.: eventos de assistentes de IAvindos do backend) através de uma API fluente:  <atm-office #office [agents]="team" [demo]="true" (agentClick)="..." />  office.agent('ana').moveTo('pedro').talk('Pode revisar meu PR?').backToDesk();  office.visit('mariana', 'lucas', 'CI quebrou no seu branch');  office.meeting('Planejamento da sprint');   // todos para a sala de reunião  office.backToWork();                        // todos voltam às mesasCada agente tem uma fila de comandos processada em sequência (goto, approach,say, wait, face). Renderização em canvas 2D com as cores dos tokens do tema(dark mode automático), sem dependências externas.
+
+## Identity
+
+- **Class**: `AtmOffice`
+- **Selector**: `atm-office`
+- **Kind**: Component
+
+## Inputs
+
+| Name | Type | Required | Default |
+| --- | --- | --- | --- |
+| `size` | AtmSize | no | 'medium' |
+| `agents` | AtmOfficeAgent[] | no | DEFAULT_TEAM |
+| `demo` | boolean | no | false |
+| `speed` | number | no | 130 |
+| `title` | string | no | 'Atmus · Team Room' |
+| `showLegend` | boolean | no | true |
+| `phrases` | string[] | no | DEFAULT_PHRASES |
+| `replies` | string[] | no | DEFAULT_REPLIES |
+
+## Outputs
+
+| Name | Payload |
+| --- | --- |
+| `agentClick` | AtmOfficeAgent |
+| `agentIdle` | string |
+
+## Models (two-way)
+
+_Nenhum._
+## Related interfaces / types
+
+### AtmOfficeAgent
+
+```ts
+export interface AtmOfficeAgent {
+  id: string;
+  name: string;
+  /** Cargo exibido na mesa. */
+  role?: string;
+  /** Cor da camiseta (qualquer cor CSS). Padrão: cicla os tokens do tema. */
+  color?: string;
+  /** Chefe: mesa executiva, coroa e cabeceira da sala de reunião. */
+  boss?: boolean;
+}
+```
+
+### AtmOfficeAgentHandle
+
+```ts
+export interface AtmOfficeAgentHandle {
+  /** Anda até ficar ao lado de outro agente. */
+  moveTo(targetId: string): AtmOfficeAgentHandle;
+  /** Anda até um ponto do mundo (0..1000 x 0..640). */
+  goTo(x: number, y: number): AtmOfficeAgentHandle;
+  /** Mostra um balão de fala pelo tempo indicado. */
+  talk(text: string, ms?: number): AtmOfficeAgentHandle;
+  /** Pausa na fila de comandos. */
+  wait(ms: number): AtmOfficeAgentHandle;
+  /** Volta para a própria mesa. */
+  backToDesk(): AtmOfficeAgentHandle;
+  /** Cancela tudo que estava na fila. */
+  stop(): AtmOfficeAgentHandle;
+}
+```
+
+## Usage example
+
+```html
+<atm-office />
+```
+
+## Conventions
+
+- Sizes: `large | medium | slim` (when `size` input exists)
+- Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
+- Variants: `solid | soft | outline | ghost` (when `variant` input exists)
+- Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
+- Icons via icofont name or `<atm-icon name="..." />`
+
+
+================================================================================
+
 # atm-pagination
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/pagination/pagination.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/pagination/pagination.component.ts`
 
 ## Purpose
 
@@ -5455,7 +5677,7 @@ Paginação controlada.
 ## Usage example
 
 ```html
-<atm-pagination [page]="page" [total]="total" [pageSize]="10" (pageChange)="page=$event" />
+<atm-pagination [page]="page" [totalItems]="total" [pageSize]="10" (pageChange)="load($event)" />
 ```
 
 ## Conventions
@@ -5471,7 +5693,7 @@ Paginação controlada.
 
 # atm-popover
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/popover/popover.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/popover/popover.component.ts`
 
 ## Purpose
 
@@ -5528,7 +5750,7 @@ _Nenhum._
 
 # atm-progress-bar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/progress/progress-bar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/progress/progress-bar.component.ts`
 
 ## Purpose
 
@@ -5576,7 +5798,7 @@ _Nenhum._
 
 # atm-progress-circle
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/progress/progress-circle.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/progress/progress-circle.component.ts`
 
 ## Purpose
 
@@ -5622,7 +5844,7 @@ _Nenhum._
 
 # atm-qrcode
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/qrcode/qrcode.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/qrcode/qrcode.component.ts`
 
 ## Purpose
 
@@ -5693,7 +5915,7 @@ export type AtmQrcodeDotStyle = 'square' | 'rounded' | 'dots';
 
 # atm-radio-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/radio/radio-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/radio/radio-group.component.ts`
 
 ## Purpose
 
@@ -5754,7 +5976,7 @@ export interface AtmRadioOption {
 
 # atm-rich-text
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/rich-text/rich-text.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/rich-text/rich-text.component.ts`
 
 ## Purpose
 
@@ -5886,7 +6108,7 @@ Valor tipicamente HTML string via CVA.
 
 # atm-scroll-shadow
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 
@@ -5999,7 +6221,7 @@ _Nenhum._
 
 # atm-search-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/search-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/search-field.component.ts`
 
 ## Purpose
 
@@ -6054,7 +6276,7 @@ _Nenhum._
 
 # atm-select
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/select/select.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/select/select.component.ts`
 
 ## Purpose
 
@@ -6132,7 +6354,7 @@ Estende overlay + CVA. Options: {value,label,description?,disabled?,icon?}.
 
 # atm-separator
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 
@@ -6180,7 +6402,7 @@ _Nenhum._
 
 # atm-signature
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/signature/signature.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/signature/signature.component.ts`
 
 ## Purpose
 
@@ -6254,7 +6476,7 @@ export type AtmSignatureMode = 'draw' | 'type';
 
 # atm-skeleton
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/skeleton/skeleton.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/skeleton/skeleton.component.ts`
 
 ## Purpose
 
@@ -6303,7 +6525,7 @@ _Nenhum._
 
 # atm-slider
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/slider/slider.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/slider/slider.component.ts`
 
 ## Purpose
 
@@ -6353,7 +6575,7 @@ _Nenhum._
 
 # atm-spinner
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/spinner/spinner.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/spinner/spinner.component.ts`
 
 ## Purpose
 
@@ -6397,7 +6619,7 @@ _Nenhum._
 
 # atm-surface
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/surface/surface.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/surface/surface.component.ts`
 
 ## Purpose
 
@@ -6450,7 +6672,7 @@ _Nenhum._
 
 # atm-switch
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/switch/switch.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/switch/switch.component.ts`
 
 ## Purpose
 
@@ -6501,7 +6723,7 @@ _Nenhum._
 
 # atm-tab
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tabs/tabs.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tabs/tabs.component.ts`
 
 ## Purpose
 
@@ -6553,338 +6775,9 @@ _Nenhum._
 
 ================================================================================
 
-# atm-table
-
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/table/table.component.ts`
-
-## Purpose
-
-Tabela rica: sort, filter, seleção, templates, paginação e remote dataSource.
-
-## Notes from source
-
-Data type of a column — drives which filter operators are offered. */
-export type AtmTableColumnType = 'text' | 'number' | 'date' | 'boolean';
-
-export type AtmTableFilterOperator =
-  | 'contains'
-  | 'notContains'
-  | 'startsWith'
-  | 'endsWith'
-  | 'equals'
-  | 'notEquals'
-  | 'gt'
-  | 'gte'
-  | 'lt'
-  | 'lte';
-
-export interface AtmTableFilter {
-  key: string;
-  operator: AtmTableFilterOperator;
-  value: unknown;
-}
-
-export interface AtmTableColumn<T = Record<string, unknown>> {
-  /** Row property. Supports dot paths for nested values, e.g. 'company.name'. */
-  key: string;
-  header: string;
-  /** Drives filter operators and local filtering/sorting. Default 'text'. */
-  type?: AtmTableColumnType;
-  sortable?: boolean;
-  /** Shows the filter icon that opens the per-column filter popup. */
-  filterable?: boolean;
-  /** Column width, e.g. '160px'. Required for good results with `fixed`. */
-  width?: string;
-  align?: 'left' | 'center' | 'right';
-  /** Sticky to the left while scrolling horizontally. Put fixed columns first. */
-  fixed?: boolean;
-  /** Custom cell renderer. */
-  template?: TemplateRef<{ $implicit: T }>;
-  /** Value accessor for derived/formatted values (display only). */
-  value?: (row: T) => unknown;
-  /** Static footer text for this column. */
-  footer?: string;
-  /** Computed footer (totals, averages…) based on the visible rows. */
-  footerValue?: (rows: T[]) => unknown;
-  /** Custom footer renderer. Context = visible rows. */
-  footerTemplate?: TemplateRef<{ $implicit: T[] }>;
-}
-
-export interface AtmSortEvent {
-  key: string;
-  direction: 'asc' | 'desc';
-}
-
-const CELL: Record<AtmSize, string> = {
-  large: 'px-4 py-4 text-sm',
-  medium: 'px-4 py-3 text-sm',
-  slim: 'px-3 py-2 text-xs',
-};
-
-const SELECT_COL_WIDTH = 44;
-const DEFAULT_FIXED_WIDTH = 150;
-
-interface OperatorOption {
-  value: AtmTableFilterOperator;
-  label: string;
-}
-
-const OPERATORS: Record<AtmTableColumnType, OperatorOption[]> = {
-  text: [
-    { value: 'contains', label: 'Contém' },
-    { value: 'notContains', label: 'Não contém' },
-    { value: 'startsWith', label: 'Começa com' },
-    { value: 'endsWith', label: 'Termina com' },
-    { value: 'equals', label: 'Igual a' },
-    { value: 'notEquals', label: 'Diferente de' },
-  ],
-  number: [
-    { value: 'equals', label: 'Igual a' },
-    { value: 'notEquals', label: 'Diferente de' },
-    { value: 'gt', label: 'Maior que' },
-    { value: 'gte', label: 'Maior ou igual' },
-    { value: 'lt', label: 'Menor que' },
-    { value: 'lte', label: 'Menor ou igual' },
-  ],
-  date: [
-    { value: 'equals', label: 'Igual a' },
-    { value: 'gte', label: 'A partir de' },
-    { value: 'gt', label: 'Depois de' },
-    { value: 'lte', label: 'Até' },
-    { value: 'lt', label: 'Antes de' },
-  ],
-  boolean: [{ value: 'equals', label: 'Igual a' }],
-};
-
-/** nest-paginator (nestjs-paginate) filter param builders: filter.<key>=$op:value */
-const REMOTE_OP: Record<AtmTableFilterOperator, (v: string) => string> = {
-  contains: (v) => `$ilike:${v}`,
-  notContains: (v) => `$not:$ilike:${v}`,
-  startsWith: (v) => `$sw:${v}`,
-  // nestjs-paginate has no endsWith — fall back to $ilike
-  endsWith: (v) => `$ilike:${v}`,
-  equals: (v) => `$eq:${v}`,
-  notEquals: (v) => `$not:$eq:${v}`,
-  gt: (v) => `$gt:${v}`,
-  gte: (v) => `$gte:${v}`,
-  lt: (v) => `$lt:${v}`,
-  lte: (v) => `$lte:${v}`,
-};
-
-function resolvePath(obj: unknown, path: string): unknown {
-  if (obj == null) return undefined;
-  if (!path.includes('.')) return (obj as Record<string, unknown>)[path];
-  return path
-    .split('.')
-    .reduce<unknown>((acc, k) => (acc == null ? undefined : (acc as Record<string, unknown>)[k]), obj);
-}
-
-function parseWidth(width: string | undefined): number {
-  const n = parseFloat(width ?? '');
-  return Number.isNaN(n) ? DEFAULT_FIXED_WIDTH : n;
-}
-
-function matchFilter(raw: unknown, filter: AtmTableFilter, type: AtmTableColumnType): boolean {
-  if (filter.value === '' || filter.value == null) return true;
-
-  if (type === 'boolean') {
-    const rowBool = raw === true || raw === 'true' || raw === 1;
-    const filterBool = filter.value === true || filter.value === 'true';
-    return rowBool === filterBool;
-  }
-
-  if (type === 'number' || type === 'date') {
-    const a = type === 'number' ? Number(raw) : new Date(String(raw)).getTime();
-    const b = type === 'number' ? Number(filter.value) : new Date(String(filter.value)).getTime();
-    if (Number.isNaN(a) || Number.isNaN(b)) return false;
-    switch (filter.operator) {
-      case 'equals':
-        return type === 'date'
-          ? new Date(String(raw)).toDateString() === new Date(String(filter.value)).toDateString()
-          : a === b;
-      case 'notEquals':
-        return a !== b;
-      case 'gt':
-        return a > b;
-      case 'gte':
-        return a >= b;
-      case 'lt':
-        return a < b;
-      case 'lte':
-        return a <= b;
-      default:
-        return true;
-    }
-  }
-
-  const s = String(raw ?? '').toLowerCase();
-  const v = String(filter.value).toLowerCase();
-  switch (filter.operator) {
-    case 'contains':
-      return s.includes(v);
-    case 'notContains':
-      return !s.includes(v);
-    case 'startsWith':
-      return s.startsWith(v);
-    case 'endsWith':
-      return s.endsWith(v);
-    case 'equals':
-      return s === v;
-    case 'notEquals':
-      return s !== v;
-    default:
-      return true;
-  }
-}
-
-const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
-  data: [],
-  meta: { itemsPerPage: 0, totalItems: 0, currentPage: 1, totalPages: 0 },
-};
-
-/**Data table with sorting, per-column filters (operator based on column type),row selection, fixed (sticky) columns, loading skeleton, built-in pagination(client-side or API driven), scrollable body and per-column footer.Local data:  <atm-table [columns]="cols" [rows]="rows" [paginator]="true" [pageSize]="10" />Remote data (nest-paginator via AtmRemoteDataSource):  <atm-table [columns]="cols" [dataSource]="usersService" [paginator]="true" />Manual server-side (you fetch, table only emits events):  <atm-table [columns]="cols" [rows]="pageRows" [serverSide]="true"             [totalItems]="total" [paginator]="true"             (queryChange)="load($event)" />
-
-## Identity
-
-- **Class**: `AtmTable`
-- **Selector**: `atm-table`
-- **Kind**: Component
-
-## Inputs
-
-| Name | Type | Required | Default |
-| --- | --- | --- | --- |
-| `size` | AtmSize | no | 'medium' |
-| `columns` | AtmTableColumn<T>[] | no | [] |
-| `rows` | T[] | no | [] |
-| `loading` | boolean | no | false |
-| `loadingRows` | number | no | 5 |
-| `emptyMessage` | string | no | 'Nenhum registro encontrado' |
-| `clickableRows` | boolean | no | false |
-| `trackBy` | string | no | 'id' |
-| `selectable` | boolean | no | false |
-| `scrollable` | boolean | no | false |
-| `scrollHeight` | string | no | '400px' |
-| `paginator` | boolean | no | false |
-| `pageSize` | number | no | 10 |
-| `totalItems` | number | no | 0 |
-| `serverSide` | boolean | no | false |
-| `dataSource` | AtmRemoteDataSource<T> \| undefined | no | undefined |
-| `autoLoad` | boolean | no | true |
-
-## Outputs
-
-| Name | Payload |
-| --- | --- |
-| `sortChange` | AtmSortEvent |
-| `rowClick` | T |
-| `filterChange` | AtmTableFilter[] |
-| `queryChange` | AtmListQuery |
-
-## Models (two-way)
-
-| Name | Type | Default |
-| --- | --- | --- |
-| `selection` | T[] | [] |
-| `page` | inferred | 1 |
-
-## Related interfaces / types
-
-### AtmTableColumnType
-
-```ts
-export type AtmTableColumnType = 'text' | 'number' | 'date' | 'boolean';
-```
-
-### AtmTableFilterOperator
-
-```ts
-export type AtmTableFilterOperator =
-  | 'contains'
-  | 'notContains'
-  | 'startsWith'
-  | 'endsWith'
-  | 'equals'
-  | 'notEquals'
-  | 'gt'
-  | 'gte'
-  | 'lt'
-  | 'lte';
-```
-
-### AtmTableFilter
-
-```ts
-export interface AtmTableFilter {
-  key: string;
-  operator: AtmTableFilterOperator;
-  value: unknown;
-}
-```
-
-### AtmTableColumn
-
-```ts
-export interface AtmTableColumn<T = Record<string, unknown>> {
-  /** Row property. Supports dot paths for nested values, e.g. 'company.name'. */
-  key: string;
-  header: string;
-  /** Drives filter operators and local filtering/sorting. Default 'text'. */
-  type?: AtmTableColumnType;
-  sortable?: boolean;
-  /** Shows the filter icon that opens the per-column filter popup. */
-  filterable?: boolean;
-  /** Column width, e.g. '160px'. Required for good results with `fixed`. */
-  width?: string;
-  align?: 'left' | 'center' | 'right';
-  /** Sticky to the left while scrolling horizontally. Put fixed columns first. */
-  fixed?: boolean;
-  /** Custom cell renderer. */
-  template?: TemplateRef<{ $implicit: T }>;
-  /** Value accessor for derived/formatted values (display only). */
-  value?: (row: T) => unknown;
-  /** Static footer text for this column. */
-  footer?: string;
-  /** Computed footer (totals, averages…) based on the visible rows. */
-  footerValue?: (rows: T[]) => unknown;
-  /** Custom footer renderer. Context = visible rows. */
-  footerTemplate?: TemplateRef<{ $implicit: T[] }>;
-}
-```
-
-### AtmSortEvent
-
-```ts
-export interface AtmSortEvent {
-  key: string;
-  direction: 'asc' | 'desc';
-}
-```
-
-## Usage example
-
-```html
-<atm-table [columns]="cols" [rows]="rows" [selectable]="true" [(selection)]="sel" />
-```
-
-## Tips
-
-Colunas AtmTableColumn. Remote usa AtmRemoteDataSource (nest-paginator).
-
-## Conventions
-
-- Sizes: `large | medium | slim` (when `size` input exists)
-- Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
-- Variants: `solid | soft | outline | ghost` (when `variant` input exists)
-- Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
-
-
-================================================================================
-
 # atm-tabs
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tabs/tabs.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tabs/tabs.component.ts`
 
 ## Purpose
 
@@ -6965,7 +6858,7 @@ _Nenhum._
 
 # atm-tag-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tag-group/tag-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tag-group/tag-group.component.ts`
 
 ## Purpose
 
@@ -7018,7 +6911,7 @@ _Nenhum._
 
 # atm-tags
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tags/tags.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tags/tags.component.ts`
 
 ## Purpose
 
@@ -7105,7 +6998,7 @@ export interface AtmTagsOption<T = unknown> extends AtmSelectOption<T> {
 
 # atm-textarea
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/textarea.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/textarea.component.ts`
 
 ## Purpose
 
@@ -7159,7 +7052,7 @@ _Nenhum._
 
 # AtmThemeService
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/theme.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/theme.service.ts`
 
 ## Purpose
 
@@ -7208,7 +7101,7 @@ inject(AtmThemeService).setTheme('dark');
 
 # atm-time-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/datepicker/time-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/datepicker/time-field.component.ts`
 
 ## Purpose
 
@@ -7260,7 +7153,7 @@ _Nenhum._
 
 # atm-toast-container
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toast/toast-container.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toast/toast-container.component.ts`
 
 ## Purpose
 
@@ -7308,7 +7201,7 @@ Coloque uma vez no shell/layout.
 
 # AtmToastService
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/services/toast.service.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/services/toast.service.ts`
 
 ## Purpose
 
@@ -7447,7 +7340,7 @@ inject(AtmToastService).success('Salvo!');
 
 # atm-toggle-button
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toggle/toggle-button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toggle/toggle-button.component.ts`
 
 ## Purpose
 
@@ -7506,7 +7399,7 @@ Pressed/unpressed button. Standalone or inside atm-toggle-button-group.
 
 # atm-toggle-button-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toggle/toggle-button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toggle/toggle-button.component.ts`
 
 ## Purpose
 
@@ -7601,7 +7494,7 @@ _Nenhum._
 
 # atm-toolbar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toolbar/toolbar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toolbar/toolbar.component.ts`
 
 ## Purpose
 
@@ -7654,7 +7547,7 @@ _Nenhum._
 
 # [atmTooltip]
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tooltip/tooltip.directive.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tooltip/tooltip.directive.ts`
 
 ## Purpose
 
@@ -7786,7 +7679,7 @@ export type AtmTooltipPlacement =
 
 # atm-tooltip-panel
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/tooltip/tooltip.directive.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/tooltip/tooltip.directive.ts`
 
 ## Purpose
 
@@ -7843,7 +7736,7 @@ export type AtmTooltipPlacement =
 
 # atm-typography
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/misc/misc.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/misc/misc.components.ts`
 
 ## Purpose
 
@@ -7975,7 +7868,7 @@ _Nenhum._
 
 # config
 
-> Fonte: `src/core/ui/config.ts`
+> Fonte: `projects/ngui/src/lib/config.ts`
 
 ## Types / interfaces
 
@@ -7996,7 +7889,7 @@ export interface AtmusUiConfig {
 
 # date-presets
 
-> Fonte: `src/core/ui/components/datepicker/date-presets.ts`
+> Fonte: `projects/ngui/src/lib/components/datepicker/date-presets.ts`
 
 ## Types / interfaces
 
@@ -8033,7 +7926,7 @@ export interface AtmDateRangePreset {
 
 # flow-internal-types
 
-> Fonte: `src/core/ui/components/flow/flow-internal.types.ts`
+> Fonte: `projects/ngui/src/lib/components/flow/flow-internal.types.ts`
 
 ## Types / interfaces
 
@@ -8162,7 +8055,7 @@ export interface FlowHandleRef {
 
 # flow-types
 
-> Fonte: `src/core/ui/components/flow/flow.types.ts`
+> Fonte: `projects/ngui/src/lib/components/flow/flow.types.ts`
 
 ## Types / interfaces
 
@@ -8456,7 +8349,7 @@ export type AtmFlowValidator = (
 
 # qr-encoder
 
-> Fonte: `src/core/ui/components/qrcode/qr-encoder.ts`
+> Fonte: `projects/ngui/src/lib/components/qrcode/qr-encoder.ts`
 
 ## Types / interfaces
 
@@ -8487,7 +8380,7 @@ export interface AtmQrMatrix {
 
 # rest-service
 
-> Fonte: `src/core/ui/services/rest.service.ts`
+> Fonte: `projects/ngui/src/lib/services/rest.service.ts`
 
 ## Types / interfaces
 
@@ -8540,7 +8433,7 @@ export interface AtmRemoteDataSource<T = Record<string, unknown>> {
 
 # types
 
-> Fonte: `src/core/ui/types.ts`
+> Fonte: `projects/ngui/src/lib/types.ts`
 
 ## Types / interfaces
 

@@ -28,14 +28,22 @@ mkdirSync(outDir, { recursive: true });
 
 const icofontCssRaw = readFileSync(join(icofontDir, 'icofont.css'), 'utf8');
 copyFileSync(join(icofontDir, 'icofont.woff2'), join(outDir, 'icofont.woff2'));
-const icofontCss = icofontCssRaw.replace(
-  /@font-face\s*\{[^}]*\}/,
-  `@font-face {
+const icofontCss = icofontCssRaw
+  .replace(
+    /@font-face\s*\{[^}]*\}/,
+    `@font-face {
   font-family: "icofont";
   font-display: swap;
   src: url('./icofont.woff2') format('woff2');
 }`,
-);
+  )
+  // O icofont.css declara @charset na linha 7. A regra só é válida no primeiro
+  // byte do arquivo, e aqui ela sempre acaba depois do banner do Tailwind — o
+  // que faz TODO consumidor que importa este CSS no meio de outro arquivo
+  // receber "@charset must be the first rule" a cada build. O CSS publicado é
+  // inteiramente ASCII (os ícones usam escapes \eXXX), então a declaração não
+  // tem função: sem ela, o arquivo continua sendo lido como UTF-8.
+  .replace(/@charset\s+["'][^"']*["']\s*;/gi, '');
 
 const entryCss = readFileSync(entry, 'utf8');
 const combined = `${icofontCss}\n\n${entryCss}`;

@@ -1,6 +1,6 @@
 # atm-progress-bar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/progress/progress-bar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/progress/progress-bar.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-radio-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/radio/radio-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/radio/radio-group.component.ts`
 
 ## Purpose
 

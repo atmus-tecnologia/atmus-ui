@@ -1,6 +1,6 @@
 # atm-dropdown-remote
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/dropdown/dropdown-remote.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/dropdown/dropdown-remote.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # qr-encoder
 
-> Fonte: `src/core/ui/components/qrcode/qr-encoder.ts`
+> Fonte: `projects/ngui/src/lib/components/qrcode/qr-encoder.ts`
 
 ## Types / interfaces
 

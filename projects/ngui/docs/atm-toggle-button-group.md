@@ -1,6 +1,6 @@
 # atm-toggle-button-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/toggle/toggle-button.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/toggle/toggle-button.component.ts`
 
 ## Purpose
 

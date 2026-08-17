@@ -1,6 +1,6 @@
 # atm-action-bar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/action-bar/action-bar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/action-bar/action-bar.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # config
 
-> Fonte: `src/core/ui/config.ts`
+> Fonte: `projects/ngui/src/lib/config.ts`
 
 ## Types / interfaces
 

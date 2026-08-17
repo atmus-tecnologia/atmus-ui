@@ -1,6 +1,6 @@
 # atm-color-swatch-picker
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/color/color.components.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/color/color.components.ts`
 
 ## Purpose
 

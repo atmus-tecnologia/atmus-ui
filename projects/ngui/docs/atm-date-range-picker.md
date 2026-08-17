@@ -1,6 +1,6 @@
 # atm-date-range-picker
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/datepicker/date-range-picker.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/datepicker/date-range-picker.component.ts`
 
 ## Purpose
 

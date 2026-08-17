@@ -1,6 +1,6 @@
 # atm-button-group
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/button/button-group.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/button/button-group.component.ts`
 
 ## Purpose
 

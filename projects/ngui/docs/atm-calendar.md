@@ -1,6 +1,6 @@
 # atm-calendar
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/calendar/calendar.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/calendar/calendar.component.ts`
 
 ## Purpose
 

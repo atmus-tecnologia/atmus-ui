@@ -107,9 +107,9 @@ const META = {
   'atm-modal': {
     purpose: 'Modal declarativo com open, título, expand e slots.',
     tips: 'Para abrir componente dinamicamente use AtmDialogService.',
-    example: `<atm-modal [(open)]="show" title="Detalhes">Conteúdo</atm-modal>`,
+    example: `<atm-modal [(open)]="show" header="Detalhes">Conteúdo</atm-modal>`,
   },
-  'atm-drawer': { purpose: 'Painel lateral (drawer) com posição e open model.', example: `<atm-drawer [(open)]="open" position="right" title="Filtros">...</atm-drawer>` },
+  'atm-drawer': { purpose: 'Painel lateral (drawer) com posição e open model.', example: `<atm-drawer [(open)]="open" position="right" header="Filtros">...</atm-drawer>` },
   'atm-toast-container': {
     purpose: 'Host visual dos toasts; use AtmToastService para disparar.',
     tips: 'Coloque uma vez no shell/layout.',
@@ -120,7 +120,7 @@ const META = {
   'atm-avatar': { purpose: 'Avatar com imagem, iniciais ou ícone.', example: `<atm-avatar src="/a.jpg" name="Ana" size="medium" />` },
   'atm-avatar-group': { purpose: 'Grupo de avatars com overflow (+N).', example: `<atm-avatar-group [max]="3">...</atm-avatar-group>` },
   'atm-alert': { purpose: 'Alerta inline dismissible com cor e ação.', example: `<atm-alert color="warning" title="Atenção" dismissible>Msg</atm-alert>` },
-  'atm-card': { purpose: 'Card com header/body/footer via projeção.', example: `<atm-card title="Título">Corpo</atm-card>` },
+  'atm-card': { purpose: 'Card com header/body/footer via projeção.', example: `<atm-card header="Título" subheader="Descrição">Corpo</atm-card>` },
   'atm-surface': { purpose: 'Superfície genérica com tokens de fundo/borda.', example: `<atm-surface class="p-4">...</atm-surface>` },
   'atm-skeleton': { purpose: 'Placeholder de loading (skeleton).', example: `<atm-skeleton class="h-4 w-40" />` },
   'atm-progress-bar': { purpose: 'Barra de progresso determinada/indeterminada.', example: `<atm-progress-bar [value]="40" />` },
@@ -130,7 +130,7 @@ const META = {
   'atm-accordion-item': { purpose: 'Item de accordion com header e conteúdo projetado.', example: `<atm-accordion-item header="Detalhes" [(expanded)]="open">...</atm-accordion-item>` },
   'atm-tabs': { purpose: 'Abas com conteúdo projetado via atm-tab.', example: `<atm-tabs [(value)]="tab">\n  <atm-tab value="a" label="A">...</atm-tab>\n</atm-tabs>` },
   'atm-tab': { purpose: 'Painel de aba (filho de atm-tabs).', example: `<atm-tab value="a" label="Geral">...</atm-tab>` },
-  'atm-pagination': { purpose: 'Paginação controlada.', example: `<atm-pagination [page]="page" [total]="total" [pageSize]="10" (pageChange)="page=$event" />` },
+  'atm-pagination': { purpose: 'Paginação controlada.', example: `<atm-pagination [page]="page" [totalItems]="total" [pageSize]="10" (pageChange)="load($event)" />` },
   'atm-breadcrumbs': { purpose: 'Trilha de navegação.', example: `<atm-breadcrumbs [items]="crumbs" />` },
   'atm-table': {
     purpose: 'Tabela rica: sort, filter, seleção, templates, paginação e remote dataSource.',

@@ -1,6 +1,6 @@
 # atm-surface
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/surface/surface.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/surface/surface.component.ts`
 
 ## Purpose
 

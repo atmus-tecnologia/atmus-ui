@@ -1,6 +1,6 @@
 # atm-signature
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/signature/signature.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/signature/signature.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-search-field
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/input/search-field.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/input/search-field.component.ts`
 
 ## Purpose
 

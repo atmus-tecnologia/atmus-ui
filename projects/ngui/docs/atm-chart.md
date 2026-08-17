@@ -1,6 +1,6 @@
 # atm-chart
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/chart/chart.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/chart/chart.component.ts`
 
 ## Purpose
 

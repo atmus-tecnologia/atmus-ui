@@ -1,6 +1,6 @@
 # atm-spinner
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/spinner/spinner.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/spinner/spinner.component.ts`
 
 ## Purpose
 

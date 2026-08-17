@@ -1,6 +1,6 @@
 # atm-qrcode
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/qrcode/qrcode.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/qrcode/qrcode.component.ts`
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # atm-combobox-user
 
-> Doc otimizada para LLMs. Fonte: `src/core/ui/components/combobox-user/combobox-user.component.ts`
+> Doc otimizada para LLMs. Fonte: `projects/ngui/src/lib/components/combobox-user/combobox-user.component.ts`
 
 ## Purpose
 

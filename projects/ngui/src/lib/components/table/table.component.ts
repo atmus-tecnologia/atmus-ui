@@ -484,7 +484,11 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
     }
   `,
 })
-export class AtmTable<T extends Record<string, unknown> = Record<string, unknown>>
+// `T` sem `extends Record<string, unknown>`: interfaces do TypeScript não têm
+// index signature implícita (só type aliases têm), então a restrição obrigava
+// quem consome a declarar um tipo de interseção só para usar a tabela. O acesso
+// por chave passa todo por `resolvePath`, que já recebe `unknown`.
+export class AtmTable<T = Record<string, unknown>>
   implements OnDestroy
 {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -670,7 +674,7 @@ export class AtmTable<T extends Record<string, unknown> = Record<string, unknown
 
   // Data helpers ----------------------------------------------------------
   trackRow(index: number, row: T): unknown {
-    return row[this.trackBy()] ?? index;
+    return resolvePath(row, this.trackBy()) ?? index;
   }
 
   /** Display value (uses col.value formatter when provided). */
@@ -710,7 +714,7 @@ export class AtmTable<T extends Record<string, unknown> = Record<string, unknown
 
   // Selection ---------------------------------------------------------------
   private keyOf(row: T): unknown {
-    return row[this.trackBy()] ?? row;
+    return resolvePath(row, this.trackBy()) ?? row;
   }
 
   isSelected(row: T): boolean {
