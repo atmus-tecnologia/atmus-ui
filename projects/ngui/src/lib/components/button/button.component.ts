@@ -2,16 +2,20 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { AtmColor, AtmSize, AtmVariant } from '../../types';
 import { AtmIcon } from '../icon/icon.component';
 
+// ** Abaixo de sm o alvo de toque sobe pro mínimo recomendado (44px iOS/48dp
+// ** Android) — slim/medium eram fixos em 32/40px em qualquer viewport, abaixo
+// ** do mínimo em ambas as plataformas. De sm pra cima volta à densidade
+// ** original: telas grandes são operadas por mouse, o dedo não é o gargalo.
 const SIZE_CLASSES: Record<AtmSize, string> = {
   large: 'h-12 px-5 text-base gap-2.5',
-  medium: 'h-10 px-4 text-sm gap-2',
-  slim: 'h-8 px-3 text-xs gap-1.5',
+  medium: 'h-11 px-4 text-sm gap-2 sm:h-10',
+  slim: 'h-10 px-3 text-xs gap-1.5 sm:h-8',
 };
 
 const ICON_ONLY_SIZE: Record<AtmSize, string> = {
   large: 'w-12 px-0',
-  medium: 'w-10 px-0',
-  slim: 'w-8 px-0',
+  medium: 'w-11 px-0 sm:w-10',
+  slim: 'w-10 px-0 sm:w-8',
 };
 
 const VARIANTS: Record<AtmVariant, Record<AtmColor, string>> = {

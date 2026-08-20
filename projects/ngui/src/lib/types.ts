@@ -7,11 +7,19 @@ export type AtmColor = 'primary' | 'success' | 'warning' | 'danger' | 'info' | '
 /** Visual weight variants for buttons / chips / badges. */
 export type AtmVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 
-/** Height per size — single source of truth for field-like components. */
+/**
+ * Height per size — single source of truth for field-like components.
+ *
+ * Below `sm` the touch target grows to the recommended minimum (44px
+ * iOS / 48dp Android) — `slim`/`medium` were fixed at 32/40px in any
+ * viewport, under the minimum on both platforms. From `sm` up it goes back
+ * to the original density: large screens are mouse-operated, the finger
+ * isn't the bottleneck there.
+ */
 export const ATM_SIZE_HEIGHT: Record<AtmSize, string> = {
   large: 'h-12',
-  medium: 'h-10',
-  slim: 'h-8',
+  medium: 'h-11 sm:h-10',
+  slim: 'h-10 sm:h-8',
 };
 
 /** Text size per size. */
