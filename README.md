@@ -60,6 +60,44 @@ npm run pack:ngui      # opcional: inspeciona o conteúdo do tarball antes de pu
 npm run publish:ngui   # publica dist/ngui no npm com --access public
 ```
 
+## Empacotamento: secondary entry points (bloqueado — não reimplementar sem ler isto)
+
+O `@atmus/ngui` publica todo o design system por um único entry point (`src/public-api.ts` → uma FESM só, `fesm2022/atmus-ngui.mjs`). Isso é conhecido e tem custo real: qualquer import eager de um app consumidor (ex.: `AtmThemeService`/`AtmToastContainer`/`provideAtmusUi` referenciados fora de uma rota lazy) arrasta a lib inteira para o bundle inicial, porque o esbuild trata o módulo físico como uma unidade só na hora de decidir o que é "initial" — não importa se a maior parte do que foi importado só é usada em telas lazy nunca visitadas.
+
+A solução correta seria dividir o pacote em **secondary entry points** por família de componente (ex.: `@atmus/ngui/button`, `@atmus/ngui/table`, `@atmus/ngui/autocomplete`), mantendo `@atmus/ngui` funcionando exatamente como hoje para quem já usa o import único — o ng-packagr já usado aqui suporta isso nativamente, sem trocar de ferramenta.
+
+**Isso foi tentado e não é implementável no momento.** Criar um secondary entry point que reexporta um arquivo já exportado pela raiz (o caso normal — é assim que `@atmus/ngui/button` preservaria `import { AtmButton } from '@atmus/ngui'` funcionando ao mesmo tempo) faz o `ng build ngui` falhar com:
+
+```
+Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined.
+```
+
+Causa provável (não confirmada oficialmente, mas consistente com o comportamento observado e com o código-fonte do compilador): o `ngtsc` usa o array `referencedFiles` do TypeScript como mecanismo interno para injetar "shims" de compilação (`ShimReferenceTagger`, ver [angular/angular@4213e8d](https://github.com/angular/angular/commit/4213e8d)) — ele modifica esse array e depois o restaura para esconder o detalhe de implementação. Quando dois entry points do ng-packagr compartilham um `SourceFile` no mesmo processo (o cenário normal de qualquer secondary entry point que reexporta algo que a raiz também exporta), a segunda passagem de restauração parece deixar o array num estado inconsistente, e uma chamada posterior de diagnóstico lê um índice que não existe mais.
+
+Testado e confirmado como bloqueador em **todas** as combinações abaixo — nenhuma resolveu:
+
+| Angular / `@angular/compiler-cli` / `ng-packagr` | TypeScript | Resultado |
+|---|---|---|
+| 20.3.x (versão do projeto) | 5.9.2 | ❌ crash |
+| 20.3.x | 5.8.3 (dentro do range suportado, `>=5.8 <6.0`) | ❌ crash idêntico |
+| 21.2.x (mais recente disponível, `ng update`) | 5.9.3 (exigido pelo ng-packagr 21) | ❌ crash idêntico |
+
+Também descartado: não é específico de um componente (reproduzido tanto com `atm-flow`, o mais pesado da lib, quanto com `atm-button`, o mais simples, com um único export); não é causado pelos `references` de projeto no `tsconfig.json` raiz (removidos experimentalmente, sem efeito).
+
+Issues públicas relacionadas (nenhuma com fix confirmado até a data deste registro, 2026-08-19): [angular/angular#57850](https://github.com/angular/angular/issues/57850), [angular-cli#31649](https://github.com/angular/angular-cli/issues/31649), [angular-cli#32281](https://github.com/angular/angular-cli/issues/32281), [nrwl/nx#33876](https://github.com/nrwl/nx/issues/33876).
+
+**Estado**: secondary entry points **não devem ser implementados agora**. O repositório foi restaurado ao estado original após os experimentos (nenhum código da lib foi alterado permanentemente).
+
+**Caminho futuro**:
+- Acompanhar as issues acima. Quando houver uma versão nova do `@angular/compiler-cli`/`ng-packagr`, repetir o teste mínimo abaixo antes de tentar implementar de novo — é rápido e evita redescobrir o mesmo bloqueio:
+  1. Criar `projects/ngui/<algo>/ng-package.json` com `{ "lib": { "entryFile": "public-api.ts" } }`.
+  2. Criar `projects/ngui/<algo>/public-api.ts` reexportando um único componente já exportado pela raiz (ex.: `export * from '../src/lib/components/button/button.component';`).
+  3. Adicionar `"<algo>/**/*.ts"` ao `include` de `projects/ngui/tsconfig.lib.json`.
+  4. Rodar `ng build ngui`. Se o segundo entry point compilar sem o erro acima, o bloqueador foi resolvido upstream.
+- Se for necessário abrir um report upstream, os passos acima já são um reprodutor mínimo suficiente — não há um caso de reprodução mantido neste repositório de propósito, para não deixar uma configuração de build quebrada no código publicável.
+
+**Workaround já aplicado no consumidor `atmusos-web`** (não depende de mudança nenhuma aqui): os providers do `@atmus/ngui` (`ATMUS_UI_CONFIG`, `AtmThemeService`, `AtmToastContainer`) foram movidos de `app.ts`/`app.config.ts` (raiz, eager) para os componentes-raiz de cada subárvore carregada via `loadComponent` (shell autenticado, auth, quote pública, impressão, etc.), usando o injector hierárquico comum do Angular em vez de `EnvironmentProviders` na raiz. Isso manteve o chunk do design system lazy sem tocar em nenhum import de rota, e reduziu o bundle inicial de ~731 kB para ~492 kB (−32,6%). É uma solução no lado do app consumidor — continua válida e não precisa ser desfeita nem depende de secondary entry points para funcionar.
+
 ## Padrões
 
 - **Prefixo**: `atm-` em todos os seletores.

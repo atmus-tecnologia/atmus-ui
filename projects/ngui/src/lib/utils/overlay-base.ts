@@ -100,22 +100,33 @@ export abstract class AtmOverlayBase implements OnDestroy {
       const onKeydown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') this.zone.run(() => this.close());
       };
-      const onScrollOrResize = () => this.zone.run(() => this.reposition());
+      // `scroll` não borbulha, então é capturado na fase de captura do window
+      // pra pegar rolagem de qualquer ancestral do trigger — mas isso também
+      // pega rolagem *dentro* do próprio painel (uma lista interna com
+      // overflow), onde o trigger não se moveu e reposicionar é só ruído
+      // (e pode até piscar, se a largura calculada variar por causa da
+      // scrollbar). Ignora quando o scroll nasce dentro do painel.
+      const onScroll = (event: Event) => {
+        const panel = this.getPanelEl();
+        if (panel && event.target instanceof Node && panel.contains(event.target)) return;
+        this.zone.run(() => this.reposition());
+      };
+      const onResize = () => this.zone.run(() => this.reposition());
 
       // Delay pointerdown registration so the opening click doesn't close it
       const timer = setTimeout(() => {
         document.addEventListener('pointerdown', onPointerDown, true);
       });
       document.addEventListener('keydown', onKeydown);
-      window.addEventListener('scroll', onScrollOrResize, { passive: true, capture: true });
-      window.addEventListener('resize', onScrollOrResize, { passive: true });
+      window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+      window.addEventListener('resize', onResize, { passive: true });
 
       this.cleanupFns.push(() => {
         clearTimeout(timer);
         document.removeEventListener('pointerdown', onPointerDown, true);
         document.removeEventListener('keydown', onKeydown);
-        window.removeEventListener('scroll', onScrollOrResize, true);
-        window.removeEventListener('resize', onScrollOrResize);
+        window.removeEventListener('scroll', onScroll, true);
+        window.removeEventListener('resize', onResize);
       });
     });
   }
