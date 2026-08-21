@@ -51,18 +51,18 @@ interface AiQuickAction {
 }
 
 const AI_SELECTION_ACTIONS: AiQuickAction[] = [
-  { id: 'grammar', icon: 'icofont-check', label: 'Corrigir ortografia e gramática' },
-  { id: 'improve', icon: 'icofont-magic', label: 'Melhorar escrita' },
-  { id: 'extend', icon: 'icofont-text-width', label: 'Estender texto' },
-  { id: 'summarize', icon: 'icofont-text-height', label: 'Resumir texto' },
-  { id: 'simplify', icon: 'icofont-paragraph', label: 'Simplificar texto' },
-  { id: 'tone-professional', icon: 'icofont-briefcase', label: 'Tom profissional', divider: true },
-  { id: 'tone-friendly', icon: 'icofont-slightly-smile', label: 'Tom amigável' },
-  { id: 'tone-confident', icon: 'icofont-muscle', label: 'Tom confiante' },
-  { id: 'tone-casual', icon: 'icofont-coffee-cup', label: 'Tom casual' },
-  { id: 'translate-en', icon: 'icofont-globe', label: 'Traduzir para Inglês', divider: true },
-  { id: 'translate-pt', icon: 'icofont-globe', label: 'Traduzir para Português' },
-  { id: 'translate-es', icon: 'icofont-globe', label: 'Traduzir para Espanhol' },
+  { id: 'grammar', icon: 'atm atm-tick-02', label: 'Corrigir ortografia e gramática' },
+  { id: 'improve', icon: 'atm atm-magic-wand-01', label: 'Melhorar escrita' },
+  { id: 'extend', icon: 'atm atm-expand-paragraph', label: 'Estender texto' },
+  { id: 'summarize', icon: 'atm atm-shrink', label: 'Resumir texto' },
+  { id: 'simplify', icon: 'atm atm-paragraph', label: 'Simplificar texto' },
+  { id: 'tone-professional', icon: 'atm atm-briefcase-01', label: 'Tom profissional', divider: true },
+  { id: 'tone-friendly', icon: 'atm atm-smile', label: 'Tom amigável' },
+  { id: 'tone-confident', icon: 'atm atm-body-part-muscle', label: 'Tom confiante' },
+  { id: 'tone-casual', icon: 'atm atm-coffee-01', label: 'Tom casual' },
+  { id: 'translate-en', icon: 'atm atm-globe', label: 'Traduzir para Inglês', divider: true },
+  { id: 'translate-pt', icon: 'atm atm-globe', label: 'Traduzir para Português' },
+  { id: 'translate-es', icon: 'atm atm-globe', label: 'Traduzir para Espanhol' },
 ];
 
 const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
@@ -109,11 +109,11 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         <!-- Desfazer / refazer -->
         <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Desfazer (Ctrl+Z)"
           (mousedown)="$event.preventDefault()" (click)="exec('undo')">
-          <i class="icofont-undo" aria-hidden="true"></i>
+          <i class="atm atm-undo" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Refazer"
           (mousedown)="$event.preventDefault()" (click)="exec('redo')">
-          <i class="icofont-redo" aria-hidden="true"></i>
+          <i class="atm atm-redo" aria-hidden="true"></i>
         </button>
 
         <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
@@ -121,23 +121,23 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         <!-- Marcações inline -->
         <button type="button" [class]="tbClass('bold')" [disabled]="isDisabled()" atmTooltip="Negrito (Ctrl+B)"
           (mousedown)="$event.preventDefault()" (click)="exec('bold')">
-          <i class="icofont-bold" aria-hidden="true"></i>
+          <i class="atm atm-text-bold" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('italic')" [disabled]="isDisabled()" atmTooltip="Itálico (Ctrl+I)"
           (mousedown)="$event.preventDefault()" (click)="exec('italic')">
-          <i class="icofont-italic" aria-hidden="true"></i>
+          <i class="atm atm-text-italic" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('underline')" [disabled]="isDisabled()" atmTooltip="Sublinhado (Ctrl+U)"
           (mousedown)="$event.preventDefault()" (click)="exec('underline')">
-          <i class="icofont-underline" aria-hidden="true"></i>
+          <i class="atm atm-text-underline" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('strikeThrough')" [disabled]="isDisabled()" atmTooltip="Tachado"
           (mousedown)="$event.preventDefault()" (click)="exec('strikeThrough')">
-          <i class="icofont-strike-through" aria-hidden="true"></i>
+          <i class="atm atm-text-strikethrough" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbCodeClass()" [disabled]="isDisabled()" atmTooltip="Código inline"
           (mousedown)="$event.preventDefault()" (click)="wrapInlineCode()">
-          <i class="icofont-code" aria-hidden="true"></i>
+          <i class="atm atm-code" aria-hidden="true"></i>
         </button>
 
         <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
@@ -157,7 +157,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         </button>
         <button type="button" [class]="tbBlockClass('blockquote')" [disabled]="isDisabled()" atmTooltip="Citação"
           (mousedown)="$event.preventDefault()" (click)="toggleBlock('blockquote')">
-          <i class="icofont-quote-left" aria-hidden="true"></i>
+          <i class="atm atm-quote-down" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbBlockClass('pre')" [disabled]="isDisabled()" atmTooltip="Bloco de código"
           (mousedown)="$event.preventDefault()" (click)="toggleBlock('pre')">
@@ -169,15 +169,15 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         <!-- Listas & link -->
         <button type="button" [class]="tbClass('insertUnorderedList')" [disabled]="isDisabled()" atmTooltip="Lista"
           (mousedown)="$event.preventDefault()" (click)="exec('insertUnorderedList')">
-          <i class="icofont-listine-dots" aria-hidden="true"></i>
+          <i class="atm atm-left-to-right-list-bullet" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('insertOrderedList')" [disabled]="isDisabled()" atmTooltip="Lista numerada"
           (mousedown)="$event.preventDefault()" (click)="exec('insertOrderedList')">
-          <i class="icofont-listing-number" aria-hidden="true"></i>
+          <i class="atm atm-list-ordered" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Inserir link"
           (mousedown)="$event.preventDefault()" (click)="setLink()">
-          <i class="icofont-link" aria-hidden="true"></i>
+          <i class="atm atm-link-01" aria-hidden="true"></i>
         </button>
 
         <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
@@ -185,15 +185,15 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         <!-- Alinhamento -->
         <button type="button" [class]="tbClass('justifyLeft')" [disabled]="isDisabled()" atmTooltip="Alinhar à esquerda"
           (mousedown)="$event.preventDefault()" (click)="exec('justifyLeft')">
-          <i class="icofont-align-left" aria-hidden="true"></i>
+          <i class="atm atm-text-align-left" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('justifyCenter')" [disabled]="isDisabled()" atmTooltip="Centralizar"
           (mousedown)="$event.preventDefault()" (click)="exec('justifyCenter')">
-          <i class="icofont-align-center" aria-hidden="true"></i>
+          <i class="atm atm-text-align-center" aria-hidden="true"></i>
         </button>
         <button type="button" [class]="tbClass('justifyRight')" [disabled]="isDisabled()" atmTooltip="Alinhar à direita"
           (mousedown)="$event.preventDefault()" (click)="exec('justifyRight')">
-          <i class="icofont-align-right" aria-hidden="true"></i>
+          <i class="atm atm-text-align-right" aria-hidden="true"></i>
         </button>
 
         <span class="mx-1 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
@@ -201,7 +201,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
         <!-- Limpar & assistente -->
         <button type="button" [class]="tbClass()" [disabled]="isDisabled()" atmTooltip="Limpar formatação"
           (mousedown)="$event.preventDefault()" (click)="clearFormatting()">
-          <i class="icofont-eraser" aria-hidden="true"></i>
+          <i class="atm atm-eraser" aria-hidden="true"></i>
         </button>
         @if (assistant()) {
           <button
@@ -211,7 +211,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
             atmTooltip="Assistente IA"
             (click)="toggleAiBox()"
           >
-            <i class="icofont-magic" aria-hidden="true"></i>
+            <i class="atm atm-magic-wand-01" aria-hidden="true"></i>
           </button>
         }
       </div>
@@ -230,7 +230,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
                 class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br
                   from-primary to-info text-white shadow-sm"
               >
-                <i class="icofont-magic" aria-hidden="true"></i>
+                <i class="atm atm-magic-wand-01" aria-hidden="true"></i>
               </span>
               <div class="min-w-0 flex-1">
                 <p class="text-[13px] leading-tight font-semibold text-ink">Assistente IA</p>
@@ -245,7 +245,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
                 aria-label="Fechar"
                 (click)="aiBoxOpen.set(false)"
               >
-                <i class="icofont-close" aria-hidden="true"></i>
+                <i class="atm atm-cancel-01" aria-hidden="true"></i>
               </button>
             </div>
 
@@ -291,10 +291,10 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
                   (click)="submitAiPrompt()"
                 >
                   @if (aiBoxBusy()) {
-                    <i class="icofont-spinner animate-spin" aria-hidden="true"></i>
+                    <i class="atm atm-loading-03 animate-spin" aria-hidden="true"></i>
                     Gerando…
                   } @else {
-                    <i class="icofont-send-mail" aria-hidden="true"></i>
+                    <i class="atm atm-send" aria-hidden="true"></i>
                     Gerar
                   }
                 </button>
@@ -362,7 +362,7 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
       >
         @if (aiBusy()) {
           <div class="flex items-center gap-2 px-2.5 py-1 text-[13px] font-medium text-primary">
-            <i class="icofont-spinner animate-spin" aria-hidden="true"></i>
+            <i class="atm atm-loading-03 animate-spin" aria-hidden="true"></i>
             Reescrevendo com IA…
           </div>
         } @else {
@@ -375,39 +375,39 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
                 [class.bg-primary-soft]="aiMenuOpen()"
                 (click)="aiMenuOpen.set(!aiMenuOpen())"
               >
-                <i class="icofont-magic" aria-hidden="true"></i>
+                <i class="atm atm-magic-wand-01" aria-hidden="true"></i>
                 Assistente
-                <i class="icofont-simple-down text-[8px]" aria-hidden="true"></i>
+                <i class="atm atm-chevron-down text-[8px]" aria-hidden="true"></i>
               </button>
               <span class="mx-0.5 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
             }
 
             <button type="button" [class]="bubbleBtn('bold')" (click)="exec('bold')" aria-label="Negrito">
-              <i class="icofont-bold" aria-hidden="true"></i>
+              <i class="atm atm-text-bold" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleBtn('italic')" (click)="exec('italic')" aria-label="Itálico">
-              <i class="icofont-italic" aria-hidden="true"></i>
+              <i class="atm atm-text-italic" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleBtn('underline')" (click)="exec('underline')" aria-label="Sublinhado">
-              <i class="icofont-underline" aria-hidden="true"></i>
+              <i class="atm atm-text-underline" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleBtn('strikeThrough')" (click)="exec('strikeThrough')" aria-label="Tachado">
-              <i class="icofont-strike-through" aria-hidden="true"></i>
+              <i class="atm atm-text-strikethrough" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleCodeClass()" (click)="wrapInlineCode()" aria-label="Código">
-              <i class="icofont-code" aria-hidden="true"></i>
+              <i class="atm atm-code" aria-hidden="true"></i>
             </button>
 
             <span class="mx-0.5 h-4 w-px shrink-0 bg-line" aria-hidden="true"></span>
 
             <button type="button" [class]="bubbleBtn('insertUnorderedList')" (click)="exec('insertUnorderedList')" aria-label="Lista">
-              <i class="icofont-listine-dots" aria-hidden="true"></i>
+              <i class="atm atm-left-to-right-list-bullet" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleBtn('insertOrderedList')" (click)="exec('insertOrderedList')" aria-label="Lista numerada">
-              <i class="icofont-listing-number" aria-hidden="true"></i>
+              <i class="atm atm-list-ordered" aria-hidden="true"></i>
             </button>
             <button type="button" [class]="bubbleBtn()" (click)="setLink()" aria-label="Link">
-              <i class="icofont-link" aria-hidden="true"></i>
+              <i class="atm atm-link-01" aria-hidden="true"></i>
             </button>
           </div>
 

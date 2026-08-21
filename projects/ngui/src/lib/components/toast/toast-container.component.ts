@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AtmToastService, AtmToast } from '../../services/toast.service';
 
 const STYLES: Record<string, { bar: string; icon: string; iconColor: string }> = {
-  success: { bar: 'bg-success', icon: 'icofont-check-circled', iconColor: 'text-success' },
-  danger: { bar: 'bg-danger', icon: 'icofont-close-circled', iconColor: 'text-danger' },
-  warning: { bar: 'bg-warning', icon: 'icofont-warning-alt', iconColor: 'text-warning' },
-  info: { bar: 'bg-info', icon: 'icofont-info-circle', iconColor: 'text-info' },
-  primary: { bar: 'bg-primary', icon: 'icofont-info-circle', iconColor: 'text-primary' },
-  neutral: { bar: 'bg-ink-muted', icon: 'icofont-info-circle', iconColor: 'text-ink-muted' },
+  success: { bar: 'bg-success', icon: 'atm atm-checkmark-circle-01', iconColor: 'text-success' },
+  danger: { bar: 'bg-danger', icon: 'atm atm-cancel-circle', iconColor: 'text-danger' },
+  warning: { bar: 'bg-warning', icon: 'atm atm-alert-circle', iconColor: 'text-warning' },
+  info: { bar: 'bg-info', icon: 'atm atm-information-circle', iconColor: 'text-info' },
+  primary: { bar: 'bg-primary', icon: 'atm atm-information-circle', iconColor: 'text-primary' },
+  neutral: { bar: 'bg-ink-muted', icon: 'atm atm-information-circle', iconColor: 'text-ink-muted' },
 };
 
 /** Render once at app root: <atm-toast-container /> */
@@ -42,7 +42,7 @@ const STYLES: Record<string, { bar: string; icon: string; iconColor: string }> =
                 (click)="service.toggleExpanded(toast.id)"
               >
                 <i
-                  class="icofont-simple-down text-xs transition-transform duration-200"
+                  class="atm atm-chevron-down text-xs transition-transform duration-200"
                   [class.rotate-180]="toast.expanded"
                   aria-hidden="true"
                 ></i>
@@ -55,7 +55,7 @@ const STYLES: Record<string, { bar: string; icon: string; iconColor: string }> =
               aria-label="Fechar"
               (click)="service.dismiss(toast.id)"
             >
-              <i class="icofont-close text-xs" aria-hidden="true"></i>
+              <i class="atm atm-cancel-01 text-xs" aria-hidden="true"></i>
             </button>
           </div>
 

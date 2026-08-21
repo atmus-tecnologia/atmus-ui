@@ -1,7 +1,7 @@
 /* =========================================================================
    Atmus UI — Design tokens, dark theme and shared component styles.
    Not consumed directly — bundled by build-styles.mjs (together with
-   Tailwind's compiled utilities and the icofont CSS) into the single
+   Tailwind's compiled utilities and the @atmus/icons CSS) into the single
    dist/ngui/styles.css published as '@atmus/ngui/styles.css'.
    ========================================================================= */
 
@@ -140,20 +140,16 @@
 /* Base                                                                */
 /* ------------------------------------------------------------------ */
 
-/* IcoFont ships the font-family only on the `.icofont` base class; the
-   `.icofont-*` classes carry just the glyph content. Apply the font to any
-   icofont-* class so `<i class="icofont-star">` works without the base class. */
-[class^='icofont-'],
-[class*=' icofont-'] {
-  font-family: 'icofont' !important;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* No icon rule here on purpose.
+   Until the move to @atmus/icons this file carried a prefix-wide attribute
+   selector so that an icon class worked without its base class. Do NOT
+   reintroduce the equivalent for the `atm-` prefix: such a selector matches
+   EVERY class starting with it, including this file's own `atm-field`,
+   `atm-panel`, `atm-option`, `atm-focus` and `atm-drawer-*` — which would
+   force the icon font, `display: inline-block` and `line-height: 1` onto
+   buttons, panels and form fields in every consuming app.
+   @atmus/icons requires the `atm` base class for exactly this reason. Write
+   `<i class="atm atm-star">` or, better, `<atm-icon name="star" />`. */
 
 @layer base {
   html {

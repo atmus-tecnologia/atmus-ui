@@ -175,8 +175,8 @@ const USERS: User[] = [
       <demo-section id="toolbar" title="Toolbar" description="Slots start / center / end." [code]="toolbarCode">
         <atm-toolbar class="w-full">
           <div start class="flex items-center gap-2">
-            <atm-button size="slim" icon="plus">Novo</atm-button>
-            <atm-button size="slim" variant="outline" color="neutral" icon="upload">Importar</atm-button>
+            <atm-button size="slim" icon="plus-sign">Novo</atm-button>
+            <atm-button size="slim" variant="outline" color="neutral" icon="upload-01">Importar</atm-button>
           </div>
           <div center class="w-full max-w-xs">
             <atm-search-field size="slim" />
@@ -206,10 +206,10 @@ const USERS: User[] = [
             [count]="barSelection().length"
             (closed)="barSelection.set([])"
           >
-            <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
-            <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
+            <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+            <atm-button size="slim" variant="ghost" color="neutral" icon="download-01">Exportar</atm-button>
             <atm-button size="slim" variant="ghost" color="neutral" icon="box">Arquivar</atm-button>
-            <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+            <atm-button size="slim" variant="soft" color="danger" icon="delete-02">Excluir</atm-button>
           </atm-action-bar>
         </div>
       </demo-section>
@@ -234,9 +234,9 @@ const USERS: User[] = [
           [count]="3"
           (closed)="viewportBar.set(null)"
         >
-          <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
-          <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
-          <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+          <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+          <atm-button size="slim" variant="ghost" color="neutral" icon="download-01">Exportar</atm-button>
+          <atm-button size="slim" variant="soft" color="danger" icon="delete-02">Excluir</atm-button>
         </atm-action-bar>
       </demo-section>
     </demo-page>
@@ -342,7 +342,7 @@ export class DataPage {
   }
 
   readonly crumbs = [
-    { label: 'Home', link: '/', icon: 'ui-home' },
+    { label: 'Home', link: '/', icon: 'home-01' },
     { label: 'Configurações', link: '/data' },
     { label: 'Usuários' },
   ];
@@ -424,7 +424,7 @@ export class UsersService extends AtmRestService<User> {
 
   readonly breadcrumbsCode = `<atm-breadcrumbs
   [items]="[
-    { label: 'Home', link: '/', icon: 'ui-home' },
+    { label: 'Home', link: '/', icon: 'home-01' },
     { label: 'Configurações', link: '/settings' },
     { label: 'Usuários' },
   ]"
@@ -440,23 +440,23 @@ export class UsersService extends AtmRestService<User> {
     [count]="selection().length"
     (closed)="selection.set([])"
   >
-    <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
-    <atm-button size="slim" variant="ghost" color="neutral" icon="download">Exportar</atm-button>
-    <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+    <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+    <atm-button size="slim" variant="ghost" color="neutral" icon="download-01">Exportar</atm-button>
+    <atm-button size="slim" variant="soft" color="danger" icon="delete-02">Excluir</atm-button>
   </atm-action-bar>
 </div>`;
 
   readonly actionBarViewportCode = `<!-- padrão: fixa na viewport, centralizada embaixo -->
 <atm-action-bar [open]="open()" position="top" [count]="3" (closed)="open.set(false)">
-  <atm-button size="slim" variant="ghost" color="neutral" icon="ui-edit">Editar</atm-button>
-  <atm-button size="slim" variant="soft" color="danger" icon="ui-delete">Excluir</atm-button>
+  <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+  <atm-button size="slim" variant="soft" color="danger" icon="delete-02">Excluir</atm-button>
 </atm-action-bar>
 
 <!-- inputs: open, position (bottom|top), container (viewport|parent),
      size (large|medium|slim), count, showClose, ariaLabel · output: closed -->`;
 
   readonly toolbarCode = `<atm-toolbar>
-  <div start><atm-button size="slim" icon="plus">Novo</atm-button></div>
+  <div start><atm-button size="slim" icon="plus-sign">Novo</atm-button></div>
   <div center><atm-search-field size="slim" /></div>
   <div end><atm-button size="slim" variant="ghost" icon="filter" [iconOnly]="true" /></div>
 </atm-toolbar>`;

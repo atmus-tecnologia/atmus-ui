@@ -52,7 +52,7 @@ export class AtmKbd {}
     >
       <ng-content />
       @if (external()) {
-        <i class="icofont-external-link text-xs" aria-hidden="true"></i>
+        <i class="atm atm-link-square-01 text-xs" aria-hidden="true"></i>
       }
     </a>
   `,

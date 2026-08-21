@@ -23,7 +23,7 @@ const COLORS: Record<AtmColor, string> = {
   template: `
     <span [class]="classes()">
       @if (icon()) {
-        <i [class]="'icofont-' + icon()" aria-hidden="true"></i>
+        <i [class]="'atm atm-' + icon()" aria-hidden="true"></i>
       }
       <ng-content />
       @if (removable()) {
@@ -34,7 +34,7 @@ const COLORS: Record<AtmColor, string> = {
           aria-label="Remover"
           (click)="removed.emit()"
         >
-          <i class="icofont-close text-[9px]" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01 text-[9px]" aria-hidden="true"></i>
         </button>
       }
     </span>

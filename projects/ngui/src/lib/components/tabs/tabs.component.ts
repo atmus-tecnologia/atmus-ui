@@ -47,7 +47,7 @@ const INNER_SIZE: Record<AtmSize, string> = {
 /**
  * Tabs:
  *   <atm-tabs [(activeIndex)]="tab" variant="segmented">
- *     <atm-tab label="General" icon="gear">...</atm-tab>
+ *     <atm-tab label="General" icon="settings-02">...</atm-tab>
  *   </atm-tabs>
  *
  * When the tab list exceeds the available width, scroll chevrons with fading
@@ -78,7 +78,7 @@ const INNER_SIZE: Record<AtmSize, string> = {
             (click)="select(i)"
           >
             @if (tab.icon()) {
-              <i [class]="'icofont-' + tab.icon()" aria-hidden="true"></i>
+              <i [class]="'atm atm-' + tab.icon()" aria-hidden="true"></i>
             }
             {{ tab.label() }}
             @if (tab.badge() !== undefined) {
@@ -101,7 +101,7 @@ const INNER_SIZE: Record<AtmSize, string> = {
           [style.background]="fadeStyle('left')"
           (click)="scrollByDir(-1)"
         >
-          <i class="icofont-simple-left text-xs" aria-hidden="true"></i>
+          <i class="atm atm-chevron-left text-xs" aria-hidden="true"></i>
         </button>
       }
       @if (canScrollRight()) {
@@ -113,7 +113,7 @@ const INNER_SIZE: Record<AtmSize, string> = {
           [style.background]="fadeStyle('right')"
           (click)="scrollByDir(1)"
         >
-          <i class="icofont-simple-right text-xs" aria-hidden="true"></i>
+          <i class="atm atm-chevron-right text-xs" aria-hidden="true"></i>
         </button>
       }
     </div>

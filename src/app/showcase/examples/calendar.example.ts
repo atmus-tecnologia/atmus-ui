@@ -205,7 +205,7 @@ function buildEvents(): AtmCalendarEvent[] {
     <div class="flex items-start gap-6">
       <!-- ===== Sidebar ===== -->
       <aside class="hidden w-64 shrink-0 space-y-6 xl:block">
-        <atm-button [block]="true" icon="plus" (clicked)="openCreate()">Criar evento</atm-button>
+        <atm-button [block]="true" icon="plus-sign" (clicked)="openCreate()">Criar evento</atm-button>
 
         <div class="overflow-hidden rounded-atm-lg border border-line bg-surface">
           <atm-calendar [flat]="true" [value]="selectedDate()" (valueChange)="onMiniPick($event)" />
@@ -315,7 +315,7 @@ function buildEvents(): AtmCalendarEvent[] {
           <atm-button variant="ghost" color="neutral" (clicked)="modalOpen.set(false)">
             Cancelar
           </atm-button>
-          <atm-button icon="check-alt" [disabled]="!draftTitle().trim()" (clicked)="createEvent()">
+          <atm-button icon="tick-02" [disabled]="!draftTitle().trim()" (clicked)="createEvent()">
             Salvar evento
           </atm-button>
         </div>

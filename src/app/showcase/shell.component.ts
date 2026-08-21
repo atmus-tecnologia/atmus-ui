@@ -30,28 +30,28 @@ const EXAMPLES: ExampleItem[] = [
   {
     label: 'Kanban',
     description: 'Board com drag & drop',
-    icon: 'icofont-listine-dots',
+    icon: 'atm atm-left-to-right-list-bullet',
     link: '/examples/kanban',
     badge: 'novo',
   },
   {
     label: 'Calendário',
     description: 'Agenda com eventos',
-    icon: 'icofont-ui-calendar',
+    icon: 'atm atm-calendar-01',
     link: '/examples/calendar',
     badge: 'novo',
   },
   {
     label: 'Chat / Atendimento',
     description: 'Tela completa de suporte',
-    icon: 'icofont-ui-chat',
+    icon: 'atm atm-bubble-chat',
     link: '/examples/chat',
     badge: 'novo',
   },
   {
     label: 'Dashboard Sales',
     description: 'Painel de vendas',
-    icon: 'icofont-chart-histogram',
+    icon: 'atm atm-chart-histogram',
     link: '/examples/dashboard',
     badge: 'novo',
   },
@@ -60,12 +60,12 @@ const EXAMPLES: ExampleItem[] = [
 const MENU: MenuGroup[] = [
   {
     label: 'Começando',
-    icon: 'icofont-rocket-alt-2',
+    icon: 'atm atm-rocket-01',
     items: [{ label: 'Introdução', link: '/' }],
   },
   {
     label: 'Botões',
-    icon: 'icofont-ui-press',
+    icon: 'atm atm-tap-01',
     items: [
       { label: 'Button', link: '/buttons', fragment: 'button' },
       { label: 'ButtonGroup', link: '/buttons', fragment: 'button-group' },
@@ -76,7 +76,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Entradas',
-    icon: 'icofont-ui-edit',
+    icon: 'atm atm-edit-02',
     items: [
       { label: 'Input', link: '/inputs', fragment: 'input' },
       { label: 'InputMask', link: '/inputs', fragment: 'input-mask' },
@@ -93,7 +93,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Editor de texto',
-    icon: 'icofont-fountain-pen',
+    icon: 'atm atm-pen-01',
     items: [
       { label: 'Rich Text', link: '/editor', fragment: 'rich-text', badge: 'novo' },
       { label: 'Assistente IA', link: '/editor', fragment: 'rich-text-assistant', badge: 'IA' },
@@ -104,7 +104,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Upload',
-    icon: 'icofont-cloud-upload',
+    icon: 'atm atm-cloud-upload',
     items: [
       { label: 'FileInput', link: '/upload', fragment: 'file-input', badge: 'novo' },
       { label: 'Área de drop', link: '/upload', fragment: 'file-input-dropzone', badge: 'novo' },
@@ -116,7 +116,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Seleção',
-    icon: 'icofont-ui-check',
+    icon: 'atm atm-tick-02',
     items: [
       { label: 'Checkbox', link: '/selection', fragment: 'checkbox' },
       { label: 'CheckboxGroup', link: '/selection', fragment: 'checkbox-group' },
@@ -135,7 +135,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Datas',
-    icon: 'icofont-ui-calendar',
+    icon: 'atm atm-calendar-01',
     items: [
       { label: 'Calendar', link: '/dates', fragment: 'calendar' },
       { label: 'RangeCalendar', link: '/dates', fragment: 'range-calendar' },
@@ -149,7 +149,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Overlays',
-    icon: 'icofont-layers',
+    icon: 'atm atm-layers-01',
     items: [
       { label: 'Modal', link: '/overlays', fragment: 'modal' },
       { label: 'Dynamic Dialog', link: '/overlays', fragment: 'dynamic-dialog', badge: 'novo' },
@@ -163,7 +163,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Feedback',
-    icon: 'icofont-info-circle',
+    icon: 'atm atm-information-circle',
     items: [
       { label: 'Alert', link: '/feedback', fragment: 'alert' },
       { label: 'ProgressBar', link: '/feedback', fragment: 'progress-bar' },
@@ -175,7 +175,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Exibição',
-    icon: 'icofont-eye-alt',
+    icon: 'atm atm-view',
     items: [
       { label: 'Avatar', link: '/display', fragment: 'avatar' },
       { label: 'Avatar múltiplo', link: '/display', fragment: 'avatar-group', badge: 'novo' },
@@ -205,7 +205,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Gráficos',
-    icon: 'icofont-chart-bar-graph',
+    icon: 'atm atm-bar-chart',
     items: [
       { label: 'Linhas & Área', link: '/charts', fragment: 'chart-line', badge: 'novo' },
       { label: 'Colunas & Barras', link: '/charts', fragment: 'chart-bar' },
@@ -228,7 +228,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Diagramas',
-    icon: 'icofont-site-map',
+    icon: 'atm atm-hierarchy',
     items: [
       { label: 'Flow — Básico', link: '/flow', fragment: 'flow-basic', badge: 'novo' },
       { label: 'Flow — Custom nodes', link: '/flow', fragment: 'flow-custom', badge: 'novo' },
@@ -245,7 +245,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Simulações',
-    icon: 'icofont-building-alt',
+    icon: 'atm atm-building-01',
     items: [
       { label: 'Office — Escritório', link: '/office', fragment: 'office', badge: 'novo' },
       { label: 'Office — Equipe custom', link: '/office', fragment: 'office-custom', badge: 'novo' },
@@ -254,7 +254,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Áudio',
-    icon: 'icofont-mic',
+    icon: 'atm atm-mic-01',
     items: [
       { label: 'Player com URL', link: '/audio', fragment: 'audio-url', badge: 'novo' },
       { label: 'Três estilos', link: '/audio', fragment: 'audio-styles', badge: 'novo' },
@@ -264,7 +264,7 @@ const MENU: MenuGroup[] = [
   },
   {
     label: 'Cores',
-    icon: 'icofont-color-picker',
+    icon: 'atm atm-color-picker',
     items: [
       { label: 'ColorSwatch', link: '/colors', fragment: 'color-swatch' },
       { label: 'ColorSwatchPicker', link: '/colors', fragment: 'color-swatch-picker' },
@@ -337,7 +337,7 @@ const MENU: MenuGroup[] = [
         @if (tab() === 'components') {
           <div class="p-3">
             <div class="atm-field flex h-9 items-center gap-2 px-2.5 text-sm">
-              <i class="icofont-ui-search text-xs text-ink-faint" aria-hidden="true"></i>
+              <i class="atm atm-search-01 text-xs text-ink-faint" aria-hidden="true"></i>
               <input
                 type="text"
                 placeholder="Filtrar componentes..."
@@ -426,7 +426,7 @@ const MENU: MenuGroup[] = [
                   <span class="size-1.5 rounded-full bg-primary"></span>
                 }
                 <i
-                  class="icofont-simple-down text-[10px] text-ink-faint transition-transform
+                  class="atm atm-chevron-down text-[10px] text-ink-faint transition-transform
                     duration-200"
                   [class.-rotate-90]="!isOpen(group)"
                   aria-hidden="true"
@@ -500,7 +500,7 @@ const MENU: MenuGroup[] = [
             aria-label="Menu"
             (click)="sidebarOpen.set(!sidebarOpen())"
           >
-            <i class="icofont-navigation-menu" aria-hidden="true"></i>
+            <i class="atm atm-menu-01" aria-hidden="true"></i>
           </button>
           <span class="text-sm text-ink-muted">
             Biblioteca de componentes · prefixo
@@ -514,7 +514,7 @@ const MENU: MenuGroup[] = [
             [attr.aria-label]="theme.isDark() ? 'Tema claro' : 'Tema escuro'"
             (click)="theme.toggle()"
           >
-            <i [class]="theme.isDark() ? 'icofont-sun' : 'icofont-moon'" aria-hidden="true"></i>
+            <i [class]="theme.isDark() ? 'atm atm-sun-01' : 'atm atm-moon-01'" aria-hidden="true"></i>
           </button>
         </header>
 

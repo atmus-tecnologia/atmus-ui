@@ -1,6 +1,6 @@
 # Atmus UI
 
-Biblioteca de componentes Angular (standalone, signals, OnPush) com Tailwind CSS 4 e IcoFont, publicada no npm como [`@atmus/ngui`](https://www.npmjs.com/package/@atmus/ngui). O CSS vai pré-compilado no pacote — quem instala não precisa ter Tailwind configurado.
+Biblioteca de componentes Angular (standalone, signals, OnPush) com Tailwind CSS 4 e [Atmus Icons](https://cdn.atmus.dev.br/assets/icons/), publicada no npm como [`@atmus/ngui`](https://www.npmjs.com/package/@atmus/ngui). O CSS vai pré-compilado no pacote — quem instala não precisa ter Tailwind configurado.
 
 Este repositório é um Angular workspace com dois projetos:
 

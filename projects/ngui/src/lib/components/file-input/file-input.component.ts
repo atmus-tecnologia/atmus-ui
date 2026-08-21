@@ -55,19 +55,19 @@ function formatBytes(bytes: number): string {
 function fileIcon(file: File): string {
   const type = file.type.toLowerCase();
   const name = file.name.toLowerCase();
-  if (type.startsWith('image/')) return 'icofont-image';
-  if (type.startsWith('video/')) return 'icofont-video-cam';
-  if (type.startsWith('audio/')) return 'icofont-music-note';
-  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'icofont-file-pdf';
-  if (/\.(doc|docx)$/.test(name) || type.includes('word')) return 'icofont-file-word';
+  if (type.startsWith('image/')) return 'atm atm-image-02';
+  if (type.startsWith('video/')) return 'atm atm-video-01';
+  if (type.startsWith('audio/')) return 'atm atm-music-note-01';
+  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'atm atm-pdf-01';
+  if (/\.(doc|docx)$/.test(name) || type.includes('word')) return 'atm atm-doc-01';
   if (/\.(xls|xlsx|csv)$/.test(name) || type.includes('sheet') || type.includes('excel'))
-    return 'icofont-file-excel';
+    return 'atm atm-xls-01';
   if (/\.(ppt|pptx)$/.test(name) || type.includes('presentation'))
-    return 'icofont-file-powerpoint';
+    return 'atm atm-ppt-01';
   if (/\.(zip|rar|7z|gz|tar)$/.test(name) || type.includes('zip') || type.includes('compressed'))
-    return 'icofont-file-zip';
-  if (/\.(txt|md|log)$/.test(name) || type.startsWith('text/')) return 'icofont-file-text';
-  return 'icofont-file-alt';
+    return 'atm atm-zip-01';
+  if (/\.(txt|md|log)$/.test(name) || type.startsWith('text/')) return 'atm atm-txt-01';
+  return 'atm atm-file-02';
 }
 
 const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: 'p-4' };
@@ -114,7 +114,7 @@ const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: '
           text-ink-muted transition-transform duration-200 group-hover:scale-105"
         [class.text-primary]="dragging()"
       >
-        <i [class]="dragging() ? 'icofont-download' : 'icofont-cloud-upload'" aria-hidden="true"></i>
+        <i [class]="dragging() ? 'atm atm-download-01' : 'atm atm-cloud-upload'" aria-hidden="true"></i>
       </span>
       <div [class]="textSize()">
         <p class="font-medium text-ink">
@@ -138,7 +138,7 @@ const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: '
 
     @if (invalid() && errorText()) {
       <p class="mt-1.5 flex items-center gap-1 text-xs font-medium text-danger" role="alert">
-        <i class="icofont-warning-alt" aria-hidden="true"></i>{{ errorText() }}
+        <i class="atm atm-alert-circle" aria-hidden="true"></i>{{ errorText() }}
       </p>
     }
 
@@ -173,10 +173,10 @@ const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: '
                 </span>
                 @switch (item.status) {
                   @case ('success') {
-                    <i class="icofont-check-circled text-success" aria-hidden="true"></i>
+                    <i class="atm atm-checkmark-circle-01 text-success" aria-hidden="true"></i>
                   }
                   @case ('error') {
-                    <i class="icofont-close-circled text-danger" aria-hidden="true"></i>
+                    <i class="atm atm-cancel-circle text-danger" aria-hidden="true"></i>
                   }
                 }
               </div>
@@ -202,7 +202,7 @@ const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: '
               aria-label="Remover arquivo"
               (click)="remove(item.id)"
             >
-              <i class="icofont-bin" aria-hidden="true"></i>
+              <i class="atm atm-delete-02" aria-hidden="true"></i>
             </button>
           </li>
         }

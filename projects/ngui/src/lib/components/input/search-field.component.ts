@@ -24,7 +24,7 @@ import { AtmValueAccessor } from '../../utils/value-accessor';
   host: { class: 'block w-full' },
   template: `
     <div [class]="wrapperClasses()">
-      <i class="icofont-ui-search shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
+      <i class="atm atm-search-01 shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
       <input
         type="search"
         class="h-full w-full min-w-0 bg-transparent outline-none placeholder:text-ink-faint
@@ -42,7 +42,7 @@ import { AtmValueAccessor } from '../../utils/value-accessor';
           aria-label="Limpar"
           (click)="clear()"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </button>
       }
     </div>

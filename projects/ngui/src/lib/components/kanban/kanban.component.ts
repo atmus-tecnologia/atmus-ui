@@ -94,9 +94,9 @@ const LABEL: Record<AtmColor, string> = {
 };
 
 const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string; label: string }> = {
-  low: { icon: 'icofont-arrow-down', class: 'text-info', label: 'Baixa' },
-  medium: { icon: 'icofont-minus', class: 'text-warning', label: 'Média' },
-  high: { icon: 'icofont-arrow-up', class: 'text-danger', label: 'Alta' },
+  low: { icon: 'atm atm-arrow-down-02', class: 'text-info', label: 'Baixa' },
+  medium: { icon: 'atm atm-minus-sign', class: 'text-warning', label: 'Média' },
+  high: { icon: 'atm atm-arrow-up-02', class: 'text-danger', label: 'Alta' },
 };
 
 /**
@@ -170,7 +170,7 @@ const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string;
                 aria-label="Adicionar cartão"
                 (click)="addCard.emit(column)"
               >
-                <i class="icofont-plus text-xs" aria-hidden="true"></i>
+                <i class="atm atm-plus-sign text-xs" aria-hidden="true"></i>
               </button>
             }
           </header>
@@ -238,7 +238,7 @@ const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string;
                       }
                       @if (card.dueDate) {
                         <span class="inline-flex items-center gap-1 text-[11px] text-ink-muted">
-                          <i class="icofont-clock-time" aria-hidden="true"></i>
+                          <i class="atm atm-clock-01" aria-hidden="true"></i>
                           {{ card.dueDate }}
                         </span>
                       }
@@ -279,7 +279,7 @@ const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string;
                 hover:bg-surface hover:text-ink"
               (click)="addCard.emit(column)"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               Adicionar cartão
             </button>
           }
@@ -300,7 +300,7 @@ const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string;
           [class]="widthClass()"
           (click)="addColumn.emit()"
         >
-          <i class="icofont-plus" aria-hidden="true"></i>
+          <i class="atm atm-plus-sign" aria-hidden="true"></i>
           Nova coluna
         </button>
       }

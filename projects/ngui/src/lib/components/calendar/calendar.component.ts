@@ -58,7 +58,7 @@ export function atmSameDay(a: Date | null | undefined, b: Date | null | undefine
               aria-label="Mês anterior"
               (click)="navigate(-1)"
             >
-              <i class="icofont-simple-left" aria-hidden="true"></i>
+              <i class="atm atm-chevron-left" aria-hidden="true"></i>
             </button>
             <span class="text-sm font-semibold text-ink">
               {{ view.label }} {{ view.year }}
@@ -70,7 +70,7 @@ export function atmSameDay(a: Date | null | undefined, b: Date | null | undefine
               aria-label="Próximo mês"
               (click)="navigate(1)"
             >
-              <i class="icofont-simple-right" aria-hidden="true"></i>
+              <i class="atm atm-chevron-right" aria-hidden="true"></i>
             </button>
           </div>
 

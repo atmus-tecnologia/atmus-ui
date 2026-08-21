@@ -59,11 +59,11 @@ import { DemoPage, DemoSection } from '../demo-section.component';
           </div>
           <div>
             <atm-label>E-mail</atm-label>
-            <atm-input type="email" placeholder="voce@empresa.com" icon="envelope" />
+            <atm-input type="email" placeholder="voce@empresa.com" icon="mail-01" />
           </div>
           <div>
             <atm-label>Senha</atm-label>
-            <atm-input type="password" placeholder="••••••••" icon="lock" />
+            <atm-input type="password" placeholder="••••••••" icon="square-lock-01" />
             <atm-description>Mínimo de 8 caracteres.</atm-description>
           </div>
           <div>
@@ -94,7 +94,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             <atm-input
               mask="(99) 99999-9999"
               placeholder="(11) 98765-4321"
-              icon="phone"
+              icon="call"
               [(ngModel)]="phone"
               #phoneModel="ngModel"
               [invalid]="!!phoneModel.invalid && !!phoneModel.touched"
@@ -105,7 +105,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
           </div>
           <div>
             <atm-label>Data</atm-label>
-            <atm-input mask="99/99/9999" placeholder="dd/mm/aaaa" icon="calendar" />
+            <atm-input mask="99/99/9999" placeholder="dd/mm/aaaa" icon="calendar-01" />
           </div>
           <div>
             <atm-label>Cartão</atm-label>
@@ -340,8 +340,8 @@ export class InputsPage {
   }
 
   readonly inputCode = `<atm-input placeholder="Seu nome" icon="user" [clearable]="true" [(ngModel)]="name" />
-<atm-input type="email" placeholder="voce@empresa.com" icon="envelope" />
-<atm-input type="password" placeholder="••••••••" icon="lock" />
+<atm-input type="email" placeholder="voce@empresa.com" icon="mail-01" />
+<atm-input type="password" placeholder="••••••••" icon="square-lock-01" />
 <atm-input placeholder="Campo inválido" [invalid]="true" />`;
 
   readonly sizesCode = `<atm-input size="large" placeholder="large · h-12" />

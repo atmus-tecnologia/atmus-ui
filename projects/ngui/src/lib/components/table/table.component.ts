@@ -263,12 +263,12 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
                         {{ col.header }}
                         <span class="inline-flex flex-col text-[8px] leading-[7px]">
                           <i
-                            class="icofont-simple-up"
+                            class="atm atm-chevron-up"
                             [class]="sortKey() === col.key && sortDir() === 'asc' ? 'text-primary' : 'text-ink-faint'"
                             aria-hidden="true"
                           ></i>
                           <i
-                            class="icofont-simple-down"
+                            class="atm atm-chevron-down"
                             [class]="sortKey() === col.key && sortDir() === 'desc' ? 'text-primary' : 'text-ink-faint'"
                             aria-hidden="true"
                           ></i>
@@ -290,7 +290,7 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
                         [attr.aria-expanded]="filterCol()?.key === col.key"
                         (click)="openFilter($event, col)"
                       >
-                        <i class="icofont-filter text-[11px]" aria-hidden="true"></i>
+                        <i class="atm atm-filter text-[11px]" aria-hidden="true"></i>
                       </button>
                     }
                   </div>
@@ -354,7 +354,7 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
                   <td [attr.colspan]="colCount()" class="px-4 py-12 text-center">
                     <div class="flex flex-col items-center gap-2 text-ink-faint">
                       @if (remoteError()) {
-                        <i class="icofont-warning-alt text-3xl" aria-hidden="true"></i>
+                        <i class="atm atm-alert-circle text-3xl" aria-hidden="true"></i>
                         <span class="text-sm">Erro ao carregar dados</span>
                         <button
                           type="button"
@@ -364,7 +364,7 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
                           Tentar novamente
                         </button>
                       } @else {
-                        <i class="icofont-file-document text-3xl" aria-hidden="true"></i>
+                        <i class="atm atm-file-02 text-3xl" aria-hidden="true"></i>
                         <span class="text-sm">{{ emptyMessage() }}</span>
                       }
                     </div>

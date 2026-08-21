@@ -22,11 +22,11 @@ import {
         (click)="toggle()"
       >
         @if (icon()) {
-          <i [class]="'text-ink-muted icofont-' + icon()" aria-hidden="true"></i>
+          <i [class]="'text-ink-muted atm atm-' + icon()" aria-hidden="true"></i>
         }
         <span class="flex-1 text-sm font-medium text-ink">{{ header() }}</span>
         <i
-          class="icofont-simple-down text-xs text-ink-faint transition-transform duration-300"
+          class="atm atm-chevron-down text-xs text-ink-faint transition-transform duration-300"
           [class.rotate-180]="expanded()"
           aria-hidden="true"
         ></i>

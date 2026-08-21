@@ -286,7 +286,7 @@ function compactNumber(v: number): string {
                 aria-label="Voltar"
                 (click)="drillUp()"
               >
-                <i class="icofont-arrow-left text-sm"></i>
+                <i class="atm atm-arrow-left-02 text-sm"></i>
               </button>
               <span class="text-xs text-ink-muted">{{ drillPath().join(' / ') }}</span>
             </div>
@@ -294,7 +294,7 @@ function compactNumber(v: number): string {
 
           @if (treeLoading()) {
             <div class="absolute inset-0 z-10 grid place-items-center bg-surface/60">
-              <i class="icofont-spinner-alt-4 inline-block animate-spin text-xl text-ink-muted"></i>
+              <i class="atm atm-loading-03 inline-block animate-spin text-xl text-ink-muted"></i>
             </div>
           }
 

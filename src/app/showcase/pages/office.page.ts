@@ -60,7 +60,7 @@ const SQUAD: AtmOfficeAgent[] = [
               class="max-w-64"
               [(ngModel)]="topic"
             />
-            <atm-button icon="megaphone" (clicked)="office.meeting(topic())">
+            <atm-button icon="megaphone-01" (clicked)="office.meeting(topic())">
               Chamar reunião
             </atm-button>
             <atm-button variant="soft" color="neutral" (clicked)="office.backToWork()">
@@ -127,7 +127,7 @@ const SQUAD: AtmOfficeAgent[] = [
         [code]="apiCode"
       >
         <div class="flex flex-wrap items-center gap-3">
-          <atm-button variant="soft" icon="play-alt-1" (clicked)="runScript()">
+          <atm-button variant="soft" icon="play" (clicked)="runScript()">
             Rodar roteiro de exemplo
           </atm-button>
           <span class="text-sm text-ink-muted">

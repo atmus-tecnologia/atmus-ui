@@ -66,11 +66,11 @@ import { AtmSpinner } from '../spinner/spinner.component';
             aria-label="Limpar"
             (click)="clear($event)"
           >
-            <i class="icofont-close" aria-hidden="true"></i>
+            <i class="atm atm-cancel-01" aria-hidden="true"></i>
           </span>
         }
         <i
-          class="icofont-simple-down text-xs text-ink-faint transition-transform duration-200"
+          class="atm atm-chevron-down text-xs text-ink-faint transition-transform duration-200"
           [class.rotate-180]="isOpen()"
           aria-hidden="true"
         ></i>
@@ -87,7 +87,7 @@ import { AtmSpinner } from '../spinner/spinner.component';
         <!-- Search -->
         <div class="border-b border-line p-2">
           <div class="atm-field flex h-9 items-center gap-2 px-2.5 text-sm">
-            <i class="icofont-ui-search text-xs text-ink-faint" aria-hidden="true"></i>
+            <i class="atm atm-search-01 text-xs text-ink-faint" aria-hidden="true"></i>
             <input
               #searchInput
               type="text"
@@ -122,12 +122,12 @@ import { AtmSpinner } from '../spinner/spinner.component';
               >
                 <span class="min-w-0 flex-1 truncate">{{ labelOf(item) }}</span>
                 @if (trackValue(item) === value()) {
-                  <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                  <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
                 }
               </button>
             } @empty {
               <div class="flex flex-col items-center gap-1 px-3 py-6 text-center">
-                <i class="icofont-ui-search text-lg text-ink-faint" aria-hidden="true"></i>
+                <i class="atm atm-search-01 text-lg text-ink-faint" aria-hidden="true"></i>
                 <span class="text-sm text-ink-faint">
                   {{ error() ? 'Erro ao carregar dados' : 'Nenhum resultado encontrado' }}
                 </span>
@@ -159,7 +159,7 @@ import { AtmSpinner } from '../spinner/spinner.component';
                 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
               (click)="onActionClick()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               {{ actionButtonLabel() }}
             </button>
           </div>

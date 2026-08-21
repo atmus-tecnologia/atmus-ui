@@ -1,8 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 /**
- * Icofont wrapper. Usage: <atm-icon name="home" /> renders `icofont-home`.
- * Pass the full class if preferred: <atm-icon name="icofont-ui-search" />.
+ * Atmus Icons wrapper. Usage: `<atm-icon name="home-01" />` renders
+ * `<i class="atm atm-home-01">`. Passing the full class also works:
+ * `<atm-icon name="atm-search-01" />`.
+ *
+ * The `atm` base class carries the font declarations and is required — the
+ * `atm-*` class alone only selects the glyph. That split is deliberate: a rule
+ * matching every `atm-*` class would also capture design-system classes such as
+ * `atm-field` and `atm-panel`, forcing an icon font onto buttons and panels.
  */
 @Component({
   selector: 'atm-icon',
@@ -17,7 +23,7 @@ export class AtmIcon {
 
   readonly iconClass = computed(() => {
     const n = this.name();
-    const base = n.startsWith('icofont-') ? n : `icofont-${n}`;
-    return `${base} ${this.iconClass_()}`.trim();
+    const base = n.startsWith('atm-') ? n : `atm-${n}`;
+    return `atm ${base} ${this.iconClass_()}`.trim();
   });
 }

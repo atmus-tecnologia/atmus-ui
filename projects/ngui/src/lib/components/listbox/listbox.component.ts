@@ -36,7 +36,7 @@ import { AtmSelectOption } from '../select/select.component';
           (click)="select(option)"
         >
           @if (option.icon) {
-            <i [class]="'text-ink-muted icofont-' + option.icon" aria-hidden="true"></i>
+            <i [class]="'text-ink-muted atm atm-' + option.icon" aria-hidden="true"></i>
           }
           <span class="min-w-0 flex-1">
             <span class="block truncate">{{ option.label }}</span>
@@ -47,7 +47,7 @@ import { AtmSelectOption } from '../select/select.component';
             }
           </span>
           @if (isSelected(option.value)) {
-            <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+            <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
           }
         </button>
       } @empty {

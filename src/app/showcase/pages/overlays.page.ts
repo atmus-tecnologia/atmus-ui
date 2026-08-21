@@ -115,7 +115,7 @@ export class ProductListDemo {
         [code]="dynamicCode"
         language="typescript"
       >
-        <atm-button icon="cart" (clicked)="openProducts()">Selecionar produto</atm-button>
+        <atm-button icon="shopping-cart-01" (clicked)="openProducts()">Selecionar produto</atm-button>
       </demo-section>
 
       <demo-section
@@ -170,7 +170,7 @@ export class ProductListDemo {
         description='Com container="parent" o drawer abre dentro do ancestral posicionado mais próximo — aqui, um sheet de baixo pra cima dentro do modal.'
         [code]="drawerContainerCode"
       >
-        <atm-button variant="outline" color="neutral" icon="file-text" (clicked)="showTermsModal.set(true)">
+        <atm-button variant="outline" color="neutral" icon="txt-01" (clicked)="showTermsModal.set(true)">
           Abrir modal com sheet
         </atm-button>
         <atm-modal [(open)]="showTermsModal" header="Terms of Service" width="36rem">
@@ -183,7 +183,7 @@ export class ProductListDemo {
               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
               fugiat nulla pariatur.
             </p>
-            <atm-button variant="soft" icon="gear" (clicked)="showModalSheet.set(true)">
+            <atm-button variant="soft" icon="settings-02" (clicked)="showModalSheet.set(true)">
               Abrir preferências (sheet)
             </atm-button>
           </div>
@@ -225,7 +225,7 @@ export class ProductListDemo {
 
       <demo-section id="popover" title="Popover" [code]="popoverCode">
         <atm-popover placement="bottom">
-          <atm-button trigger variant="outline" color="neutral" iconRight="simple-down">
+          <atm-button trigger variant="outline" color="neutral" iconRight="chevron-down">
             Abrir popover
           </atm-button>
           <div body class="w-64">

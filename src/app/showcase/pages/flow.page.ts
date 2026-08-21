@@ -34,7 +34,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
     >
       <div class="flex items-center gap-2.5 border-b border-line px-3 py-2.5">
         <span class="flex size-8 items-center justify-center rounded-lg bg-[#6366f1] text-base text-white">
-          <i class="icofont-speech-comments" aria-hidden="true"></i>
+          <i class="atm atm-message-01" aria-hidden="true"></i>
         </span>
         <div class="min-w-0">
           <p class="text-[13px] leading-tight font-semibold text-ink">Enviar Mensagem</p>
@@ -274,7 +274,7 @@ export class NodeSendMessage {
             [style.top.px]="m.y"
           >
             <div class="flex items-center gap-2.5 border-b border-line px-3.5 py-2.5">
-              <i class="icofont-plus-circle text-lg text-primary" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign-circle text-lg text-primary" aria-hidden="true"></i>
               <div class="min-w-0">
                 <p class="text-[13px] leading-tight font-semibold text-ink">Adicionar módulo</p>
                 <p class="text-[11px] leading-tight text-ink-muted">Próximo passo do fluxo</p>
@@ -423,12 +423,12 @@ export class FlowPage {
   /* ------------------------- básico ------------------------- */
 
   readonly basicNodes = signal<AtmFlowNode[]>([
-    { id: 'in', label: 'Webhook recebido', icon: 'icofont-download', color: 'var(--atm-info)', position: { x: 0, y: 130 } },
-    { id: 'val', label: 'Validar payload', icon: 'icofont-check-circled', position: { x: 230, y: 40 } },
-    { id: 'enr', label: 'Enriquecer dados', icon: 'icofont-database', position: { x: 230, y: 220 } },
-    { id: 'dec', label: 'Aprovado?', icon: 'icofont-question-circle', color: 'var(--atm-warning)', position: { x: 470, y: 130 } },
-    { id: 'ok', label: 'Processar pedido', icon: 'icofont-gear', color: 'var(--atm-success)', position: { x: 710, y: 40 } },
-    { id: 'no', label: 'Notificar rejeição', icon: 'icofont-close-circled', color: 'var(--atm-danger)', position: { x: 710, y: 220 } },
+    { id: 'in', label: 'Webhook recebido', icon: 'atm atm-download-01', color: 'var(--atm-info)', position: { x: 0, y: 130 } },
+    { id: 'val', label: 'Validar payload', icon: 'atm atm-checkmark-circle-01', position: { x: 230, y: 40 } },
+    { id: 'enr', label: 'Enriquecer dados', icon: 'atm atm-database', position: { x: 230, y: 220 } },
+    { id: 'dec', label: 'Aprovado?', icon: 'atm atm-help-circle', color: 'var(--atm-warning)', position: { x: 470, y: 130 } },
+    { id: 'ok', label: 'Processar pedido', icon: 'atm atm-settings-02', color: 'var(--atm-success)', position: { x: 710, y: 40 } },
+    { id: 'no', label: 'Notificar rejeição', icon: 'atm atm-cancel-circle', color: 'var(--atm-danger)', position: { x: 710, y: 220 } },
   ]);
 
   readonly basicEdges = signal<AtmFlowEdge[]>([
@@ -450,7 +450,7 @@ export class FlowPage {
       data: {
         title: 'Ingestão',
         subtitle: 'Consome eventos do Kafka a cada 5s.',
-        icon: 'icofont-data',
+        icon: 'atm atm-database-01',
         color: 'var(--atm-info)',
         soft: 'var(--atm-info-soft)',
         badge: 'live',
@@ -463,7 +463,7 @@ export class FlowPage {
       data: {
         title: 'Transformação',
         subtitle: 'Normaliza, deduplica e valida o schema.',
-        icon: 'icofont-exchange',
+        icon: 'atm atm-exchange-01',
         color: 'var(--atm-primary)',
         soft: 'var(--atm-primary-soft)',
       },
@@ -475,7 +475,7 @@ export class FlowPage {
       data: {
         title: 'Machine Learning',
         subtitle: 'Score de risco em tempo real.',
-        icon: 'icofont-brand-slideshare',
+        icon: 'atm atm-slideshare',
         color: 'var(--atm-warning)',
         soft: 'var(--atm-warning-soft)',
         badge: 'beta',
@@ -488,7 +488,7 @@ export class FlowPage {
       data: {
         title: 'Data Warehouse',
         subtitle: 'Persistência analítica particionada.',
-        icon: 'icofont-database',
+        icon: 'atm atm-database',
         color: 'var(--atm-success)',
         soft: 'var(--atm-success-soft)',
       },
@@ -529,10 +529,10 @@ export class FlowPage {
       width: 400,
       height: 300,
     },
-    { id: 'ga1', label: 'Receber evento', icon: 'icofont-download', parentId: 'grp-a', position: { x: 40, y: 60 } },
-    { id: 'ga2', label: 'Validar schema', icon: 'icofont-check-circled', parentId: 'grp-a', position: { x: 70, y: 180 } },
-    { id: 'gb1', label: 'Persistir', icon: 'icofont-database', color: 'var(--atm-success)', position: { x: 540, y: 80 } },
-    { id: 'gb2', label: 'Notificar', icon: 'icofont-paper-plane', color: 'var(--atm-info)', position: { x: 540, y: 210 } },
+    { id: 'ga1', label: 'Receber evento', icon: 'atm atm-download-01', parentId: 'grp-a', position: { x: 40, y: 60 } },
+    { id: 'ga2', label: 'Validar schema', icon: 'atm atm-checkmark-circle-01', parentId: 'grp-a', position: { x: 70, y: 180 } },
+    { id: 'gb1', label: 'Persistir', icon: 'atm atm-database', color: 'var(--atm-success)', position: { x: 540, y: 80 } },
+    { id: 'gb2', label: 'Notificar', icon: 'atm atm-send', color: 'var(--atm-info)', position: { x: 540, y: 210 } },
   ]);
 
   readonly groupEdges = signal<AtmFlowEdge[]>([
@@ -590,7 +590,7 @@ export class FlowPage {
     {
       id: 'cn-trigger',
       label: 'Gatilho: novo lead',
-      icon: 'icofont-flash',
+      icon: 'atm atm-flash',
       color: 'var(--atm-primary)',
       position: { x: 0, y: 150 },
     },
@@ -604,14 +604,14 @@ export class FlowPage {
     {
       id: 'cn-next',
       label: 'Próximo passo',
-      icon: 'icofont-check-circled',
+      icon: 'atm atm-checkmark-circle-01',
       color: 'var(--atm-success)',
       position: { x: 660, y: 90 },
     },
     {
       id: 'cn-err',
       label: 'Tratar falha',
-      icon: 'icofont-warning',
+      icon: 'atm atm-alert-02',
       color: 'var(--atm-danger)',
       position: { x: 660, y: 250 },
     },
@@ -629,7 +629,7 @@ export class FlowPage {
     {
       id: 'ty-text',
       label: 'Origem: texto',
-      icon: 'icofont-file-text',
+      icon: 'atm atm-txt-01',
       color: 'var(--atm-info)',
       position: { x: 0, y: 40 },
       handles: [{ type: 'source', position: 'right', dataType: 'text' }],
@@ -637,7 +637,7 @@ export class FlowPage {
     {
       id: 'ty-num',
       label: 'Origem: número',
-      icon: 'icofont-calculator',
+      icon: 'atm atm-calculator',
       color: 'var(--atm-warning)',
       position: { x: 0, y: 220 },
       handles: [{ type: 'source', position: 'right', dataType: 'number' }],
@@ -665,7 +665,7 @@ export class FlowPage {
     {
       id: 'ty-log',
       label: 'Log — aceita qualquer (any)',
-      icon: 'icofont-eye-alt',
+      icon: 'atm atm-view',
       position: { x: 340, y: 260 },
       handles: [{ type: 'target', position: 'left', dataType: 'any' }],
     },
@@ -686,16 +686,16 @@ export class FlowPage {
   /* ----------------------- interações ------------------------ */
 
   readonly palette = [
-    { label: 'Tarefa', icon: 'icofont-tasks', color: 'var(--atm-primary)' },
-    { label: 'Condição', icon: 'icofont-question-circle', color: 'var(--atm-warning)' },
-    { label: 'Ação', icon: 'icofont-flash', color: 'var(--atm-success)' },
+    { label: 'Tarefa', icon: 'atm atm-task-01', color: 'var(--atm-primary)' },
+    { label: 'Condição', icon: 'atm atm-help-circle', color: 'var(--atm-warning)' },
+    { label: 'Ação', icon: 'atm atm-flash', color: 'var(--atm-success)' },
   ];
 
   readonly interactNodes = signal<AtmFlowNode[]>([
-    { id: 'i1', label: 'Início', icon: 'icofont-play-alt-2', color: 'var(--atm-success)', position: { x: 0, y: 120 } },
+    { id: 'i1', label: 'Início', icon: 'atm atm-play-circle', color: 'var(--atm-success)', position: { x: 0, y: 120 } },
     { id: 'i2', label: 'Etapa A', position: { x: 240, y: 40 } },
     { id: 'i3', label: 'Etapa B', position: { x: 240, y: 200 } },
-    { id: 'i4', label: 'Fim', icon: 'icofont-stop', color: 'var(--atm-danger)', position: { x: 480, y: 120 } },
+    { id: 'i4', label: 'Fim', icon: 'atm atm-stop', color: 'var(--atm-danger)', position: { x: 480, y: 120 } },
   ]);
 
   readonly interactEdges = signal<AtmFlowEdge[]>([
@@ -737,10 +737,10 @@ export class FlowPage {
   /* --------------------- menu de contexto --------------------- */
 
   readonly ctxNodes = signal<AtmFlowNode[]>([
-    { id: 'cx-start', label: 'Início', icon: 'icofont-play-alt-2', color: 'var(--atm-success)', position: { x: 0, y: 150 } },
-    { id: 'cx-crm', label: 'Consultar CRM', icon: 'icofont-database', position: { x: 250, y: 60 } },
-    { id: 'cx-mail', label: 'Enviar e-mail', icon: 'icofont-email', color: 'var(--atm-info)', position: { x: 250, y: 240 } },
-    { id: 'cx-end', label: 'Finalizar', icon: 'icofont-check-circled', color: 'var(--atm-primary)', position: { x: 520, y: 150 } },
+    { id: 'cx-start', label: 'Início', icon: 'atm atm-play-circle', color: 'var(--atm-success)', position: { x: 0, y: 150 } },
+    { id: 'cx-crm', label: 'Consultar CRM', icon: 'atm atm-database', position: { x: 250, y: 60 } },
+    { id: 'cx-mail', label: 'Enviar e-mail', icon: 'atm atm-mail-02', color: 'var(--atm-info)', position: { x: 250, y: 240 } },
+    { id: 'cx-end', label: 'Finalizar', icon: 'atm atm-checkmark-circle-01', color: 'var(--atm-primary)', position: { x: 520, y: 150 } },
   ]);
 
   readonly ctxEdges = signal<AtmFlowEdge[]>([
@@ -751,9 +751,9 @@ export class FlowPage {
   ]);
 
   private readonly canvasMenuItems: AtmContextMenuItem[] = [
-    { label: 'Adicionar node aqui', value: 'add-node', icon: 'plus' },
-    { label: 'Auto layout', value: 'auto-layout', icon: 'site-map' },
-    { label: 'Ajustar visão', value: 'fit-view', icon: 'eye-alt' },
+    { label: 'Adicionar node aqui', value: 'add-node', icon: 'plus-sign' },
+    { label: 'Auto layout', value: 'auto-layout', icon: 'hierarchy' },
+    { label: 'Ajustar visão', value: 'fit-view', icon: 'view' },
     { label: 'Limpar canvas', value: 'clear', icon: 'trash', danger: true, separatorBefore: true },
   ];
 
@@ -764,15 +764,15 @@ export class FlowPage {
     if (e.node) {
       header = e.node.label ?? e.node.id;
       items = [
-        { label: 'Editar node', value: 'edit', icon: 'edit' },
+        { label: 'Editar node', value: 'edit', icon: 'edit-02' },
         { label: 'Duplicar', value: 'duplicate', icon: 'copy', shortcut: 'Ctrl+D' },
-        { label: 'Desconectar tudo', value: 'disconnect', icon: 'close-circled' },
+        { label: 'Desconectar tudo', value: 'disconnect', icon: 'cancel-circle' },
         { label: 'Excluir node', value: 'delete-node', icon: 'trash', danger: true, separatorBefore: true },
       ];
     } else if (e.edge) {
       header = `Conexão ${e.edge.source} → ${e.edge.target}`;
       items = [
-        { label: e.edge.animated ? 'Parar animação' : 'Animar fluxo', value: 'edge-animate', icon: 'exchange' },
+        { label: e.edge.animated ? 'Parar animação' : 'Animar fluxo', value: 'edge-animate', icon: 'exchange-01' },
         { label: e.edge.dashed ? 'Linha sólida' : 'Linha tracejada', value: 'edge-dashed', icon: 'ruler' },
         { label: 'Excluir conexão', value: 'delete-edge', icon: 'trash', danger: true, separatorBefore: true },
       ];
@@ -791,7 +791,7 @@ export class FlowPage {
       case 'add-node':
         this.ctxNodes.update((ns) => [
           ...ns,
-          { id: atmUid('n'), label: 'Novo node', icon: 'icofont-plus', position: { x: e.position.x - 60, y: e.position.y - 20 } },
+          { id: atmUid('n'), label: 'Novo node', icon: 'atm atm-plus-sign', position: { x: e.position.x - 60, y: e.position.y - 20 } },
         ]);
         break;
       case 'auto-layout':
@@ -846,7 +846,7 @@ export class FlowPage {
     {
       id: 'trigger',
       label: 'Gatilho: nova mensagem',
-      icon: 'icofont-flash',
+      icon: 'atm atm-flash',
       color: 'var(--atm-primary)',
       position: { x: 40, y: 160 },
     },
@@ -863,12 +863,12 @@ export class FlowPage {
   } | null>(null);
 
   readonly modules = [
-    { label: 'Executar script', icon: 'icofont-code', color: '#8b5cf6' },
-    { label: 'Enviar mensagem', icon: 'icofont-speech-comments', color: '#6366f1' },
-    { label: 'Enviar áudio', icon: 'icofont-mic', color: '#0ea5e9' },
-    { label: 'Enviar imagem', icon: 'icofont-image', color: '#7c3aed' },
-    { label: 'Enviar vídeo', icon: 'icofont-video-alt', color: '#6d28d9' },
-    { label: 'Aguardar resposta', icon: 'icofont-sand-clock', color: '#f59e0b' },
+    { label: 'Executar script', icon: 'atm atm-code', color: '#8b5cf6' },
+    { label: 'Enviar mensagem', icon: 'atm atm-message-01', color: '#6366f1' },
+    { label: 'Enviar áudio', icon: 'atm atm-mic-01', color: '#0ea5e9' },
+    { label: 'Enviar imagem', icon: 'atm atm-image-02', color: '#7c3aed' },
+    { label: 'Enviar vídeo', icon: 'atm atm-video-01', color: '#6d28d9' },
+    { label: 'Aguardar resposta', icon: 'atm atm-hourglass', color: '#f59e0b' },
   ];
 
   /** Soltou a conexão no vazio → abre o seletor de módulos naquele ponto. */
@@ -938,7 +938,7 @@ export class FlowPage {
     { id: 'a1', label: 'Serviço A1', position: { x: -160, y: 260 } },
     { id: 'a2', label: 'Serviço A2', position: { x: 40, y: 300 } },
     { id: 'b1', label: 'Serviço B1', position: { x: 240, y: 260 } },
-    { id: 'db', label: 'Banco de dados', icon: 'icofont-database', position: { x: 40, y: 420 } },
+    { id: 'db', label: 'Banco de dados', icon: 'atm atm-database', position: { x: 40, y: 420 } },
   ]);
 
   readonly jsonEdges = signal<AtmFlowEdge[]>([
@@ -1002,7 +1002,7 @@ export class FlowPage {
 
 // nodes: AtmFlowNode[]
 [
-  { id: 'in', label: 'Webhook recebido', icon: 'icofont-download', color: 'var(--atm-info)', position: { x: 0, y: 130 } },
+  { id: 'in', label: 'Webhook recebido', icon: 'atm atm-download-01', color: 'var(--atm-info)', position: { x: 0, y: 130 } },
   { id: 'dec', label: 'Aprovado?', color: 'var(--atm-warning)', position: { x: 470, y: 130 } },
   ...
 ]

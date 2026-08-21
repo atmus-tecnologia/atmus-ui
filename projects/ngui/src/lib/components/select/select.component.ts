@@ -45,7 +45,7 @@ export interface AtmSelectOption<T = unknown> {
     >
       <span class="flex min-w-0 flex-1 items-center gap-2">
         @if (selectedOption()?.icon) {
-          <i [class]="'text-ink-muted icofont-' + selectedOption()!.icon" aria-hidden="true"></i>
+          <i [class]="'text-ink-muted atm atm-' + selectedOption()!.icon" aria-hidden="true"></i>
         }
         <span class="truncate" [class.text-ink-faint]="!selectedOption()">
           {{ selectedOption()?.label ?? placeholder() }}
@@ -59,11 +59,11 @@ export interface AtmSelectOption<T = unknown> {
           aria-label="Limpar"
           (click)="clear($event)"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </span>
       }
       <i
-        class="icofont-simple-down shrink-0 text-xs text-ink-faint transition-transform duration-200"
+        class="atm atm-chevron-down shrink-0 text-xs text-ink-faint transition-transform duration-200"
         [class.rotate-180]="isOpen()"
         aria-hidden="true"
       ></i>
@@ -91,7 +91,7 @@ export interface AtmSelectOption<T = unknown> {
               (mouseenter)="activeIndex.set(i)"
             >
               @if (option.icon) {
-                <i [class]="'text-ink-muted icofont-' + option.icon" aria-hidden="true"></i>
+                <i [class]="'text-ink-muted atm atm-' + option.icon" aria-hidden="true"></i>
               }
               <span class="min-w-0 flex-1">
                 <span class="block truncate">{{ option.label }}</span>
@@ -102,7 +102,7 @@ export interface AtmSelectOption<T = unknown> {
                 }
               </span>
               @if (option.value === value()) {
-                <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
               }
             </button>
           } @empty {
@@ -117,7 +117,7 @@ export interface AtmSelectOption<T = unknown> {
                 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
               (click)="onActionClick()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               {{ actionButtonLabel() }}
             </button>
           </div>

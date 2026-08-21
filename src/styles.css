@@ -2,6 +2,6 @@
 /* Compila o Tailwind ao vivo escaneando src/app (showcase) + projects/ngui
    (lib) — cobre as classes usadas nos dois. O CSS pré-compilado publicado
    em '@atmus/ngui/styles.css' é gerado à parte por build-styles.mjs. */
-@import '@icon/icofont/icofont.css';
+@import '@atmus/icons/solid-core.css';
 @import 'tailwindcss';
 @import '../projects/ngui/src/lib/styles/atmus.css';

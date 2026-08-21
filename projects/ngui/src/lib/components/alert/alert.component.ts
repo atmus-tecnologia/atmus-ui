@@ -6,37 +6,37 @@ const STYLES: Record<AtmColor, { icon: string; title: string; button: string; de
     icon: 'text-primary',
     title: 'text-primary',
     button: 'bg-primary text-primary-contrast hover:bg-primary-hover active:bg-primary-active',
-    defaultIcon: 'info-circle',
+    defaultIcon: 'information-circle',
   },
   success: {
     icon: 'text-success',
     title: 'text-success',
     button: 'bg-success text-white hover:brightness-105 active:brightness-95',
-    defaultIcon: 'check-circled',
+    defaultIcon: 'checkmark-circle-01',
   },
   warning: {
     icon: 'text-warning',
     title: 'text-warning',
     button: 'bg-warning text-white hover:brightness-105 active:brightness-95',
-    defaultIcon: 'warning-alt',
+    defaultIcon: 'alert-circle',
   },
   danger: {
     icon: 'text-danger',
     title: 'text-danger',
     button: 'bg-danger text-white hover:brightness-105 active:brightness-95',
-    defaultIcon: 'close-circled',
+    defaultIcon: 'cancel-circle',
   },
   info: {
     icon: 'text-info',
     title: 'text-info',
     button: 'bg-info text-white hover:brightness-105 active:brightness-95',
-    defaultIcon: 'info-circle',
+    defaultIcon: 'information-circle',
   },
   neutral: {
     icon: 'text-ink-muted',
     title: 'text-ink',
     button: 'bg-ink text-surface hover:opacity-90 active:opacity-80',
-    defaultIcon: 'info-circle',
+    defaultIcon: 'information-circle',
   },
 };
 
@@ -86,7 +86,7 @@ const STYLES: Record<AtmColor, { icon: string; title: string; button: string; de
             aria-label="Fechar"
             (click)="dismiss()"
           >
-            <i class="icofont-close text-xs" aria-hidden="true"></i>
+            <i class="atm atm-cancel-01 text-xs" aria-hidden="true"></i>
           </button>
         }
       </div>
@@ -110,7 +110,7 @@ export class AtmAlert {
 
   readonly style = computed(() => STYLES[this.color()]);
   readonly iconClasses = computed(
-    () => `icofont-${this.icon() ?? STYLES[this.color()].defaultIcon} ${STYLES[this.color()].icon}`,
+    () => `atm atm-${this.icon() ?? STYLES[this.color()].defaultIcon} ${STYLES[this.color()].icon}`,
   );
 
   dismiss(): void {

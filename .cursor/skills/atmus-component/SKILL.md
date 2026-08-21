@@ -12,7 +12,9 @@ description: Cria novos componentes para a biblioteca Atmus UI (projects/ngui, p
 3. **Standalone** (sem `standalone: true` — é default), `ChangeDetectionStrategy.OnPush`, `input()`/`output()`/`model()`/`signal()`/`computed()` — nunca decorators, nunca `@HostBinding/@HostListener` (usar `host: {}`).
 4. **Size**: todo componente dimensionável recebe `readonly size = input<AtmSize>('medium')` com `large | medium | slim`. Alturas padrão: large=h-12, medium=h-10, slim=h-8 (constantes `ATM_SIZE_HEIGHT/TEXT/PX` em `projects/ngui/src/lib/types.ts`).
 5. **Cores**: usar apenas classes Tailwind mapeadas para tokens: `bg-primary`, `text-ink`, `text-ink-muted`, `text-ink-faint`, `bg-surface`, `bg-surface-alt`, `border-line`, `bg-success-soft` etc. NUNCA cores fixas (`bg-indigo-500`) — assim o dark mode funciona sozinho. Componentes com cor semântica recebem `color = input<AtmColor>('primary')`.
-6. **Ícones**: icofont via `<i class="icofont-nome">` ou `<atm-icon name="nome" />`. Nunca SVG externo/lib de ícones diferente.
+6. **Ícones**: Atmus Icons via `<atm-icon name="nome" />` (preferido) ou
+   `<i class="atm atm-nome">`. A classe base `atm` é obrigatória — sem ela o
+   glifo não renderiza. Nunca SVG externo/lib de ícones diferente.
 7. **Template inline** (template: `...`), CSS via Tailwind no template — não criar arquivos .html/.css separados.
 8. **Registrar** o componente em `projects/ngui/src/public-api.ts` (export) e em `projects/ngui/src/lib/atmus-ui.module.ts` (array COMPONENTS).
 9. **Showcase**: adicionar demo na página adequada de `src/app/showcase/pages/` (usar `<demo-section id="..." title="..." [code]="...">`) e o item no menu em `src/app/showcase/shell.component.ts`. Depois de mudar a lib, rode `npm run build:ngui` para o showcase pegar a versão nova.

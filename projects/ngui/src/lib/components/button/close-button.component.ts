@@ -17,7 +17,7 @@ const SIZE: Record<AtmSize, string> = {
       aria-label="Fechar"
       (click)="clicked.emit($event)"
     >
-      <i class="icofont-close" aria-hidden="true"></i>
+      <i class="atm atm-cancel-01" aria-hidden="true"></i>
     </button>
   `,
 })

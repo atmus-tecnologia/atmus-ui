@@ -123,7 +123,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
                 [attr.aria-label]="'Remover ' + chip.label"
                 (click)="removeAt($index); $event.stopPropagation()"
               >
-                <i class="icofont-close text-[10px]" aria-hidden="true"></i>
+                <i class="atm atm-cancel-01 text-[10px]" aria-hidden="true"></i>
               </button>
             }
           </span>
@@ -170,12 +170,12 @@ function sameGroup(a: unknown, b: unknown): boolean {
             aria-label="Limpar"
             (click)="clear($event)"
           >
-            <i class="icofont-close" aria-hidden="true"></i>
+            <i class="atm atm-cancel-01" aria-hidden="true"></i>
           </span>
         }
       }
       <i
-        class="icofont-simple-down ml-auto shrink-0 text-xs text-ink-faint transition-transform duration-200"
+        class="atm atm-chevron-down ml-auto shrink-0 text-xs text-ink-faint transition-transform duration-200"
         [class.rotate-180]="isOpen()"
         aria-hidden="true"
       ></i>
@@ -189,7 +189,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
       >
         @if (!multiple()) {
           <div class="flex w-0 min-w-full items-center gap-2 border-b border-line px-3">
-            <i class="icofont-search-1 shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
+            <i class="atm atm-search-01 shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
             <input
               #input
               type="text"
@@ -244,7 +244,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
                 style="background: linear-gradient(to right, var(--atm-surface) 55%, transparent)"
                 (click)="scrollTabsBy(-1)"
               >
-                <i class="icofont-simple-left text-xs" aria-hidden="true"></i>
+                <i class="atm atm-chevron-left text-xs" aria-hidden="true"></i>
               </button>
             }
             @if (canScrollTabsRight()) {
@@ -256,7 +256,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
                 style="background: linear-gradient(to left, var(--atm-surface) 55%, transparent)"
                 (click)="scrollTabsBy(1)"
               >
-                <i class="icofont-simple-right text-xs" aria-hidden="true"></i>
+                <i class="atm atm-chevron-right text-xs" aria-hidden="true"></i>
               </button>
             }
           </div>
@@ -288,7 +288,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
                 }
               </span>
               @if (isSelected(option)) {
-                <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
               }
             </button>
           } @empty {
@@ -303,7 +303,7 @@ function sameGroup(a: unknown, b: unknown): boolean {
                 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
               (click)="onActionClick()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               {{ actionButtonLabel() }}
             </button>
           </div>

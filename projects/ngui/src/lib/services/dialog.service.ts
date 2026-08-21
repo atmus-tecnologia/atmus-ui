@@ -81,7 +81,7 @@ export class AtmDialogRef<R = unknown> {
               (click)="maximized.set(!maximized())"
             >
               <i
-                [class]="maximized() ? 'icofont-collapse' : 'icofont-expand-alt'"
+                [class]="maximized() ? 'atm atm-collapse' : 'atm atm-expand'"
                 class="text-sm"
                 aria-hidden="true"
               ></i>
@@ -95,7 +95,7 @@ export class AtmDialogRef<R = unknown> {
               aria-label="Fechar"
               (click)="ref.close()"
             >
-              <i class="icofont-close" aria-hidden="true"></i>
+              <i class="atm atm-cancel-01" aria-hidden="true"></i>
             </button>
           }
         </div>

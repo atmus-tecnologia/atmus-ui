@@ -88,7 +88,7 @@ export interface AtmContextMenuSelect {
             >
               @if (item.icon) {
                 <i
-                  [class]="'w-4 text-center icofont-' + item.icon"
+                  [class]="'w-4 text-center atm atm-' + item.icon"
                   [class.text-ink-muted]="!item.danger"
                   aria-hidden="true"
                 ></i>

@@ -78,7 +78,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
 
       <demo-section id="chip" title="Chip" [code]="chipCode">
         @for (tag of chips(); track tag) {
-          <atm-chip color="primary" icon="tag" [removable]="true" (removed)="removeChip(tag)">
+          <atm-chip color="primary" icon="tag-01" [removable]="true" (removed)="removeChip(tag)">
             {{ tag }}
           </atm-chip>
         }
@@ -166,7 +166,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
           <atm-accordion-item header="Como funciona o tema escuro?">
             A classe .dark no html troca os tokens CSS; os componentes não precisam saber de nada.
           </atm-accordion-item>
-          <atm-accordion-item header="Posso customizar as cores?" icon="paint">
+          <atm-accordion-item header="Posso customizar as cores?" icon="paint-board">
             Sim — basta sobrescrever as variáveis --atm-* no :root do seu projeto.
           </atm-accordion-item>
         </atm-accordion>
@@ -175,10 +175,10 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       <demo-section id="tabs" title="Tabs" description="Conteúdo lazy — só a tab ativa renderiza." [code]="tabsCode">
         <div class="w-full">
           <atm-tabs>
-            <atm-tab label="Geral" icon="gear">
+            <atm-tab label="Geral" icon="settings-02">
               <p class="text-sm text-ink-muted">Configurações gerais do sistema.</p>
             </atm-tab>
-            <atm-tab label="Notificações" icon="notification" [badge]="3">
+            <atm-tab label="Notificações" icon="notification-01" [badge]="3">
               <p class="text-sm text-ink-muted">Preferências de notificação.</p>
             </atm-tab>
             <atm-tab label="Bloqueada" [disabled]="true">
@@ -303,7 +303,7 @@ export class DisplayPage {
 <atm-badge color="danger" variant="solid">9+</atm-badge>
 <atm-badge color="warning" variant="outline">Pendente</atm-badge>`;
 
-  readonly chipCode = `<atm-chip color="primary" icon="tag" [removable]="true" (removed)="remove(tag)">
+  readonly chipCode = `<atm-chip color="primary" icon="tag-01" [removable]="true" (removed)="remove(tag)">
   {{ tag }}
 </atm-chip>`;
 
@@ -346,7 +346,7 @@ export class DisplayPage {
 
   readonly tabsCode = `<!-- variant: line | pill | enclosed | segmented -->
 <atm-tabs variant="line">
-  <atm-tab label="Geral" icon="gear">...</atm-tab>
+  <atm-tab label="Geral" icon="settings-02">...</atm-tab>
   <atm-tab label="Notificações" [badge]="3">...</atm-tab>
 </atm-tabs>
 

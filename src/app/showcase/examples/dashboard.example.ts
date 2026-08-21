@@ -107,7 +107,7 @@ function brl(value: number): string {
         <atm-select size="slim" [options]="periodOptions" [(ngModel)]="period" />
       </div>
       <atm-date-range-picker size="slim" class="w-64 max-sm:hidden" />
-      <atm-button size="slim" variant="outline" color="neutral" icon="download" (clicked)="notify('Exportando relatório...')">
+      <atm-button size="slim" variant="outline" color="neutral" icon="download-01" (clicked)="notify('Exportando relatório...')">
         Exportar
       </atm-button>
     </header>
@@ -132,7 +132,7 @@ function brl(value: number): string {
             <div class="mt-2 flex items-center gap-2">
               <atm-badge size="slim" [color]="kpi.delta >= 0 ? 'success' : 'danger'">
                 <i
-                  [class]="kpi.delta >= 0 ? 'icofont-arrow-up' : 'icofont-arrow-down'"
+                  [class]="kpi.delta >= 0 ? 'atm atm-arrow-up-02' : 'atm atm-arrow-down-02'"
                   aria-hidden="true"
                 ></i>
                 {{ kpi.delta >= 0 ? '+' : '' }}{{ kpi.delta }}%
@@ -303,7 +303,7 @@ export class DashboardExample {
       label: 'Receita total',
       value: brl(128420),
       delta: 12.4,
-      icon: 'icofont-money',
+      icon: 'atm atm-money-01',
       iconClass: 'bg-primary-soft text-primary',
       spark: [74, 82, 79, 96, 104, 128],
     },
@@ -311,7 +311,7 @@ export class DashboardExample {
       label: 'Pedidos',
       value: '1.284',
       delta: 8.1,
-      icon: 'icofont-shopping-cart',
+      icon: 'atm atm-shopping-cart-01',
       iconClass: 'bg-info-soft text-info',
       spark: [820, 940, 890, 1020, 1150, 1284],
     },
@@ -319,7 +319,7 @@ export class DashboardExample {
       label: 'Ticket médio',
       value: brl(486),
       delta: 3.9,
-      icon: 'icofont-price',
+      icon: 'atm atm-tag-01',
       iconClass: 'bg-success-soft text-success',
       spark: [402, 415, 398, 441, 460, 486],
     },
@@ -327,7 +327,7 @@ export class DashboardExample {
       label: 'Conversão',
       value: '15,1%',
       delta: -1.2,
-      icon: 'icofont-chart-arrows-axis',
+      icon: 'atm atm-chart-line',
       iconClass: 'bg-warning-soft text-warning',
       spark: [16.4, 15.9, 16.8, 15.6, 15.4, 15.1],
     },

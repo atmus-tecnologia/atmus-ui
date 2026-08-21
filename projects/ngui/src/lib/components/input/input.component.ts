@@ -65,7 +65,7 @@ const MASK_TOKENS: Record<string, RegExp> = {
   template: `
     <div [class]="wrapperClasses()">
       @if (icon()) {
-        <i [class]="'shrink-0 text-ink-faint icofont-' + icon()" aria-hidden="true"></i>
+        <i [class]="'shrink-0 text-ink-faint atm atm-' + icon()" aria-hidden="true"></i>
       }
       <input
         [id]="inputId()"
@@ -89,7 +89,7 @@ const MASK_TOKENS: Record<string, RegExp> = {
           aria-label="Limpar"
           (click)="clear()"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </button>
       }
       @if (type() === 'password') {
@@ -99,11 +99,11 @@ const MASK_TOKENS: Record<string, RegExp> = {
           [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
           (click)="showPassword.set(!showPassword())"
         >
-          <i [class]="showPassword() ? 'icofont-eye-blocked' : 'icofont-eye'" aria-hidden="true"></i>
+          <i [class]="showPassword() ? 'atm atm-view-off' : 'atm atm-view'" aria-hidden="true"></i>
         </button>
       }
       @if (iconRight() && type() !== 'password') {
-        <i [class]="'shrink-0 text-ink-faint icofont-' + iconRight()" aria-hidden="true"></i>
+        <i [class]="'shrink-0 text-ink-faint atm atm-' + iconRight()" aria-hidden="true"></i>
       }
     </div>
   `,

@@ -17,7 +17,7 @@ import { DemoSection } from '../demo-section.component';
         claro/escuro via tokens CSS e foco em performance (OnPush + signals em tudo).
       </p>
       <div class="mt-6 flex gap-3">
-        <atm-button routerLink="/buttons" iconRight="simple-right">Explorar componentes</atm-button>
+        <atm-button routerLink="/buttons" iconRight="chevron-right">Explorar componentes</atm-button>
         <atm-button variant="outline" color="neutral" routerLink="/dropdowns">
           Ver Dropdown Remote
         </atm-button>

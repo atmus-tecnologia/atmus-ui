@@ -20,7 +20,7 @@ const SIZE: Record<AtmSize, string> = {
         aria-label="Página anterior"
         (click)="go(page() - 1)"
       >
-        <i class="icofont-simple-left" aria-hidden="true"></i>
+        <i class="atm atm-chevron-left" aria-hidden="true"></i>
       </button>
 
       @for (item of pages(); track $index) {
@@ -45,7 +45,7 @@ const SIZE: Record<AtmSize, string> = {
         aria-label="Próxima página"
         (click)="go(page() + 1)"
       >
-        <i class="icofont-simple-right" aria-hidden="true"></i>
+        <i class="atm atm-chevron-right" aria-hidden="true"></i>
       </button>
     </nav>
   `,

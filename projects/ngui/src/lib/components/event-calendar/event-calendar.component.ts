@@ -259,7 +259,7 @@ function shortDate(d: Date): string {
           aria-label="Anterior"
           (click)="navigate(-1)"
         >
-          <i class="icofont-simple-left" aria-hidden="true"></i>
+          <i class="atm atm-chevron-left" aria-hidden="true"></i>
         </button>
         <button
           type="button"
@@ -276,7 +276,7 @@ function shortDate(d: Date): string {
           aria-label="Próximo"
           (click)="navigate(1)"
         >
-          <i class="icofont-simple-right" aria-hidden="true"></i>
+          <i class="atm atm-chevron-right" aria-hidden="true"></i>
         </button>
       </div>
       <!-- View dropdown -->
@@ -292,7 +292,7 @@ function shortDate(d: Date): string {
         >
           {{ viewLabel() }}
           <i
-            class="icofont-simple-down text-[9px] text-ink-faint transition-transform duration-200"
+            class="atm atm-chevron-down text-[9px] text-ink-faint transition-transform duration-200"
             [class.rotate-180]="viewMenuOpen()"
             aria-hidden="true"
           ></i>
@@ -313,7 +313,7 @@ function shortDate(d: Date): string {
               >
                 <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
                 @if (view() === option.value) {
-                  <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                  <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
                 }
               </button>
             }
@@ -329,7 +329,7 @@ function shortDate(d: Date): string {
             transition-opacity hover:opacity-90"
           (click)="addEvent.emit()"
         >
-          <i class="icofont-plus" aria-hidden="true"></i>
+          <i class="atm atm-plus-sign" aria-hidden="true"></i>
           Novo evento
         </button>
       }
@@ -370,7 +370,7 @@ function shortDate(d: Date): string {
                 {{ cell.date.getDate() }}
               </span>
               <i
-                class="icofont-plus hidden text-[10px] text-ink-faint group-hover:block"
+                class="atm atm-plus-sign hidden text-[10px] text-ink-faint group-hover:block"
                 aria-hidden="true"
               ></i>
             </div>
@@ -589,7 +589,7 @@ function shortDate(d: Date): string {
                   }
                   @if (block.event.location && block.height > 52) {
                     <span class="block truncate text-[10px] opacity-70">
-                      <i class="icofont-location-pin" aria-hidden="true"></i>
+                      <i class="atm atm-location-01" aria-hidden="true"></i>
                       {{ block.event.location }}
                     </span>
                   }
@@ -655,7 +655,7 @@ function shortDate(d: Date): string {
                       </span>
                       @if (event.location) {
                         <span class="block truncate text-xs text-ink-faint">
-                          <i class="icofont-location-pin" aria-hidden="true"></i>
+                          <i class="atm atm-location-01" aria-hidden="true"></i>
                           {{ event.location }}
                         </span>
                       }

@@ -72,7 +72,7 @@ const BINS = 64;
           (click)="toggle()"
         >
           <i
-            [class]="isPlaying() ? 'icofont-ui-pause' : 'icofont-ui-play'"
+            [class]="isPlaying() ? 'atm atm-pause' : 'atm atm-play'"
             [class.translate-x-px]="!isPlaying()"
             aria-hidden="true"
           ></i>

@@ -36,8 +36,8 @@ const CLOSE_SIZE: Record<AtmSize, AtmSize> = {
  *     [count]="selection().length"
  *     (closed)="selection.set([])"
  *   >
- *     <atm-button size="slim" variant="ghost" color="neutral" icon="edit">Editar</atm-button>
- *     <atm-button size="slim" variant="ghost" color="danger" icon="ui-delete">Excluir</atm-button>
+ *     <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+ *     <atm-button size="slim" variant="ghost" color="danger" icon="delete-02">Excluir</atm-button>
  *   </atm-action-bar>
  */
 @Component({

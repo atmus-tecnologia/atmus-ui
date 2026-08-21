@@ -56,9 +56,9 @@ interface Conversation {
 }
 
 const CHANNEL_META: Record<Channel, { icon: string; label: string; color: AtmColor }> = {
-  whatsapp: { icon: 'icofont-brand-whatsapp', label: 'WhatsApp', color: 'success' },
-  email: { icon: 'icofont-envelope', label: 'E-mail', color: 'info' },
-  site: { icon: 'icofont-globe', label: 'Site', color: 'primary' },
+  whatsapp: { icon: 'atm atm-whatsapp', label: 'WhatsApp', color: 'success' },
+  email: { icon: 'atm atm-mail-01', label: 'E-mail', color: 'info' },
+  site: { icon: 'atm atm-globe', label: 'Site', color: 'primary' },
 };
 
 const CONVERSATIONS: Conversation[] = [
@@ -320,7 +320,7 @@ const CONVERSATIONS: Conversation[] = [
               color="neutral"
               size="slim"
               [iconOnly]="true"
-              icon="phone"
+              icon="call"
               atmTooltip="Ligar"
               (clicked)="notify('Chamada de voz iniciada')"
             />
@@ -329,12 +329,12 @@ const CONVERSATIONS: Conversation[] = [
               color="neutral"
               size="slim"
               [iconOnly]="true"
-              icon="video-cam"
+              icon="video-01"
               atmTooltip="Videochamada"
               (clicked)="notify('Videochamada iniciada')"
             />
             <atm-dropdown [items]="actionItems" (itemClick)="onAction($event)">
-              <atm-button variant="ghost" color="neutral" size="slim" [iconOnly]="true" icon="navigation-menu" />
+              <atm-button variant="ghost" color="neutral" size="slim" [iconOnly]="true" icon="menu-01" />
             </atm-dropdown>
           </header>
 
@@ -364,7 +364,7 @@ const CONVERSATIONS: Conversation[] = [
                   >
                     {{ message.time }}
                     @if (message.from === 'agent') {
-                      <i class="icofont-check-alt text-success" aria-hidden="true"></i>
+                      <i class="atm atm-tick-02 text-success" aria-hidden="true"></i>
                     }
                   </div>
                 </div>
@@ -402,7 +402,7 @@ const CONVERSATIONS: Conversation[] = [
                 (keydown.enter)="send()"
               />
               <atm-button
-                icon="paper-plane"
+                icon="send"
                 [disabled]="!draft().trim()"
                 (clicked)="send()"
               >
@@ -442,11 +442,11 @@ const CONVERSATIONS: Conversation[] = [
             <atm-accordion-item header="Dados do contato" icon="id-card" [expanded]="true">
               <ul class="space-y-2.5 text-[13px]">
                 <li class="flex items-center gap-2.5">
-                  <i class="icofont-envelope w-4 text-ink-faint" aria-hidden="true"></i>
+                  <i class="atm atm-mail-01 w-4 text-ink-faint" aria-hidden="true"></i>
                   <span class="truncate text-ink">{{ conversation.email }}</span>
                 </li>
                 <li class="flex items-center gap-2.5">
-                  <i class="icofont-phone w-4 text-ink-faint" aria-hidden="true"></i>
+                  <i class="atm atm-call w-4 text-ink-faint" aria-hidden="true"></i>
                   <span class="text-ink">{{ conversation.phone }}</span>
                 </li>
                 <li class="flex items-center gap-2.5">
@@ -456,7 +456,7 @@ const CONVERSATIONS: Conversation[] = [
               </ul>
             </atm-accordion-item>
 
-            <atm-accordion-item header="Atendimento" icon="tasks" [expanded]="true">
+            <atm-accordion-item header="Atendimento" icon="task-01" [expanded]="true">
               <div class="space-y-3">
                 <div>
                   <atm-label>Status</atm-label>
@@ -479,7 +479,7 @@ const CONVERSATIONS: Conversation[] = [
               </div>
             </atm-accordion-item>
 
-            <atm-accordion-item header="Notas internas" icon="notepad">
+            <atm-accordion-item header="Notas internas" icon="notepad-text">
               <atm-textarea
                 size="slim"
                 placeholder="Visível apenas para o time..."
@@ -493,10 +493,10 @@ const CONVERSATIONS: Conversation[] = [
           </atm-accordion>
 
           <div class="space-y-2 p-4">
-            <atm-button [block]="true" variant="outline" color="success" icon="check-alt" (clicked)="notify('Atendimento resolvido')">
+            <atm-button [block]="true" variant="outline" color="success" icon="tick-02" (clicked)="notify('Atendimento resolvido')">
               Marcar como resolvido
             </atm-button>
-            <atm-button [block]="true" variant="ghost" color="danger" icon="close-circled" (clicked)="notify('Atendimento encerrado')">
+            <atm-button [block]="true" variant="ghost" color="danger" icon="cancel-circle" (clicked)="notify('Atendimento encerrado')">
               Encerrar atendimento
             </atm-button>
           </div>
@@ -524,9 +524,9 @@ export class ChatExample {
   ];
 
   readonly statusOptions: AtmSelectOption<string>[] = [
-    { label: 'Aberto', value: 'open', icon: 'ui-play' },
-    { label: 'Pendente', value: 'pending', icon: 'clock-time' },
-    { label: 'Resolvido', value: 'resolved', icon: 'check-alt' },
+    { label: 'Aberto', value: 'open', icon: 'play' },
+    { label: 'Pendente', value: 'pending', icon: 'clock-01' },
+    { label: 'Resolvido', value: 'resolved', icon: 'tick-02' },
   ];
 
   readonly agentOptions: AtmSelectOption<string>[] = [
@@ -536,9 +536,9 @@ export class ChatExample {
   ];
 
   readonly actionItems: AtmDropdownItem[] = [
-    { label: 'Transferir atendimento', icon: 'exchange' },
+    { label: 'Transferir atendimento', icon: 'exchange-01' },
     { label: 'Ver histórico completo', icon: 'history' },
-    { label: 'Exportar conversa', icon: 'download' },
+    { label: 'Exportar conversa', icon: 'download-01' },
     { label: 'Bloquear contato', icon: 'ban', danger: true, separatorBefore: true },
   ];
 
@@ -570,7 +570,7 @@ export class ChatExample {
   }
 
   channelIcon(channel: Channel): string {
-    return CHANNEL_META[channel].icon.replace('icofont-', '');
+    return CHANNEL_META[channel].icon.replace('atm atm-', '');
   }
 
   statusLabel(status: Conversation['status']): string {

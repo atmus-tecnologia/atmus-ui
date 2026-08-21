@@ -41,13 +41,13 @@ export interface AtmAlertDialogOptions {
           aria-label="Fechar"
           (click)="resolve(false)"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </button>
         <div
           class="mb-4 flex size-11 items-center justify-center rounded-full"
           [class]="iconWrapClass()"
         >
-          <i [class]="'text-xl icofont-' + (options().icon ?? defaultIcon())" aria-hidden="true"></i>
+          <i [class]="'text-xl atm atm-' + (options().icon ?? defaultIcon())" aria-hidden="true"></i>
         </div>
         <h2 class="text-lg font-semibold text-ink">{{ options().title }}</h2>
         <p class="mt-2 text-sm leading-relaxed text-ink-muted">{{ options().message }}</p>

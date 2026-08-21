@@ -41,7 +41,7 @@ export type { AtmDateRange } from './date-presets';
       [disabled]="isDisabled()"
       (click)="toggle()"
     >
-      <i class="icofont-ui-calendar shrink-0 text-ink-faint" aria-hidden="true"></i>
+      <i class="atm atm-calendar-01 shrink-0 text-ink-faint" aria-hidden="true"></i>
       <span class="flex-1 truncate text-left" [class.text-ink-faint]="!range().start">
         {{ display() || placeholder() }}
       </span>
@@ -53,7 +53,7 @@ export type { AtmDateRange } from './date-presets';
           aria-label="Limpar"
           (click)="clear($event)"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </span>
       }
     </button>
@@ -106,7 +106,7 @@ export type { AtmDateRange } from './date-presets';
               aria-label="Limpar seleção"
               (click)="clearPending()"
             >
-              <i class="icofont-ui-delete" aria-hidden="true"></i>
+              <i class="atm atm-delete-02" aria-hidden="true"></i>
             </button>
             <div class="flex items-center gap-2">
               <atm-button size="slim" variant="ghost" color="neutral" (clicked)="cancel()">

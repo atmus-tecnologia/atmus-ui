@@ -28,7 +28,7 @@ import { AtmValueAccessor } from '../../utils/value-accessor';
         aria-label="Diminuir"
         (click)="step_(-1)"
       >
-        <i class="icofont-minus" aria-hidden="true"></i>
+        <i class="atm atm-minus-sign" aria-hidden="true"></i>
       </button>
       <input
         type="number"
@@ -54,7 +54,7 @@ import { AtmValueAccessor } from '../../utils/value-accessor';
         aria-label="Aumentar"
         (click)="step_(1)"
       >
-        <i class="icofont-plus" aria-hidden="true"></i>
+        <i class="atm atm-plus-sign" aria-hidden="true"></i>
       </button>
     </div>
   `,

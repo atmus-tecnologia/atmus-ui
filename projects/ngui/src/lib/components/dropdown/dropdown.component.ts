@@ -58,7 +58,7 @@ export interface AtmDropdownItem {
             >
               @if (item.icon) {
                 <i
-                  [class]="'w-4 text-center icofont-' + item.icon"
+                  [class]="'w-4 text-center atm atm-' + item.icon"
                   [class.text-ink-muted]="!item.danger"
                   aria-hidden="true"
                 ></i>
@@ -80,7 +80,7 @@ export interface AtmDropdownItem {
                 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
               (click)="onActionClick()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               {{ actionButtonLabel() }}
             </button>
           </div>

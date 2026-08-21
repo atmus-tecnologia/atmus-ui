@@ -19,7 +19,7 @@ import { AtmValueAccessor } from '../../utils/value-accessor';
   host: { class: 'block w-full' },
   template: `
     <div [class]="wrapperClasses()">
-      <i class="icofont-clock-time shrink-0 text-ink-faint" aria-hidden="true"></i>
+      <i class="atm atm-clock-01 shrink-0 text-ink-faint" aria-hidden="true"></i>
       <input
         type="time"
         class="h-full w-full min-w-0 bg-transparent outline-none disabled:cursor-not-allowed

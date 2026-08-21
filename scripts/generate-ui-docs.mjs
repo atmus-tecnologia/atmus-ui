@@ -23,9 +23,12 @@ for (const f of ['value-accessor.ts', 'overlay-base.ts', 'position.ts']) {
 /** Curated purpose + usage tips per selector / class key */
 const META = {
   'atm-icon': {
-    purpose: 'Renderiza ícone icofont pelo nome.',
-    tips: 'Use names sem o prefixo icofont- (ex.: name="check").',
-    example: `<atm-icon name="check" class="text-lg" />`,
+    purpose: 'Renderiza um ícone do Atmus Icons pelo nome.',
+    tips:
+      'Use nomes sem o prefixo `atm-` (ex.: name="tick-02"). O componente já adiciona a ' +
+      'classe base `atm`, obrigatória para o glifo renderizar. Lista completa em ' +
+      '`@atmus/icons/icons.json`; o pacote também exporta o tipo `AtmIconName`.',
+    example: `<atm-icon name="tick-02" class="text-lg" />`,
   },
   'atm-spinner': {
     purpose: 'Indicador de carregamento circular.',
@@ -544,7 +547,7 @@ function renderComponentMd(comp, interfaces, sourceFile) {
   md += `- Colors: \`primary | success | warning | danger | info | neutral\` (when \`color\` input exists)\n`;
   md += `- Variants: \`solid | soft | outline | ghost\` (when \`variant\` input exists)\n`;
   md += `- Prefer theme tokens (\`bg-primary\`, \`text-ink\`, etc.) — never hardcode palette colors\n`;
-  md += `- Icons via icofont name or \`<atm-icon name="..." />\`\n`;
+  md += `- Icons via Atmus Icons name or \`<atm-icon name="..." />\`\n`;
 
   return md;
 }
@@ -620,7 +623,7 @@ provideAtmusUi({ theme: 'system', serverUrl: environment.serverUrl })
 - Colors: \`primary | success | warning | danger | info | neutral\`
 - Variants: \`solid | soft | outline | ghost\`
 - Theme tokens only: \`bg-primary\`, \`text-ink\`, \`text-ink-muted\`, \`bg-surface\`, \`border-line\`, etc. Dark mode via \`.dark\`
-- Icons: icofont via \`<i class="icofont-name">\` or \`<atm-icon name="name" />\`
+- Icons: Atmus Icons via \`<atm-icon name="name" />\` or \`<i class="atm atm-name">\` (base class \`atm\` required)
 - Shared CSS utils: \`.atm-field\`, \`.atm-focus\`, \`.atm-panel\`, \`.atm-option\`, animations \`animate-atm-fade|pop|slide-up\`
 - Form fields extend \`AtmValueAccessor<T>\` (CVA)
 - Overlays extend \`AtmOverlayBase\` (fixed position, flip, escape, outside click)

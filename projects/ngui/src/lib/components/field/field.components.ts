@@ -36,7 +36,7 @@ export class AtmDescription {}
     class: 'mt-1.5 flex items-center gap-1 text-xs font-medium text-danger animate-atm-fade',
     role: 'alert',
   },
-  template: `<i class="icofont-warning-alt" aria-hidden="true"></i><ng-content />`,
+  template: `<i class="atm atm-alert-circle" aria-hidden="true"></i><ng-content />`,
 })
 export class AtmErrorMessage {}
 

@@ -100,7 +100,7 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
                 (mouseenter)="activeIndex.set(item.index)"
               >
                 @if (item.option.icon) {
-                  <i [class]="'text-ink-muted icofont-' + item.option.icon" aria-hidden="true"></i>
+                  <i [class]="'text-ink-muted atm atm-' + item.option.icon" aria-hidden="true"></i>
                 }
                 <span class="min-w-0 flex-1">
                   <span class="block truncate">{{ item.option.label }}</span>
@@ -111,7 +111,7 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
                   }
                 </span>
                 @if (isSelected(item.option)) {
-                  <i class="icofont-check-alt shrink-0 text-primary" aria-hidden="true"></i>
+                  <i class="atm atm-tick-02 shrink-0 text-primary" aria-hidden="true"></i>
                 }
               </button>
             }
@@ -126,7 +126,7 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
               class="atm-option py-2 text-primary"
               (click)="addCustom()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               <span class="min-w-0 flex-1 truncate">Adicionar "{{ query().trim() }}"</span>
             </button>
           }
@@ -139,7 +139,7 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
                 px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
               (click)="onActionClick()"
             >
-              <i class="icofont-plus" aria-hidden="true"></i>
+              <i class="atm atm-plus-sign" aria-hidden="true"></i>
               {{ actionButtonLabel() }}
             </button>
           </div>

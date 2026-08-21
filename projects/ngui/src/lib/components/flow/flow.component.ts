@@ -614,13 +614,13 @@ export class AtmFlow {
   protected readonly zoomPct = computed(() => Math.round(this.viewport().zoom * 100));
 
   protected readonly ctrlButtons = computed(() => [
-    { action: 'zoom-in', icon: 'icofont-plus', label: 'Aproximar', active: false },
-    { action: 'zoom-out', icon: 'icofont-minus', label: 'Afastar', active: false },
-    { action: 'fit', icon: 'icofont-focus', label: 'Enquadrar', active: false },
-    { action: 'layout', icon: 'icofont-site-map', label: 'Auto organizar', active: false },
+    { action: 'zoom-in', icon: 'atm atm-plus-sign', label: 'Aproximar', active: false },
+    { action: 'zoom-out', icon: 'atm atm-minus-sign', label: 'Afastar', active: false },
+    { action: 'fit', icon: 'atm atm-focus', label: 'Enquadrar', active: false },
+    { action: 'layout', icon: 'atm atm-hierarchy', label: 'Auto organizar', active: false },
     {
       action: 'lock',
-      icon: this.locked() ? 'icofont-lock' : 'icofont-unlock',
+      icon: this.locked() ? 'atm atm-square-lock-01' : 'atm atm-square-unlock-01',
       label: this.locked() ? 'Desbloquear' : 'Bloquear',
       active: this.locked(),
     },

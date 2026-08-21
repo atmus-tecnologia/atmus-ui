@@ -235,10 +235,10 @@ export class SelectsPage {
   }
 
   readonly statusOptions: AtmSelectOption[] = [
-    { label: 'Ativo', value: 'active', icon: 'check-circled', description: 'Visível para todos' },
+    { label: 'Ativo', value: 'active', icon: 'checkmark-circle-01', description: 'Visível para todos' },
     { label: 'Pausado', value: 'paused', icon: 'pause' },
     { label: 'Arquivado', value: 'archived', icon: 'archive', disabled: true },
-    { label: 'Rascunho', value: 'draft', icon: 'edit' },
+    { label: 'Rascunho', value: 'draft', icon: 'edit-02' },
   ];
 
   readonly countries: AtmSelectOption[] = [
@@ -253,7 +253,7 @@ export class SelectsPage {
   ];
 
   readonly selectCode = `<atm-select
-  [options]="[{ label: 'Ativo', value: 'active', icon: 'check-circled' }]"
+  [options]="[{ label: 'Ativo', value: 'active', icon: 'checkmark-circle-01' }]"
   [(ngModel)]="status"
   [clearable]="true"
   [hasActionButton]="true"

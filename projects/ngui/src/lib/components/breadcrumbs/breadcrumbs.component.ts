@@ -22,7 +22,7 @@ export interface AtmBreadcrumb {
                 class="flex items-center gap-1 text-ink-muted transition-colors hover:text-primary"
               >
                 @if (item.icon) {
-                  <i [class]="'icofont-' + item.icon" aria-hidden="true"></i>
+                  <i [class]="'atm atm-' + item.icon" aria-hidden="true"></i>
                 }
                 {{ item.label }}
               </a>
@@ -33,13 +33,13 @@ export interface AtmBreadcrumb {
                 [attr.aria-current]="last ? 'page' : null"
               >
                 @if (item.icon) {
-                  <i [class]="'icofont-' + item.icon" aria-hidden="true"></i>
+                  <i [class]="'atm atm-' + item.icon" aria-hidden="true"></i>
                 }
                 {{ item.label }}
               </span>
             }
             @if (!last) {
-              <i class="icofont-simple-right text-[10px] text-ink-faint" aria-hidden="true"></i>
+              <i class="atm atm-chevron-right text-[10px] text-ink-faint" aria-hidden="true"></i>
             }
           </li>
         }

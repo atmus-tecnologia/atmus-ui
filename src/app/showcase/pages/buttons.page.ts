@@ -53,9 +53,9 @@ import { DemoPage, DemoSection } from '../demo-section.component';
       <demo-section title="Tamanhos, ícones e estados" [code]="statesCode">
         <div class="flex w-full flex-col gap-3">
           <div class="flex flex-wrap items-end gap-2">
-            <atm-button size="large" icon="plus">Large</atm-button>
-            <atm-button size="medium" icon="plus">Medium</atm-button>
-            <atm-button size="slim" icon="plus">Slim</atm-button>
+            <atm-button size="large" icon="plus-sign">Large</atm-button>
+            <atm-button size="medium" icon="plus-sign">Medium</atm-button>
+            <atm-button size="slim" icon="plus-sign">Slim</atm-button>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <atm-button [loading]="loading()" (clicked)="simulate()">
@@ -64,15 +64,15 @@ import { DemoPage, DemoSection } from '../demo-section.component';
             <atm-button [loading]="true" variant="soft">Carregando</atm-button>
             <atm-button [loading]="true" variant="outline" color="neutral">Carregando</atm-button>
             <atm-button [disabled]="true">Desabilitado</atm-button>
-            <atm-button icon="ui-check" [iconOnly]="true" aria-label="Confirmar" />
-            <atm-button [rounded]="true" iconRight="simple-right">Arredondado</atm-button>
+            <atm-button icon="tick-02" [iconOnly]="true" aria-label="Confirmar" />
+            <atm-button [rounded]="true" iconRight="chevron-right">Arredondado</atm-button>
           </div>
         </div>
       </demo-section>
 
       <demo-section id="button-group" title="ButtonGroup" [code]="groupCode">
         <atm-button-group>
-          <atm-button variant="outline" color="neutral" icon="ui-text-chat">Anos</atm-button>
+          <atm-button variant="outline" color="neutral" icon="chat">Anos</atm-button>
           <atm-button variant="outline" color="neutral">Meses</atm-button>
           <atm-button variant="outline" color="neutral">Dias</atm-button>
         </atm-button-group>
@@ -91,7 +91,7 @@ import { DemoPage, DemoSection } from '../demo-section.component';
         [code]="toggleCode"
       >
         <atm-toggle-button icon="star">Favorito</atm-toggle-button>
-        <atm-toggle-button icon="notification" [pressed]="true">Notificações</atm-toggle-button>
+        <atm-toggle-button icon="notification-01" [pressed]="true">Notificações</atm-toggle-button>
       </demo-section>
 
       <demo-section
@@ -130,15 +130,15 @@ export class ButtonsPage {
 <atm-button variant="outline">Outline</atm-button>
 <atm-button variant="ghost">Ghost</atm-button>`;
 
-  readonly statesCode = `<atm-button size="large" icon="plus">Large</atm-button>
-<atm-button size="slim" icon="plus">Slim</atm-button>
+  readonly statesCode = `<atm-button size="large" icon="plus-sign">Large</atm-button>
+<atm-button size="slim" icon="plus-sign">Slim</atm-button>
 
 <!-- [loading] mostra spinner e desabilita o clique -->
 <atm-button [loading]="saving" (clicked)="save()">Salvar</atm-button>
 <atm-button [loading]="true" variant="soft">Carregando</atm-button>
 <atm-button [disabled]="true">Desabilitado</atm-button>
-<atm-button icon="ui-check" [iconOnly]="true" />
-<atm-button [rounded]="true" iconRight="simple-right">Arredondado</atm-button>`;
+<atm-button icon="tick-02" [iconOnly]="true" />
+<atm-button [rounded]="true" iconRight="chevron-right">Arredondado</atm-button>`;
 
   readonly groupCode = `<atm-button-group>
   <atm-button variant="outline" color="neutral">Anos</atm-button>

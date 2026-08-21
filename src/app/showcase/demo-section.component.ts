@@ -32,7 +32,7 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
                   font-medium text-ink-muted transition-colors hover:bg-surface hover:text-ink"
                 (click)="copy()"
               >
-                <i [class]="copied() ? 'icofont-check-alt text-success' : 'icofont-copy'" aria-hidden="true"></i>
+                <i [class]="copied() ? 'atm atm-tick-02 text-success' : 'atm atm-copy'" aria-hidden="true"></i>
                 {{ copied() ? 'Copiado!' : 'Copiar' }}
               </button>
             </div>

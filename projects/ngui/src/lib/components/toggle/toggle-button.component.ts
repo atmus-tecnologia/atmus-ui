@@ -31,7 +31,7 @@ const SIZE: Record<AtmSize, string> = {
       (click)="toggle()"
     >
       @if (icon()) {
-        <i [class]="'icofont-' + icon()" aria-hidden="true"></i>
+        <i [class]="'atm atm-' + icon()" aria-hidden="true"></i>
       }
       <ng-content />
     </button>
@@ -83,7 +83,7 @@ export class AtmToggleButton {
           (click)="select(option.value)"
         >
           @if (option.icon) {
-            <i [class]="'icofont-' + option.icon" aria-hidden="true"></i>
+            <i [class]="'atm atm-' + option.icon" aria-hidden="true"></i>
           }
           @if (option.label) {
             {{ option.label }}

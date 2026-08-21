@@ -214,7 +214,7 @@ const COLUMNS: AtmKanbanColumn[] = [
       <div class="w-56">
         <atm-search-field size="slim" placeholder="Buscar cartão..." (search)="query.set($event)" />
       </div>
-      <atm-button size="slim" icon="plus" (clicked)="openNewCard()">Novo cartão</atm-button>
+      <atm-button size="slim" icon="plus-sign" (clicked)="openNewCard()">Novo cartão</atm-button>
     </header>
 
     <!-- Board -->
@@ -259,7 +259,7 @@ const COLUMNS: AtmKanbanColumn[] = [
         <footer class="mt-2.5 flex items-center gap-2">
           @if (card.dueDate) {
             <span class="inline-flex items-center gap-1 text-[11px] text-ink-muted">
-              <i class="icofont-clock-time" aria-hidden="true"></i>
+              <i class="atm atm-clock-01" aria-hidden="true"></i>
               {{ card.dueDate }}
             </span>
           }
@@ -307,7 +307,7 @@ const COLUMNS: AtmKanbanColumn[] = [
           <atm-button variant="ghost" color="neutral" (clicked)="modalOpen.set(false)">
             Cancelar
           </atm-button>
-          <atm-button icon="check-alt" [disabled]="!draftTitle().trim()" (clicked)="createCard()">
+          <atm-button icon="tick-02" [disabled]="!draftTitle().trim()" (clicked)="createCard()">
             Criar cartão
           </atm-button>
         </div>
@@ -379,9 +379,9 @@ export class KanbanExample {
   /** Estilos do card custom — decididos pelo app host, não pela lib. */
   priorityIcon(priority: 'low' | 'medium' | 'high'): string {
     const map = {
-      low: 'icofont-arrow-down text-info',
-      medium: 'icofont-minus text-warning',
-      high: 'icofont-arrow-up text-danger',
+      low: 'atm atm-arrow-down-02 text-info',
+      medium: 'atm atm-minus-sign text-warning',
+      high: 'atm atm-arrow-up-02 text-danger',
     };
     return map[priority];
   }

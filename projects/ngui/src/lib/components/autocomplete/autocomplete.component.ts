@@ -27,7 +27,7 @@ import { AtmSelectOption } from '../select/select.component';
   host: { class: 'block w-full' },
   template: `
     <div #trigger [class]="wrapperClasses()">
-      <i class="icofont-ui-search shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
+      <i class="atm atm-search-01 shrink-0 text-xs text-ink-faint" aria-hidden="true"></i>
       <input
         type="text"
         role="combobox"
@@ -48,7 +48,7 @@ import { AtmSelectOption } from '../select/select.component';
           aria-label="Limpar"
           (click)="clear()"
         >
-          <i class="icofont-close" aria-hidden="true"></i>
+          <i class="atm atm-cancel-01" aria-hidden="true"></i>
         </button>
       }
     </div>

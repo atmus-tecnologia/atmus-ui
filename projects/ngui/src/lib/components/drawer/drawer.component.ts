@@ -73,7 +73,7 @@ const LEAVE_ANIM: Record<AtmDrawerPosition, string> = {
               aria-label="Fechar"
               (click)="close()"
             >
-              <i class="icofont-close" aria-hidden="true"></i>
+              <i class="atm atm-cancel-01" aria-hidden="true"></i>
             </button>
           </div>
 

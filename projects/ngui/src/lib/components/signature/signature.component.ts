@@ -104,7 +104,7 @@ const SCRIPT_FONT = `'Segoe Script', 'Bradley Hand', 'Brush Script MT', cursive`
             aria-label="Limpar assinatura"
             (click)="clear()"
           >
-            <i class="icofont-eraser" aria-hidden="true"></i>
+            <i class="atm atm-eraser" aria-hidden="true"></i>
           </button>
         }
       </div>

@@ -50,10 +50,10 @@ const TEXT: Record<AtmSize, string> = { large: 'text-base', medium: 'text-sm', s
             group-hover:border-primary/60 group-active:scale-90"
         >
           @if (indeterminate()) {
-            <i class="icofont-minus text-[10px] font-bold text-primary" aria-hidden="true"></i>
+            <i class="atm atm-minus-sign text-[10px] font-bold text-primary" aria-hidden="true"></i>
           } @else if (isChecked()) {
             <i
-              class="icofont-check-alt animate-atm-pop text-[11px] font-bold text-primary-contrast"
+              class="atm atm-tick-02 animate-atm-pop text-[11px] font-bold text-primary-contrast"
               aria-hidden="true"
             ></i>
           }
