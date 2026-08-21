@@ -33,18 +33,18 @@ interface AiQuickAction {
 }
 
 const AI_SELECTION_ACTIONS: AiQuickAction[] = [
-  { id: 'grammar', icon: 'icofont-check', label: 'Corrigir ortografia e gramática' },
-  { id: 'improve', icon: 'icofont-magic', label: 'Melhorar escrita' },
-  { id: 'extend', icon: 'icofont-text-width', label: 'Estender texto' },
-  { id: 'summarize', icon: 'icofont-text-height', label: 'Resumir texto' },
-  { id: 'simplify', icon: 'icofont-paragraph', label: 'Simplificar texto' },
-  { id: 'tone-professional', icon: 'icofont-briefcase', label: 'Tom profissional', divider: true },
-  { id: 'tone-friendly', icon: 'icofont-slightly-smile', label: 'Tom amigável' },
-  { id: 'tone-confident', icon: 'icofont-muscle', label: 'Tom confiante' },
-  { id: 'tone-casual', icon: 'icofont-coffee-cup', label: 'Tom casual' },
-  { id: 'translate-en', icon: 'icofont-globe', label: 'Traduzir para Inglês', divider: true },
-  { id: 'translate-pt', icon: 'icofont-globe', label: 'Traduzir para Português' },
-  { id: 'translate-es', icon: 'icofont-globe', label: 'Traduzir para Espanhol' },
+  { id: 'grammar', icon: 'atm atm-tick-02', label: 'Corrigir ortografia e gramática' },
+  { id: 'improve', icon: 'atm atm-magic-wand-01', label: 'Melhorar escrita' },
+  { id: 'extend', icon: 'atm atm-expand-paragraph', label: 'Estender texto' },
+  { id: 'summarize', icon: 'atm atm-shrink', label: 'Resumir texto' },
+  { id: 'simplify', icon: 'atm atm-paragraph', label: 'Simplificar texto' },
+  { id: 'tone-professional', icon: 'atm atm-briefcase-01', label: 'Tom profissional', divider: true },
+  { id: 'tone-friendly', icon: 'atm atm-smile', label: 'Tom amigável' },
+  { id: 'tone-confident', icon: 'atm atm-body-part-muscle', label: 'Tom confiante' },
+  { id: 'tone-casual', icon: 'atm atm-coffee-01', label: 'Tom casual' },
+  { id: 'translate-en', icon: 'atm atm-globe', label: 'Traduzir para Inglês', divider: true },
+  { id: 'translate-pt', icon: 'atm atm-globe', label: 'Traduzir para Português' },
+  { id: 'translate-es', icon: 'atm atm-globe', label: 'Traduzir para Espanhol' },
 ];
 
 const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
@@ -54,7 +54,17 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
   { id: 'translate-en', label: 'Traduzir para Inglês' },
 ];
 
-/**Editor de texto rico (contenteditable) com:- toolbar completa (blocos, marcas inline, alinhamento, listas, link, undo/redo);- bubble de formatação rápida ao selecionar texto;- assistente de IA opcional (`[assistant]="true"`): reescreve a seleção  (bubble) ou o documento inteiro (painel na toolbar). A chamada é delegada  ao token `ATM_ASSISTANT_HANDLER` — sem provider registrado usa o mock;- `[config].highlights`: detecção automática de trechos com tag colorida  e tooltip;- `[scrollHeight]`: altura máxima da área editável (scroll interno).Integra ngModel / formControl (o valor é o HTML do conteúdo).
+/**
+Editor de texto rico (contenteditable) com:
+- toolbar completa (blocos, marcas inline, alinhamento, listas, link, undo/redo);
+- bubble de formatação rápida ao selecionar texto;
+- assistente de IA opcional (`[assistant]="true"`): reescreve a seleção
+  (bubble) ou o documento inteiro (painel na toolbar). A chamada é delegada
+  ao token `ATM_ASSISTANT_HANDLER` — sem provider registrado usa o mock;
+- `[config].highlights`: detecção automática de trechos com tag colorida
+  e tooltip;
+- `[scrollHeight]`: altura máxima da área editável (scroll interno).
+Integra ngModel / formControl (o valor é o HTML do conteúdo).
 
 ## Identity
 
@@ -125,4 +135,4 @@ Valor tipicamente HTML string via CVA.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

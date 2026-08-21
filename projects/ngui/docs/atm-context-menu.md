@@ -32,7 +32,16 @@ export interface AtmContextMenuSelect {
   data?: unknown;
 }
 
-/**Right-click context menu. Renders nothing until opened; the panel is`position: fixed` at the cursor, clamped to the viewport (flips to theother side of the pointer when there is no room). Closes on outside click,Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).Declarative — attach to any element via directive:  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):  menu.open(mouseEvent, { items, header: 'Node X', data: node });
+/**
+Right-click context menu. Renders nothing until opened; the panel is
+`position: fixed` at the cursor, clamped to the viewport (flips to the
+other side of the pointer when there is no room). Closes on outside click,
+Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).
+Declarative — attach to any element via directive:
+  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>
+  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />
+Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):
+  menu.open(mouseEvent, { items, header: 'Node X', data: node });
 
 ## Identity
 
@@ -110,7 +119,7 @@ export interface AtmContextMenuSelect {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 ---
 
@@ -148,7 +157,17 @@ export interface AtmContextMenuSelect {
   data?: unknown;
 }
 
-/**Right-click context menu. Renders nothing until opened; the panel is`position: fixed` at the cursor, clamped to the viewport (flips to theother side of the pointer when there is no room). Closes on outside click,Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).Declarative — attach to any element via directive:  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):  menu.open(mouseEvent, { items, header: 'Node X', data: node });/
+/**
+Right-click context menu. Renders nothing until opened; the panel is
+`position: fixed` at the cursor, clamped to the viewport (flips to the
+other side of the pointer when there is no room). Closes on outside click,
+Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).
+Declarative — attach to any element via directive:
+  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>
+  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />
+Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):
+  menu.open(mouseEvent, { items, header: 'Node X', data: node });
+/
 @Component({
   selector: 'atm-context-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -185,7 +204,7 @@ export interface AtmContextMenuSelect {
             >
               @if (item.icon) {
                 <i
-                  [class]="'w-4 text-center icofont-' + item.icon"
+                  [class]="'w-4 text-center atm atm-' + item.icon"
                   [class.text-ink-muted]="!item.danger"
                   aria-hidden="true"
                 ></i>
@@ -366,7 +385,11 @@ export class AtmContextMenu implements OnDestroy {
   }
 }
 
-/**Attaches an AtmContextMenu to any element: right-click opens the menu atthe cursor. `atmContextMenuData` is echoed back in `itemClick` — perfectfor lists where every row shares the same menu instance.  <tr [atmContextMenu]="rowMenu" [atmContextMenuData]="row" [atmContextMenuHeader]="row.name">
+/**
+Attaches an AtmContextMenu to any element: right-click opens the menu at
+the cursor. `atmContextMenuData` is echoed back in `itemClick` — perfect
+for lists where every row shares the same menu instance.
+  <tr [atmContextMenu]="rowMenu" [atmContextMenuData]="row" [atmContextMenuHeader]="row.name">
 
 ## Identity
 
@@ -441,4 +464,4 @@ export interface AtmContextMenuSelect {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

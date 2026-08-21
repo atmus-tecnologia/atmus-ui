@@ -48,4 +48,4 @@ export interface AtmBreadcrumb {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

@@ -8,7 +8,19 @@ Dropdown que busca opções via AtmRemoteDataSource (API paginada).
 
 ## Notes from source
 
-Remote (API-driven) dropdown for nest-paginator backends.Pass any service implementing AtmRemoteDataSource (e.g. one extendingAtmRestService):  <atm-dropdown-remote    [dataSource]="contactsService"    labelField="name"    valueField="id"    [hasActionButton]="true"    (actionClick)="createContact()"    [(ngModel)]="contactId"  />Loads at most `limit` (default 10) records; further records are reached bytyping in the built-in search box (debounced, server-side search).
+Remote (API-driven) dropdown for nest-paginator backends.
+Pass any service implementing AtmRemoteDataSource (e.g. one extending
+AtmRestService):
+  <atm-dropdown-remote
+    [dataSource]="contactsService"
+    labelField="name"
+    valueField="id"
+    [hasActionButton]="true"
+    (actionClick)="createContact()"
+    [(ngModel)]="contactId"
+  />
+Loads at most `limit` (default 10) records; further records are reached by
+typing in the built-in search box (debounced, server-side search).
 
 ## Identity
 
@@ -62,4 +74,4 @@ Requer dataSource. Debounce 300ms, limit ~10. serverUrl via provideAtmusUi.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

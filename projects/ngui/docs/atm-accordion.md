@@ -23,11 +23,11 @@ Single collapsible item — use inside atm-accordion or standalone as atm-disclo
         (click)="toggle()"
       >
         @if (icon()) {
-          <i [class]="'text-ink-muted icofont-' + icon()" aria-hidden="true"></i>
+          <i [class]="'text-ink-muted atm atm-' + icon()" aria-hidden="true"></i>
         }
         <span class="flex-1 text-sm font-medium text-ink">{{ header() }}</span>
         <i
-          class="icofont-simple-down text-xs text-ink-faint transition-transform duration-300"
+          class="atm atm-chevron-down text-xs text-ink-faint transition-transform duration-300"
           [class.rotate-180]="expanded()"
           aria-hidden="true"
         ></i>
@@ -59,7 +59,11 @@ export class AtmAccordionItem {
   }
 }
 
-/**Accordion (alias: atm-disclosure-group):  <atm-accordion [multiple]="false">    <atm-accordion-item header="...">...</atm-accordion-item>  </atm-accordion>
+/**
+Accordion (alias: atm-disclosure-group):
+  <atm-accordion [multiple]="false">
+    <atm-accordion-item header="...">...</atm-accordion-item>
+  </atm-accordion>
 
 ## Identity
 
@@ -98,4 +102,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

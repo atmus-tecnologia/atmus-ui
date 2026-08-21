@@ -22,7 +22,13 @@ export function atmParseDate(text: string): Date | null {
   return valid ? date : null;
 }
 
-/**Date picker (alias atm-date-field): input + calendar popover, dd/mm/yyyy.Flips above when there is no viewport space below.With `[editable]="true"` the field becomes a typeable input with add/mm/yyyy mask and the calendar opens only via the icon button.`[presets]` shows recommendation shortcuts beside the calendar and`[confirm]="true"` only applies the change after clicking "Confirmar".
+/**
+Date picker (alias atm-date-field): input + calendar popover, dd/mm/yyyy.
+Flips above when there is no viewport space below.
+With `[editable]="true"` the field becomes a typeable input with a
+dd/mm/yyyy mask and the calendar opens only via the icon button.
+`[presets]` shows recommendation shortcuts beside the calendar and
+`[confirm]="true"` only applies the change after clicking "Confirmar".
 
 ## Identity
 
@@ -70,4 +76,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

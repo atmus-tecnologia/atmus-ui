@@ -34,7 +34,16 @@ const COLOR_VAR: Record<AtmColor, string> = {
 /** Number of smoothed intensity buckets kept between frames. */
 const BINS = 64;
 
-/**Audio intensity visualizer with three animated styles (bars, wave, ring).Sources:- `src`    — audio URL (or blob URL). Renders a play/pause control + time.             For remote URLs the server must allow CORS, otherwise the             Web Audio analyser cannot read the samples.- `stream` — live `MediaStream` (e.g. `getUserMedia`), great for recorders.             Nothing is routed to the speakers (no feedback).While idle it renders a subtle breathing animation so the componentalways looks alive.
+/**
+Audio intensity visualizer with three animated styles (bars, wave, ring).
+Sources:
+- `src`    — audio URL (or blob URL). Renders a play/pause control + time.
+             For remote URLs the server must allow CORS, otherwise the
+             Web Audio analyser cannot read the samples.
+- `stream` — live `MediaStream` (e.g. `getUserMedia`), great for recorders.
+             Nothing is routed to the speakers (no feedback).
+While idle it renders a subtle breathing animation so the component
+always looks alive.
 
 ## Identity
 
@@ -84,4 +93,4 @@ export type AtmAudioVisualizerVariant = 'bars' | 'wave' | 'ring';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

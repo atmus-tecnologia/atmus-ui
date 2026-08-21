@@ -8,7 +8,17 @@ Barra de ações flutuante (seleção em massa).
 
 ## Notes from source
 
-Floating toolbar for contextual actions (bulk selection, editing controls…).Appears centered at the bottom (or top) of the viewport — or of the nearest`relative` container when `container="parent"`.  <atm-action-bar    [open]="selection().length > 0"    [count]="selection().length"    (closed)="selection.set([])"  >    <atm-button size="slim" variant="ghost" color="neutral" icon="edit">Editar</atm-button>    <atm-button size="slim" variant="ghost" color="danger" icon="ui-delete">Excluir</atm-button>  </atm-action-bar>
+Floating toolbar for contextual actions (bulk selection, editing controls…).
+Appears centered at the bottom (or top) of the viewport — or of the nearest
+`relative` container when `container="parent"`.
+  <atm-action-bar
+    [open]="selection().length > 0"
+    [count]="selection().length"
+    (closed)="selection.set([])"
+  >
+    <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+    <atm-button size="slim" variant="ghost" color="danger" icon="delete-02">Excluir</atm-button>
+  </atm-action-bar>
 
 ## Identity
 
@@ -55,4 +65,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

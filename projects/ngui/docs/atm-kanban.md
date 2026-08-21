@@ -89,12 +89,23 @@ const LABEL: Record<AtmColor, string> = {
 };
 
 const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string; label: string }> = {
-  low: { icon: 'icofont-arrow-down', class: 'text-info', label: 'Baixa' },
-  medium: { icon: 'icofont-minus', class: 'text-warning', label: 'Média' },
-  high: { icon: 'icofont-arrow-up', class: 'text-danger', label: 'Alta' },
+  low: { icon: 'atm atm-arrow-down-02', class: 'text-info', label: 'Baixa' },
+  medium: { icon: 'atm atm-minus-sign', class: 'text-warning', label: 'Média' },
+  high: { icon: 'atm atm-arrow-up-02', class: 'text-danger', label: 'Alta' },
 };
 
-/**Reusable Kanban board with native drag & drop between columns.  <atm-kanban [(columns)]="columns" (cardMove)="onMove($event)" />Provide a custom card body with an `<ng-template #card>`.Context: `$implicit` (card), `column` and `index`:  <atm-kanban [(columns)]="columns">    <ng-template #card let-card let-column="column">{{ card.title }}</ng-template>  </atm-kanban>- `[scrollable]` (default true): horizontal scroll with fixed-width columns.  When false, columns shrink/grow to fit the available width.- `[allowColumnReorder]` (default false): drag column headers to reorder,  emitting `(columnReorder)`.
+/**
+Reusable Kanban board with native drag & drop between columns.
+  <atm-kanban [(columns)]="columns" (cardMove)="onMove($event)" />
+Provide a custom card body with an `<ng-template #card>`.
+Context: `$implicit` (card), `column` and `index`:
+  <atm-kanban [(columns)]="columns">
+    <ng-template #card let-card let-column="column">{{ card.title }}</ng-template>
+  </atm-kanban>
+- `[scrollable]` (default true): horizontal scroll with fixed-width columns.
+  When false, columns shrink/grow to fit the available width.
+- `[allowColumnReorder]` (default false): drag column headers to reorder,
+  emitting `(columnReorder)`.
 
 ## Identity
 
@@ -211,4 +222,4 @@ export interface AtmKanbanColumnReorderEvent {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

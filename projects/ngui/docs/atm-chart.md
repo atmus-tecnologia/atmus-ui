@@ -223,7 +223,22 @@ function compactNumber(v: number): string {
   return Number.isInteger(v) ? String(v) : trim(v);
 }
 
-/**AtmChart — canvas-based charting component.Types: line, area, bar (columns), bar-horizontal, pie, donut, radar, funnel(horizontal, vertical and pyramid), heatmap, treemap (with drill-down) andmixed charts (per-dataset `type`). Renders on HTML5 canvas withdevicePixelRatio scaling, ResizeObserver responsiveness, entry animations(respects prefers-reduced-motion), interactive HTML tooltip + legend andautomatic dark-mode via theme tokens.```html<atm-chart  type="bar"  title="Vendas"  [labels]="['Jan', 'Fev', 'Mar']"  [datasets]="[{ label: 'Receita', data: [10, 25, 18] }]"/>```
+/**
+AtmChart — canvas-based charting component.
+Types: line, area, bar (columns), bar-horizontal, pie, donut, radar, funnel
+(horizontal, vertical and pyramid), heatmap, treemap (with drill-down) and
+mixed charts (per-dataset `type`). Renders on HTML5 canvas with
+devicePixelRatio scaling, ResizeObserver responsiveness, entry animations
+(respects prefers-reduced-motion), interactive HTML tooltip + legend and
+automatic dark-mode via theme tokens.
+```html
+<atm-chart
+  type="bar"
+  title="Vendas"
+  [labels]="['Jan', 'Fev', 'Mar']"
+  [datasets]="[{ label: 'Receita', data: [10, 25, 18] }]"
+/>
+```
 
 ## Identity
 
@@ -385,4 +400,4 @@ export interface AtmChartTreeEvent {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

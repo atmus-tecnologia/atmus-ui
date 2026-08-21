@@ -187,7 +187,18 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
   meta: { itemsPerPage: 0, totalItems: 0, currentPage: 1, totalPages: 0 },
 };
 
-/**Data table with sorting, per-column filters (operator based on column type),row selection, fixed (sticky) columns, loading skeleton, built-in pagination(client-side or API driven), scrollable body and per-column footer.Local data:  <atm-table [columns]="cols" [rows]="rows" [paginator]="true" [pageSize]="10" />Remote data (nest-paginator via AtmRemoteDataSource):  <atm-table [columns]="cols" [dataSource]="usersService" [paginator]="true" />Manual server-side (you fetch, table only emits events):  <atm-table [columns]="cols" [rows]="pageRows" [serverSide]="true"             [totalItems]="total" [paginator]="true"             (queryChange)="load($event)" />
+/**
+Data table with sorting, per-column filters (operator based on column type),
+row selection, fixed (sticky) columns, loading skeleton, built-in pagination
+(client-side or API driven), scrollable body and per-column footer.
+Local data:
+  <atm-table [columns]="cols" [rows]="rows" [paginator]="true" [pageSize]="10" />
+Remote data (nest-paginator via AtmRemoteDataSource):
+  <atm-table [columns]="cols" [dataSource]="usersService" [paginator]="true" />
+Manual server-side (you fetch, table only emits events):
+  <atm-table [columns]="cols" [rows]="pageRows" [serverSide]="true"
+             [totalItems]="total" [paginator]="true"
+             (queryChange)="load($event)" />
 
 ## Identity
 
@@ -322,4 +333,4 @@ Colunas AtmTableColumn. Remote usa AtmRemoteDataSource (nest-paginator).
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

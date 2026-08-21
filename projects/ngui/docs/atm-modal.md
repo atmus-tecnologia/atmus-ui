@@ -8,7 +8,13 @@ Modal declarativo com open, título, expand e slots.
 
 ## Notes from source
 
-Declarative modal:  <atm-modal [(open)]="showModal" header="Title" [expandable]="true">    content...    <div footer>buttons...</div>  </atm-modal>The expand icon (next to close) maximizes to 90% of the viewport,keeping a margin so it never touches the screen edges.
+Declarative modal:
+  <atm-modal [(open)]="showModal" header="Title" [expandable]="true">
+    content...
+    <div footer>buttons...</div>
+  </atm-modal>
+The expand icon (next to close) maximizes to 90% of the viewport,
+keeping a margin so it never touches the screen edges.
 
 ## Identity
 
@@ -58,4 +64,4 @@ Para abrir componente dinamicamente use AtmDialogService.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

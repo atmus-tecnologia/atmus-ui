@@ -8,7 +8,8 @@ Select dropdown com busca, multiple, action button e CVA.
 
 ## Notes from source
 
-Custom select with viewport-aware panel (flips up when there is no spacebelow), keyboard navigation and optional footer action button.
+Custom select with viewport-aware panel (flips up when there is no space
+below), keyboard navigation and optional footer action button.
 
 ## Identity
 
@@ -71,4 +72,4 @@ Estende overlay + CVA. Options: {value,label,description?,disabled?,icon?}.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

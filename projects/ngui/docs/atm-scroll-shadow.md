@@ -60,7 +60,7 @@ export class AtmKbd {}
     >
       <ng-content />
       @if (external()) {
-        <i class="icofont-external-link text-xs" aria-hidden="true"></i>
+        <i class="atm atm-link-square-01 text-xs" aria-hidden="true"></i>
       }
     </a>
   `,
@@ -106,4 +106,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

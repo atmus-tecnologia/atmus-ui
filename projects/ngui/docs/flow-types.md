@@ -61,7 +61,7 @@ export interface AtmFlowNode<T = any> {
   height?: number;
   /** Accent color (any CSS color or var). Shown as a dot on the default node. */
   color?: string;
-  /** icofont icon name (default node renderer). */
+  /** Atmus Icons name, without the `atm-` prefix (default node renderer). */
   icon?: string;
   /** Custom handles. Defaults to target-left + source-right (LR) or top/bottom (TB). */
   handles?: AtmFlowHandle[];

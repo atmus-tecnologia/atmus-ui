@@ -23,7 +23,7 @@ provideAtmusUi({ theme: 'system', serverUrl: environment.serverUrl })
 - Colors: `primary | success | warning | danger | info | neutral`
 - Variants: `solid | soft | outline | ghost`
 - Theme tokens only: `bg-primary`, `text-ink`, `text-ink-muted`, `bg-surface`, `border-line`, etc. Dark mode via `.dark`
-- Icons: icofont via `<i class="icofont-name">` or `<atm-icon name="name" />`
+- Icons: Atmus Icons via `<atm-icon name="name" />` or `<i class="atm atm-name">` (base class `atm` required)
 - Shared CSS utils: `.atm-field`, `.atm-focus`, `.atm-panel`, `.atm-option`, animations `animate-atm-fade|pop|slide-up`
 - Form fields extend `AtmValueAccessor<T>` (CVA)
 - Overlays extend `AtmOverlayBase` (fixed position, flip, escape, outside click)
@@ -106,7 +106,7 @@ type AtmVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 - [`atm-flow`](./atm-flow.md) — Editor de fluxos/nodes com edges, zoom e history.
 - [`atm-flow-handle`](./atm-flow-handle.md) — Handle de conexão de node no flow.
 - [`atm-flow-node`](./atm-flow-node.md) — Diretiva ng-template[atmFlowNode] para registrar tipo de node.
-- [`atm-icon`](./atm-icon.md) — Renderiza ícone icofont pelo nome.
+- [`atm-icon`](./atm-icon.md) — Renderiza um ícone do Atmus Icons pelo nome.
 - [`atm-image-crop`](./atm-image-crop.md) — Recorte de imagem interativo.
 - [`atm-image-crop-dialog`](./atm-image-crop-dialog.md) — Dialog wrapper para recorte de imagem.
 - [`atm-input`](./atm-input.md) — Campo de texto com CVA (ngModel/FormControl).
@@ -196,11 +196,11 @@ Single collapsible item — use inside atm-accordion or standalone as atm-disclo
         (click)="toggle()"
       >
         @if (icon()) {
-          <i [class]="'text-ink-muted icofont-' + icon()" aria-hidden="true"></i>
+          <i [class]="'text-ink-muted atm atm-' + icon()" aria-hidden="true"></i>
         }
         <span class="flex-1 text-sm font-medium text-ink">{{ header() }}</span>
         <i
-          class="icofont-simple-down text-xs text-ink-faint transition-transform duration-300"
+          class="atm atm-chevron-down text-xs text-ink-faint transition-transform duration-300"
           [class.rotate-180]="expanded()"
           aria-hidden="true"
         ></i>
@@ -232,7 +232,11 @@ export class AtmAccordionItem {
   }
 }
 
-/**Accordion (alias: atm-disclosure-group):  <atm-accordion [multiple]="false">    <atm-accordion-item header="...">...</atm-accordion-item>  </atm-accordion>
+/**
+Accordion (alias: atm-disclosure-group):
+  <atm-accordion [multiple]="false">
+    <atm-accordion-item header="...">...</atm-accordion-item>
+  </atm-accordion>
 
 ## Identity
 
@@ -271,7 +275,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -327,7 +331,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -342,7 +346,17 @@ Barra de ações flutuante (seleção em massa).
 
 ## Notes from source
 
-Floating toolbar for contextual actions (bulk selection, editing controls…).Appears centered at the bottom (or top) of the viewport — or of the nearest`relative` container when `container="parent"`.  <atm-action-bar    [open]="selection().length > 0"    [count]="selection().length"    (closed)="selection.set([])"  >    <atm-button size="slim" variant="ghost" color="neutral" icon="edit">Editar</atm-button>    <atm-button size="slim" variant="ghost" color="danger" icon="ui-delete">Excluir</atm-button>  </atm-action-bar>
+Floating toolbar for contextual actions (bulk selection, editing controls…).
+Appears centered at the bottom (or top) of the viewport — or of the nearest
+`relative` container when `container="parent"`.
+  <atm-action-bar
+    [open]="selection().length > 0"
+    [count]="selection().length"
+    (closed)="selection.set([])"
+  >
+    <atm-button size="slim" variant="ghost" color="neutral" icon="edit-02">Editar</atm-button>
+    <atm-button size="slim" variant="ghost" color="danger" icon="delete-02">Excluir</atm-button>
+  </atm-action-bar>
 
 ## Identity
 
@@ -389,7 +403,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -445,7 +459,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -502,7 +516,7 @@ export interface AtmAlertDialogOptions {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -610,7 +624,7 @@ export interface AtmAssistantHandler {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -651,7 +665,16 @@ const COLOR_VAR: Record<AtmColor, string> = {
 /** Number of smoothed intensity buckets kept between frames. */
 const BINS = 64;
 
-/**Audio intensity visualizer with three animated styles (bars, wave, ring).Sources:- `src`    — audio URL (or blob URL). Renders a play/pause control + time.             For remote URLs the server must allow CORS, otherwise the             Web Audio analyser cannot read the samples.- `stream` — live `MediaStream` (e.g. `getUserMedia`), great for recorders.             Nothing is routed to the speakers (no feedback).While idle it renders a subtle breathing animation so the componentalways looks alive.
+/**
+Audio intensity visualizer with three animated styles (bars, wave, ring).
+Sources:
+- `src`    — audio URL (or blob URL). Renders a play/pause control + time.
+             For remote URLs the server must allow CORS, otherwise the
+             Web Audio analyser cannot read the samples.
+- `stream` — live `MediaStream` (e.g. `getUserMedia`), great for recorders.
+             Nothing is routed to the speakers (no feedback).
+While idle it renders a subtle breathing animation so the component
+always looks alive.
 
 ## Identity
 
@@ -701,7 +724,7 @@ export type AtmAudioVisualizerVariant = 'bars' | 'wave' | 'ring';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -716,7 +739,8 @@ Autocomplete/combobox com filtro local.
 
 ## Notes from source
 
-Autocomplete / ComboBox — text input with filtered local suggestions.Alias selectors: atm-autocomplete, atm-combobox.
+Autocomplete / ComboBox — text input with filtered local suggestions.
+Alias selectors: atm-autocomplete, atm-combobox.
 
 ## Identity
 
@@ -759,7 +783,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -810,7 +834,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -888,7 +912,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -938,7 +962,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -993,7 +1017,7 @@ export interface AtmBreadcrumb {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1057,7 +1081,7 @@ Prefira color/variant de token. loading desabilita o clique.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1108,7 +1132,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1123,7 +1147,9 @@ Calendário de seleção de data (single/range).
 
 ## Notes from source
 
-Month calendar. Single mode: [(value)]. Range mode: [range]=true + [(rangeValue)].`[months]="2"` renders consecutive months side by side (double calendar).`[flat]="true"` removes the border/background so it can live inside a panel.
+Month calendar. Single mode: [(value)]. Range mode: [range]=true + [(rangeValue)].
+`[months]="2"` renders consecutive months side by side (double calendar).
+`[flat]="true"` removes the border/background so it can live inside a panel.
 
 ## Identity
 
@@ -1178,7 +1204,7 @@ export interface AtmCalendarDay {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1232,7 +1258,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1462,7 +1488,22 @@ function compactNumber(v: number): string {
   return Number.isInteger(v) ? String(v) : trim(v);
 }
 
-/**AtmChart — canvas-based charting component.Types: line, area, bar (columns), bar-horizontal, pie, donut, radar, funnel(horizontal, vertical and pyramid), heatmap, treemap (with drill-down) andmixed charts (per-dataset `type`). Renders on HTML5 canvas withdevicePixelRatio scaling, ResizeObserver responsiveness, entry animations(respects prefers-reduced-motion), interactive HTML tooltip + legend andautomatic dark-mode via theme tokens.```html<atm-chart  type="bar"  title="Vendas"  [labels]="['Jan', 'Fev', 'Mar']"  [datasets]="[{ label: 'Receita', data: [10, 25, 18] }]"/>```
+/**
+AtmChart — canvas-based charting component.
+Types: line, area, bar (columns), bar-horizontal, pie, donut, radar, funnel
+(horizontal, vertical and pyramid), heatmap, treemap (with drill-down) and
+mixed charts (per-dataset `type`). Renders on HTML5 canvas with
+devicePixelRatio scaling, ResizeObserver responsiveness, entry animations
+(respects prefers-reduced-motion), interactive HTML tooltip + legend and
+automatic dark-mode via theme tokens.
+```html
+<atm-chart
+  type="bar"
+  title="Vendas"
+  [labels]="['Jan', 'Fev', 'Mar']"
+  [datasets]="[{ label: 'Receita', data: [10, 25, 18] }]"
+/>
+```
 
 ## Identity
 
@@ -1624,7 +1665,7 @@ export interface AtmChartTreeEvent {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1639,7 +1680,8 @@ Checkbox com CVA boolean/indeterminate.
 
 ## Notes from source
 
-Checkbox. Works with forms (ngModel/formControl) or controlled via[checked] + (changed) when used inside groups.
+Checkbox. Works with forms (ngModel/formControl) or controlled via
+[checked] + (changed) when used inside groups.
 
 ## Identity
 
@@ -1685,7 +1727,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1750,7 +1792,7 @@ export interface AtmCheckboxOption {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1807,7 +1849,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1853,7 +1895,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -1968,7 +2010,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2016,7 +2058,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2090,7 +2132,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2158,7 +2200,17 @@ function sameGroup(a: unknown, b: unknown): boolean {
   return a === b || String(a) === String(b);
 }
 
-/**ComboBox for picking people (or any entity with a photo): options renderavatar + name + description, and can be grouped into tabs by a dot path ofthe option value (`groupBy="role.name"`). Tabs are auto-generated from thedistinct path values (capped by `maxTabs`), or provide `[tabs]` toname/order them yourself. When the tab row overflows, scroll chevrons withfading edges appear (same pattern as atm-tabs).Single (`T | null`) or multi (`[multiple]`, value `T[]`) — in multi mode theselection is shown as avatar chips inside the field (search inline, likeatm-tags); in single mode the panel has a search bar on top.Values can be backend objects; use `compareWith` to match by id.
+/**
+ComboBox for picking people (or any entity with a photo): options render
+avatar + name + description, and can be grouped into tabs by a dot path of
+the option value (`groupBy="role.name"`). Tabs are auto-generated from the
+distinct path values (capped by `maxTabs`), or provide `[tabs]` to
+name/order them yourself. When the tab row overflows, scroll chevrons with
+fading edges appear (same pattern as atm-tabs).
+Single (`T | null`) or multi (`[multiple]`, value `T[]`) — in multi mode the
+selection is shown as avatar chips inside the field (search inline, like
+atm-tags); in single mode the panel has a search bar on top.
+Values can be backend objects; use `compareWith` to match by id.
 
 ## Identity
 
@@ -2242,7 +2294,7 @@ Options tipicamente com avatar/description.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2281,7 +2333,16 @@ export interface AtmContextMenuSelect {
   data?: unknown;
 }
 
-/**Right-click context menu. Renders nothing until opened; the panel is`position: fixed` at the cursor, clamped to the viewport (flips to theother side of the pointer when there is no room). Closes on outside click,Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).Declarative — attach to any element via directive:  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):  menu.open(mouseEvent, { items, header: 'Node X', data: node });
+/**
+Right-click context menu. Renders nothing until opened; the panel is
+`position: fixed` at the cursor, clamped to the viewport (flips to the
+other side of the pointer when there is no room). Closes on outside click,
+Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).
+Declarative — attach to any element via directive:
+  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>
+  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />
+Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):
+  menu.open(mouseEvent, { items, header: 'Node X', data: node });
 
 ## Identity
 
@@ -2359,7 +2420,7 @@ export interface AtmContextMenuSelect {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 ---
 
@@ -2397,7 +2458,17 @@ export interface AtmContextMenuSelect {
   data?: unknown;
 }
 
-/**Right-click context menu. Renders nothing until opened; the panel is`position: fixed` at the cursor, clamped to the viewport (flips to theother side of the pointer when there is no room). Closes on outside click,Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).Declarative — attach to any element via directive:  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):  menu.open(mouseEvent, { items, header: 'Node X', data: node });/
+/**
+Right-click context menu. Renders nothing until opened; the panel is
+`position: fixed` at the cursor, clamped to the viewport (flips to the
+other side of the pointer when there is no room). Closes on outside click,
+Escape, scroll and resize. Full keyboard navigation (arrows/Home/End/Enter).
+Declarative — attach to any element via directive:
+  <div [atmContextMenu]="menu" [atmContextMenuData]="row">…</div>
+  <atm-context-menu #menu [items]="items" (itemClick)="onAction($event)" />
+Imperative — open with dynamic items (ex.: canvas vs node de um diagrama):
+  menu.open(mouseEvent, { items, header: 'Node X', data: node });
+/
 @Component({
   selector: 'atm-context-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2434,7 +2505,7 @@ export interface AtmContextMenuSelect {
             >
               @if (item.icon) {
                 <i
-                  [class]="'w-4 text-center icofont-' + item.icon"
+                  [class]="'w-4 text-center atm atm-' + item.icon"
                   [class.text-ink-muted]="!item.danger"
                   aria-hidden="true"
                 ></i>
@@ -2615,7 +2686,11 @@ export class AtmContextMenu implements OnDestroy {
   }
 }
 
-/**Attaches an AtmContextMenu to any element: right-click opens the menu atthe cursor. `atmContextMenuData` is echoed back in `itemClick` — perfectfor lists where every row shares the same menu instance.  <tr [atmContextMenu]="rowMenu" [atmContextMenuData]="row" [atmContextMenuHeader]="row.name">
+/**
+Attaches an AtmContextMenu to any element: right-click opens the menu at
+the cursor. `atmContextMenuData` is echoed back in `itemClick` — perfect
+for lists where every row shares the same menu instance.
+  <tr [atmContextMenu]="rowMenu" [atmContextMenuData]="row" [atmContextMenuHeader]="row.name">
 
 ## Identity
 
@@ -2690,7 +2765,7 @@ export interface AtmContextMenuSelect {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2719,7 +2794,13 @@ export function atmParseDate(text: string): Date | null {
   return valid ? date : null;
 }
 
-/**Date picker (alias atm-date-field): input + calendar popover, dd/mm/yyyy.Flips above when there is no viewport space below.With `[editable]="true"` the field becomes a typeable input with add/mm/yyyy mask and the calendar opens only via the icon button.`[presets]` shows recommendation shortcuts beside the calendar and`[confirm]="true"` only applies the change after clicking "Confirmar".
+/**
+Date picker (alias atm-date-field): input + calendar popover, dd/mm/yyyy.
+Flips above when there is no viewport space below.
+With `[editable]="true"` the field becomes a typeable input with a
+dd/mm/yyyy mask and the calendar opens only via the icon button.
+`[presets]` shows recommendation shortcuts beside the calendar and
+`[confirm]="true"` only applies the change after clicking "Confirmar".
 
 ## Identity
 
@@ -2767,7 +2848,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2782,7 +2863,10 @@ Range de datas com presets opcionais.
 
 ## Notes from source
 
-Date range picker — input + range calendar popover. Value: { start, end }.Shows preset recommendations on the side ([presets]="[]" hides them) and adouble-month calendar ([months]="1" for a single one). With [confirm]="true"the selection is only applied when the user clicks "Confirmar".
+Date range picker — input + range calendar popover. Value: { start, end }.
+Shows preset recommendations on the side ([presets]="[]" hides them) and a
+double-month calendar ([months]="1" for a single one). With [confirm]="true"
+the selection is only applied when the user clicks "Confirmar".
 
 ## Identity
 
@@ -2828,7 +2912,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2895,7 +2979,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2955,7 +3039,7 @@ export interface AtmDialogConfig<D = unknown> {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -2987,7 +3071,13 @@ const LEAVE_ANIM: Record<AtmDrawerPosition, string> = {
   bottom: 'atm-drawer-out-bottom',
 };
 
-/**Slide-in panel with enter/exit animation on every edge.Top/bottom render as a centered sheet (grab handle + rounded corners).  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>  <atm-drawer [(open)]="show" position="bottom" header="Preferences" description="...">...</atm-drawer>Inside a container (e.g. a modal — the nearest `relative` + `overflow-hidden` ancestor):  <atm-drawer [(open)]="show" position="bottom" container="parent">...</atm-drawer>
+/**
+Slide-in panel with enter/exit animation on every edge.
+Top/bottom render as a centered sheet (grab handle + rounded corners).
+  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>
+  <atm-drawer [(open)]="show" position="bottom" header="Preferences" description="...">...</atm-drawer>
+Inside a container (e.g. a modal — the nearest `relative` + `overflow-hidden` ancestor):
+  <atm-drawer [(open)]="show" position="bottom" container="parent">...</atm-drawer>
 
 ## Identity
 
@@ -3043,7 +3133,7 @@ export type AtmDrawerPosition = 'left' | 'right' | 'top' | 'bottom';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3058,7 +3148,11 @@ Menu dropdown de ações (não é form field).
 
 ## Notes from source
 
-Action menu dropdown. The trigger is projected content:  <atm-dropdown [items]="items" (itemClick)="...">    <atm-button>Options</atm-button>  </atm-dropdown>Flips up automatically when there is no viewport space below.
+Action menu dropdown. The trigger is projected content:
+  <atm-dropdown [items]="items" (itemClick)="...">
+    <atm-button>Options</atm-button>
+  </atm-dropdown>
+Flips up automatically when there is no viewport space below.
 
 ## Identity
 
@@ -3121,7 +3215,7 @@ export interface AtmDropdownItem {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3136,7 +3230,19 @@ Dropdown que busca opções via AtmRemoteDataSource (API paginada).
 
 ## Notes from source
 
-Remote (API-driven) dropdown for nest-paginator backends.Pass any service implementing AtmRemoteDataSource (e.g. one extendingAtmRestService):  <atm-dropdown-remote    [dataSource]="contactsService"    labelField="name"    valueField="id"    [hasActionButton]="true"    (actionClick)="createContact()"    [(ngModel)]="contactId"  />Loads at most `limit` (default 10) records; further records are reached bytyping in the built-in search box (debounced, server-side search).
+Remote (API-driven) dropdown for nest-paginator backends.
+Pass any service implementing AtmRemoteDataSource (e.g. one extending
+AtmRestService):
+  <atm-dropdown-remote
+    [dataSource]="contactsService"
+    labelField="name"
+    valueField="id"
+    [hasActionButton]="true"
+    (actionClick)="createContact()"
+    [(ngModel)]="contactId"
+  />
+Loads at most `limit` (default 10) records; further records are reached by
+typing in the built-in search box (debounced, server-side search).
 
 ## Identity
 
@@ -3190,7 +3296,7 @@ Requer dataSource. Debounce 300ms, limit ~10. serverUrl via provideAtmusUi.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3267,7 +3373,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3461,7 +3567,23 @@ function shortDate(d: Date): string {
   return `${d.getDate()} de ${MONTHS_SHORT[d.getMonth()]} de ${d.getFullYear()}`;
 }
 
-/**Full event calendar (scheduler) with month, week, day and list views.Week/day views support drag to move, drag the bottom edge to resize,drag-select on empty space to pick a range, and configurable slots +working hours:  <atm-event-calendar    [events]="events"    [(date)]="date"    [(view)]="view"    [workStart]="8"    [workEnd]="18"    [slotMinutes]="30"    (eventClick)="open($event)"    (dayClick)="createFromMonth($event)"    (rangeSelect)="create($event.start, $event.end)"    (eventChange)="apply($event)"  />
+/**
+Full event calendar (scheduler) with month, week, day and list views.
+Week/day views support drag to move, drag the bottom edge to resize,
+drag-select on empty space to pick a range, and configurable slots +
+working hours:
+  <atm-event-calendar
+    [events]="events"
+    [(date)]="date"
+    [(view)]="view"
+    [workStart]="8"
+    [workEnd]="18"
+    [slotMinutes]="30"
+    (eventClick)="open($event)"
+    (dayClick)="createFromMonth($event)"
+    (rangeSelect)="create($event.start, $event.end)"
+    (eventChange)="apply($event)"
+  />
 
 ## Identity
 
@@ -3556,7 +3678,7 @@ export interface AtmCalendarEventChange {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3607,7 +3729,7 @@ export class AtmDescription {}
     class: 'mt-1.5 flex items-center gap-1 text-xs font-medium text-danger animate-atm-fade',
     role: 'alert',
   },
-  template: `<i class="icofont-warning-alt" aria-hidden="true"></i><ng-content />`,
+  template: `<i class="atm atm-alert-circle" aria-hidden="true"></i><ng-content />`,
 })
 export class AtmErrorMessage {}
 
@@ -3648,7 +3770,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3700,24 +3822,32 @@ function formatBytes(bytes: number): string {
 function fileIcon(file: File): string {
   const type = file.type.toLowerCase();
   const name = file.name.toLowerCase();
-  if (type.startsWith('image/')) return 'icofont-image';
-  if (type.startsWith('video/')) return 'icofont-video-cam';
-  if (type.startsWith('audio/')) return 'icofont-music-note';
-  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'icofont-file-pdf';
-  if (/\.(doc|docx)$/.test(name) || type.includes('word')) return 'icofont-file-word';
+  if (type.startsWith('image/')) return 'atm atm-image-02';
+  if (type.startsWith('video/')) return 'atm atm-video-01';
+  if (type.startsWith('audio/')) return 'atm atm-music-note-01';
+  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'atm atm-pdf-01';
+  if (/\.(doc|docx)$/.test(name) || type.includes('word')) return 'atm atm-doc-01';
   if (/\.(xls|xlsx|csv)$/.test(name) || type.includes('sheet') || type.includes('excel'))
-    return 'icofont-file-excel';
+    return 'atm atm-xls-01';
   if (/\.(ppt|pptx)$/.test(name) || type.includes('presentation'))
-    return 'icofont-file-powerpoint';
+    return 'atm atm-ppt-01';
   if (/\.(zip|rar|7z|gz|tar)$/.test(name) || type.includes('zip') || type.includes('compressed'))
-    return 'icofont-file-zip';
-  if (/\.(txt|md|log)$/.test(name) || type.startsWith('text/')) return 'icofont-file-text';
-  return 'icofont-file-alt';
+    return 'atm atm-zip-01';
+  if (/\.(txt|md|log)$/.test(name) || type.startsWith('text/')) return 'atm atm-txt-01';
+  return 'atm atm-file-02';
 }
 
 const AREA_PAD: Record<AtmSize, string> = { large: 'p-8', medium: 'p-6', slim: 'p-4' };
 
-/**File input with a drag & drop area, multi-file support, type/size limits,image thumbnails / file-type icons, per-file upload progress, and optionalcropping: set `[crop]="true"` and every dropped image opens the{@link AtmImageCropDialog} before being added.Works with template-driven and reactive forms (value is `File[]`, or asingle `File | null` when `multiple` is false). Use `(rejected)` to reactto files that fail the `accept` / `maxSize` / `maxFiles` rules, and thepublic `items` signal + `patchItem()` to drive an upload progress UI.
+/**
+File input with a drag & drop area, multi-file support, type/size limits,
+image thumbnails / file-type icons, per-file upload progress, and optional
+cropping: set `[crop]="true"` and every dropped image opens the
+{@link AtmImageCropDialog} before being added.
+Works with template-driven and reactive forms (value is `File[]`, or a
+single `File | null` when `multiple` is false). Use `(rejected)` to react
+to files that fail the `accept` / `maxSize` / `maxFiles` rules, and the
+public `items` signal + `patchItem()` to drive an upload progress UI.
 
 ## Identity
 
@@ -3805,7 +3935,7 @@ CVA tipicamente File[] / itens. Aceita accept, multiple, maxSize.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3820,7 +3950,13 @@ Editor de fluxos/nodes com edges, zoom e history.
 
 ## Notes from source
 
-Node-based flow editor (React Flow style): pan/zoom canvas, draggablenodes, drag-to-connect handles, custom node templates, edge types(bezier/smoothstep/step/straight) with labels & markers, groups (coloredresizable containers that drag their children along), minimap, controls,dotted background, box selection, snap-to-grid, helper lines, auto layout,undo/redo, copy/paste and JSON import/export.Viewport culling keeps it fast with thousands of nodes.
+Node-based flow editor (React Flow style): pan/zoom canvas, draggable
+nodes, drag-to-connect handles, custom node templates, edge types
+(bezier/smoothstep/step/straight) with labels & markers, groups (colored
+resizable containers that drag their children along), minimap, controls,
+dotted background, box selection, snap-to-grid, helper lines, auto layout,
+undo/redo, copy/paste and JSON import/export.
+Viewport culling keeps it fast with thousands of nodes.
 
 ## Identity
 
@@ -3904,7 +4040,7 @@ Defina templates de node com ng-template atmFlowNode. Handles via atm-flow-handl
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -3954,7 +4090,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4001,7 +4137,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4012,11 +4148,17 @@ _Nenhum._
 
 ## Purpose
 
-Renderiza ícone icofont pelo nome.
+Renderiza um ícone do Atmus Icons pelo nome.
 
 ## Notes from source
 
-Icofont wrapper. Usage: <atm-icon name="home" /> renders `icofont-home`.Pass the full class if preferred: <atm-icon name="icofont-ui-search" />.
+Atmus Icons wrapper. Usage: `<atm-icon name="home-01" />` renders
+`<i class="atm atm-home-01">`. Passing the full class also works:
+`<atm-icon name="atm-search-01" />`.
+The `atm` base class carries the font declarations and is required — the
+`atm-*` class alone only selects the glyph. That split is deliberate: a rule
+matching every `atm-*` class would also capture design-system classes such as
+`atm-field` and `atm-panel`, forcing an icon font onto buttons and panels.
 
 ## Identity
 
@@ -4040,12 +4182,12 @@ _Nenhum._
 ## Usage example
 
 ```html
-<atm-icon name="check" class="text-lg" />
+<atm-icon name="tick-02" class="text-lg" />
 ```
 
 ## Tips
 
-Use names sem o prefixo icofont- (ex.: name="check").
+Use nomes sem o prefixo `atm-` (ex.: name="tick-02"). O componente já adiciona a classe base `atm`, obrigatória para o glifo renderizar. Lista completa em `@atmus/icons/icons.json`; o pacote também exporta o tipo `AtmIconName`.
 
 ## Conventions
 
@@ -4053,7 +4195,7 @@ Use names sem o prefixo icofont- (ex.: name="check").
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4134,7 +4276,7 @@ export interface AtmImageCropDialogData {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4568,7 +4710,7 @@ export interface AtmImageCropDialogData {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4590,7 +4732,21 @@ const MASK_TOKENS: Record<string, RegExp> = {
   '*': /[a-zA-Z0-9]/,
 };
 
-/**Base text input — one component for text/email/password/tel/url/search/currency.Alias selectors: atm-input, atm-text-field.Password type gets a visibility toggle automatically.Mask: `mask="(99) 99999-9999"` — 9 = digit, a = letter, * = alphanumeric,other chars are literals. The form value is always UNMASKED (raw chars only).Multiple masks: separate with `||` (e.g. CPF/CNPJ:`mask="999.999.999-99||99.999.999/9999-99"`) — the active mask is picked bythe typed length.Incomplete mask: while typing the control is invalid with`{ maskIncomplete: { requiredLength, actualLength } }`; on blur the value isCLEARED if it doesn't fully match any mask. Empty value stays valid —combine with Validators.required if needed.Currency: `type="currency"` formats as money while typing (ATM style) and theform value is a plain `number` (e.g. 1234.56). Configure with `currency` + `locale`.
+/**
+Base text input — one component for text/email/password/tel/url/search/currency.
+Alias selectors: atm-input, atm-text-field.
+Password type gets a visibility toggle automatically.
+Mask: `mask="(99) 99999-9999"` — 9 = digit, a = letter, * = alphanumeric,
+other chars are literals. The form value is always UNMASKED (raw chars only).
+Multiple masks: separate with `||` (e.g. CPF/CNPJ:
+`mask="999.999.999-99||99.999.999/9999-99"`) — the active mask is picked by
+the typed length.
+Incomplete mask: while typing the control is invalid with
+`{ maskIncomplete: { requiredLength, actualLength } }`; on blur the value is
+CLEARED if it doesn't fully match any mask. Empty value stays valid —
+combine with Validators.required if needed.
+Currency: `type="currency"` formats as money while typing (ATM style) and the
+form value is a plain `number` (e.g. 1234.56). Configure with `currency` + `locale`.
 
 ## Identity
 
@@ -4663,7 +4819,7 @@ Suporta clearable, password toggle, ícones. Use size large|medium|slim.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4719,7 +4875,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4774,7 +4930,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -4870,12 +5026,23 @@ const LABEL: Record<AtmColor, string> = {
 };
 
 const PRIORITY: Record<'low' | 'medium' | 'high', { icon: string; class: string; label: string }> = {
-  low: { icon: 'icofont-arrow-down', class: 'text-info', label: 'Baixa' },
-  medium: { icon: 'icofont-minus', class: 'text-warning', label: 'Média' },
-  high: { icon: 'icofont-arrow-up', class: 'text-danger', label: 'Alta' },
+  low: { icon: 'atm atm-arrow-down-02', class: 'text-info', label: 'Baixa' },
+  medium: { icon: 'atm atm-minus-sign', class: 'text-warning', label: 'Média' },
+  high: { icon: 'atm atm-arrow-up-02', class: 'text-danger', label: 'Alta' },
 };
 
-/**Reusable Kanban board with native drag & drop between columns.  <atm-kanban [(columns)]="columns" (cardMove)="onMove($event)" />Provide a custom card body with an `<ng-template #card>`.Context: `$implicit` (card), `column` and `index`:  <atm-kanban [(columns)]="columns">    <ng-template #card let-card let-column="column">{{ card.title }}</ng-template>  </atm-kanban>- `[scrollable]` (default true): horizontal scroll with fixed-width columns.  When false, columns shrink/grow to fit the available width.- `[allowColumnReorder]` (default false): drag column headers to reorder,  emitting `(columnReorder)`.
+/**
+Reusable Kanban board with native drag & drop between columns.
+  <atm-kanban [(columns)]="columns" (cardMove)="onMove($event)" />
+Provide a custom card body with an `<ng-template #card>`.
+Context: `$implicit` (card), `column` and `index`:
+  <atm-kanban [(columns)]="columns">
+    <ng-template #card let-card let-column="column">{{ card.title }}</ng-template>
+  </atm-kanban>
+- `[scrollable]` (default true): horizontal scroll with fixed-width columns.
+  When false, columns shrink/grow to fit the available width.
+- `[allowColumnReorder]` (default false): drag column headers to reorder,
+  emitting `(columnReorder)`.
 
 ## Identity
 
@@ -4992,7 +5159,7 @@ export interface AtmKanbanColumnReorderEvent {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5064,7 +5231,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5116,7 +5283,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5206,7 +5373,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5260,7 +5427,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5312,7 +5479,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5327,7 +5494,13 @@ Modal declarativo com open, título, expand e slots.
 
 ## Notes from source
 
-Declarative modal:  <atm-modal [(open)]="showModal" header="Title" [expandable]="true">    content...    <div footer>buttons...</div>  </atm-modal>The expand icon (next to close) maximizes to 90% of the viewport,keeping a margin so it never touches the screen edges.
+Declarative modal:
+  <atm-modal [(open)]="showModal" header="Title" [expandable]="true">
+    content...
+    <div footer>buttons...</div>
+  </atm-modal>
+The expand icon (next to close) maximizes to 90% of the viewport,
+keeping a margin so it never touches the screen edges.
 
 ## Identity
 
@@ -5377,7 +5550,7 @@ Para abrir componente dinamicamente use AtmDialogService.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5432,7 +5605,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5634,7 +5807,7 @@ export interface AtmOfficeAgentHandle {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5686,7 +5859,7 @@ Paginação controlada.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5743,7 +5916,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5791,7 +5964,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5837,7 +6010,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5908,7 +6081,7 @@ export type AtmQrcodeDotStyle = 'square' | 'rounded' | 'dots';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -5969,7 +6142,7 @@ export interface AtmRadioOption {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6009,18 +6182,18 @@ interface AiQuickAction {
 }
 
 const AI_SELECTION_ACTIONS: AiQuickAction[] = [
-  { id: 'grammar', icon: 'icofont-check', label: 'Corrigir ortografia e gramática' },
-  { id: 'improve', icon: 'icofont-magic', label: 'Melhorar escrita' },
-  { id: 'extend', icon: 'icofont-text-width', label: 'Estender texto' },
-  { id: 'summarize', icon: 'icofont-text-height', label: 'Resumir texto' },
-  { id: 'simplify', icon: 'icofont-paragraph', label: 'Simplificar texto' },
-  { id: 'tone-professional', icon: 'icofont-briefcase', label: 'Tom profissional', divider: true },
-  { id: 'tone-friendly', icon: 'icofont-slightly-smile', label: 'Tom amigável' },
-  { id: 'tone-confident', icon: 'icofont-muscle', label: 'Tom confiante' },
-  { id: 'tone-casual', icon: 'icofont-coffee-cup', label: 'Tom casual' },
-  { id: 'translate-en', icon: 'icofont-globe', label: 'Traduzir para Inglês', divider: true },
-  { id: 'translate-pt', icon: 'icofont-globe', label: 'Traduzir para Português' },
-  { id: 'translate-es', icon: 'icofont-globe', label: 'Traduzir para Espanhol' },
+  { id: 'grammar', icon: 'atm atm-tick-02', label: 'Corrigir ortografia e gramática' },
+  { id: 'improve', icon: 'atm atm-magic-wand-01', label: 'Melhorar escrita' },
+  { id: 'extend', icon: 'atm atm-expand-paragraph', label: 'Estender texto' },
+  { id: 'summarize', icon: 'atm atm-shrink', label: 'Resumir texto' },
+  { id: 'simplify', icon: 'atm atm-paragraph', label: 'Simplificar texto' },
+  { id: 'tone-professional', icon: 'atm atm-briefcase-01', label: 'Tom profissional', divider: true },
+  { id: 'tone-friendly', icon: 'atm atm-smile', label: 'Tom amigável' },
+  { id: 'tone-confident', icon: 'atm atm-body-part-muscle', label: 'Tom confiante' },
+  { id: 'tone-casual', icon: 'atm atm-coffee-01', label: 'Tom casual' },
+  { id: 'translate-en', icon: 'atm atm-globe', label: 'Traduzir para Inglês', divider: true },
+  { id: 'translate-pt', icon: 'atm atm-globe', label: 'Traduzir para Português' },
+  { id: 'translate-es', icon: 'atm atm-globe', label: 'Traduzir para Espanhol' },
 ];
 
 const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
@@ -6030,7 +6203,17 @@ const AI_DOC_CHIPS: { id: AtmAssistantAction; label: string }[] = [
   { id: 'translate-en', label: 'Traduzir para Inglês' },
 ];
 
-/**Editor de texto rico (contenteditable) com:- toolbar completa (blocos, marcas inline, alinhamento, listas, link, undo/redo);- bubble de formatação rápida ao selecionar texto;- assistente de IA opcional (`[assistant]="true"`): reescreve a seleção  (bubble) ou o documento inteiro (painel na toolbar). A chamada é delegada  ao token `ATM_ASSISTANT_HANDLER` — sem provider registrado usa o mock;- `[config].highlights`: detecção automática de trechos com tag colorida  e tooltip;- `[scrollHeight]`: altura máxima da área editável (scroll interno).Integra ngModel / formControl (o valor é o HTML do conteúdo).
+/**
+Editor de texto rico (contenteditable) com:
+- toolbar completa (blocos, marcas inline, alinhamento, listas, link, undo/redo);
+- bubble de formatação rápida ao selecionar texto;
+- assistente de IA opcional (`[assistant]="true"`): reescreve a seleção
+  (bubble) ou o documento inteiro (painel na toolbar). A chamada é delegada
+  ao token `ATM_ASSISTANT_HANDLER` — sem provider registrado usa o mock;
+- `[config].highlights`: detecção automática de trechos com tag colorida
+  e tooltip;
+- `[scrollHeight]`: altura máxima da área editável (scroll interno).
+Integra ngModel / formControl (o valor é o HTML do conteúdo).
 
 ## Identity
 
@@ -6101,7 +6284,7 @@ Valor tipicamente HTML string via CVA.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6168,7 +6351,7 @@ export class AtmKbd {}
     >
       <ng-content />
       @if (external()) {
-        <i class="icofont-external-link text-xs" aria-hidden="true"></i>
+        <i class="atm atm-link-square-01 text-xs" aria-hidden="true"></i>
       }
     </a>
   `,
@@ -6214,7 +6397,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6269,7 +6452,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6284,7 +6467,8 @@ Select dropdown com busca, multiple, action button e CVA.
 
 ## Notes from source
 
-Custom select with viewport-aware panel (flips up when there is no spacebelow), keyboard navigation and optional footer action button.
+Custom select with viewport-aware panel (flips up when there is no space
+below), keyboard navigation and optional footer action button.
 
 ## Identity
 
@@ -6347,7 +6531,7 @@ Estende overlay + CVA. Options: {value,label,description?,disabled?,icon?}.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6395,7 +6579,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6417,7 +6601,14 @@ const BOX_H: Record<AtmSize, string> = { large: 'h-44', medium: 'h-36', slim: 'h
 const TYPED_TEXT: Record<AtmSize, string> = { large: 'text-4xl', medium: 'text-3xl', slim: 'text-2xl' };
 const SCRIPT_FONT = `'Segoe Script', 'Bradley Hand', 'Brush Script MT', cursive`;
 
-/**Signature pad integrated with Angular forms (ngModel / formControl).The form value is a transparent PNG data URL (or `null` when empty).Two capture modes: free-hand drawing on canvas (with stroke smoothing andretina-aware rendering) and typed signature rendered in a script font.Switching modes clears the current signature.  <atm-signature [(ngModel)]="signature" />  <atm-signature formControlName="signature" [invalid]="isInvalid('signature')" />
+/**
+Signature pad integrated with Angular forms (ngModel / formControl).
+The form value is a transparent PNG data URL (or `null` when empty).
+Two capture modes: free-hand drawing on canvas (with stroke smoothing and
+retina-aware rendering) and typed signature rendered in a script font.
+Switching modes clears the current signature.
+  <atm-signature [(ngModel)]="signature" />
+  <atm-signature formControlName="signature" [invalid]="isInvalid('signature')" />
 
 ## Identity
 
@@ -6469,7 +6660,7 @@ export type AtmSignatureMode = 'draw' | 'type';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6518,7 +6709,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6568,7 +6759,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6612,7 +6803,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6665,7 +6856,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6716,7 +6907,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6770,7 +6961,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6813,7 +7004,13 @@ const INNER_SIZE: Record<AtmSize, string> = {
   slim: 'h-6 px-3 text-xs',
 };
 
-/**Tabs:  <atm-tabs [(activeIndex)]="tab" variant="segmented">    <atm-tab label="General" icon="gear">...</atm-tab>  </atm-tabs>When the tab list exceeds the available width, scroll chevrons with fadingedges appear automatically (all variants). Arrow keys / Home / End navigate.
+/**
+Tabs:
+  <atm-tabs [(activeIndex)]="tab" variant="segmented">
+    <atm-tab label="General" icon="settings-02">...</atm-tab>
+  </atm-tabs>
+When the tab list exceeds the available width, scroll chevrons with fading
+edges appear automatically (all variants). Arrow keys / Home / End navigate.
 
 ## Identity
 
@@ -6851,7 +7048,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6904,7 +7101,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -6931,7 +7128,12 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
   slim: 'min-h-8',
 };
 
-/**Tags input with suggestions panel (multi-select).The form value is `T[]` — option values can be any object coming from thebackend; use `compareWith` to match by id and `displayWith` to renderlabels for values that are not in the options list.With `allowCustom`, free text becomes a tag via `createTag` (string by default).
+/**
+Tags input with suggestions panel (multi-select).
+The form value is `T[]` — option values can be any object coming from the
+backend; use `compareWith` to match by id and `displayWith` to render
+labels for values that are not in the options list.
+With `allowCustom`, free text becomes a tag via `createTag` (string by default).
 
 ## Identity
 
@@ -6991,7 +7193,7 @@ export interface AtmTagsOption<T = unknown> extends AtmSelectOption<T> {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7045,7 +7247,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7094,7 +7296,7 @@ inject(AtmThemeService).setTheme('dark');
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7146,7 +7348,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7194,7 +7396,7 @@ Coloque uma vez no shell/layout.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7333,7 +7535,7 @@ inject(AtmToastService).success('Salvo!');
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7392,7 +7594,7 @@ Pressed/unpressed button. Standalone or inside atm-toggle-button-group.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7421,7 +7623,7 @@ Pressed/unpressed button. Standalone or inside atm-toggle-button-group. */
       (click)="toggle()"
     >
       @if (icon()) {
-        <i [class]="'icofont-' + icon()" aria-hidden="true"></i>
+        <i [class]="'atm atm-' + icon()" aria-hidden="true"></i>
       }
       <ng-content />
     </button>
@@ -7451,7 +7653,9 @@ export class AtmToggleButton {
   }
 }
 
-/**Exclusive (or multiple) toggle group bound to a form value:  <atm-toggle-button-group [options]="[{label, value, icon?}]" [(ngModel)]="v" />
+/**
+Exclusive (or multiple) toggle group bound to a form value:
+  <atm-toggle-button-group [options]="[{label, value, icon?}]" [(ngModel)]="v" />
 
 ## Identity
 
@@ -7487,7 +7691,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7540,7 +7744,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7672,7 +7876,7 @@ export type AtmTooltipPlacement =
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7729,7 +7933,7 @@ export type AtmTooltipPlacement =
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -7796,7 +8000,7 @@ export class AtmKbd {}
     >
       <ng-content />
       @if (external()) {
-        <i class="icofont-external-link text-xs" aria-hidden="true"></i>
+        <i class="atm atm-link-square-01 text-xs" aria-hidden="true"></i>
       }
     </a>
   `,
@@ -7861,7 +8065,7 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
 
 
 ================================================================================
@@ -8116,7 +8320,7 @@ export interface AtmFlowNode<T = any> {
   height?: number;
   /** Accent color (any CSS color or var). Shown as a dot on the default node. */
   color?: string;
-  /** icofont icon name (default node renderer). */
+  /** Atmus Icons name, without the `atm-` prefix (default node renderer). */
   icon?: string;
   /** Custom handles. Defaults to target-left + source-right (LR) or top/bottom (TB). */
   handles?: AtmFlowHandle[];

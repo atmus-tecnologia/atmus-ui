@@ -8,7 +8,13 @@ Editor de fluxos/nodes com edges, zoom e history.
 
 ## Notes from source
 
-Node-based flow editor (React Flow style): pan/zoom canvas, draggablenodes, drag-to-connect handles, custom node templates, edge types(bezier/smoothstep/step/straight) with labels & markers, groups (coloredresizable containers that drag their children along), minimap, controls,dotted background, box selection, snap-to-grid, helper lines, auto layout,undo/redo, copy/paste and JSON import/export.Viewport culling keeps it fast with thousands of nodes.
+Node-based flow editor (React Flow style): pan/zoom canvas, draggable
+nodes, drag-to-connect handles, custom node templates, edge types
+(bezier/smoothstep/step/straight) with labels & markers, groups (colored
+resizable containers that drag their children along), minimap, controls,
+dotted background, box selection, snap-to-grid, helper lines, auto layout,
+undo/redo, copy/paste and JSON import/export.
+Viewport culling keeps it fast with thousands of nodes.
 
 ## Identity
 
@@ -92,4 +98,4 @@ Defina templates de node com ng-template atmFlowNode. Handles via atm-flow-handl
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

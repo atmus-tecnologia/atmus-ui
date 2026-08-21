@@ -187,7 +187,23 @@ function shortDate(d: Date): string {
   return `${d.getDate()} de ${MONTHS_SHORT[d.getMonth()]} de ${d.getFullYear()}`;
 }
 
-/**Full event calendar (scheduler) with month, week, day and list views.Week/day views support drag to move, drag the bottom edge to resize,drag-select on empty space to pick a range, and configurable slots +working hours:  <atm-event-calendar    [events]="events"    [(date)]="date"    [(view)]="view"    [workStart]="8"    [workEnd]="18"    [slotMinutes]="30"    (eventClick)="open($event)"    (dayClick)="createFromMonth($event)"    (rangeSelect)="create($event.start, $event.end)"    (eventChange)="apply($event)"  />
+/**
+Full event calendar (scheduler) with month, week, day and list views.
+Week/day views support drag to move, drag the bottom edge to resize,
+drag-select on empty space to pick a range, and configurable slots +
+working hours:
+  <atm-event-calendar
+    [events]="events"
+    [(date)]="date"
+    [(view)]="view"
+    [workStart]="8"
+    [workEnd]="18"
+    [slotMinutes]="30"
+    (eventClick)="open($event)"
+    (dayClick)="createFromMonth($event)"
+    (rangeSelect)="create($event.start, $event.end)"
+    (eventChange)="apply($event)"
+  />
 
 ## Identity
 
@@ -282,4 +298,4 @@ export interface AtmCalendarEventChange {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

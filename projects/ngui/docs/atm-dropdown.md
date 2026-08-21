@@ -8,7 +8,11 @@ Menu dropdown de ações (não é form field).
 
 ## Notes from source
 
-Action menu dropdown. The trigger is projected content:  <atm-dropdown [items]="items" (itemClick)="...">    <atm-button>Options</atm-button>  </atm-dropdown>Flips up automatically when there is no viewport space below.
+Action menu dropdown. The trigger is projected content:
+  <atm-dropdown [items]="items" (itemClick)="...">
+    <atm-button>Options</atm-button>
+  </atm-dropdown>
+Flips up automatically when there is no viewport space below.
 
 ## Identity
 
@@ -71,4 +75,4 @@ export interface AtmDropdownItem {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

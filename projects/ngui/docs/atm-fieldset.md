@@ -44,7 +44,7 @@ export class AtmDescription {}
     class: 'mt-1.5 flex items-center gap-1 text-xs font-medium text-danger animate-atm-fade',
     role: 'alert',
   },
-  template: `<i class="icofont-warning-alt" aria-hidden="true"></i><ng-content />`,
+  template: `<i class="atm atm-alert-circle" aria-hidden="true"></i><ng-content />`,
 })
 export class AtmErrorMessage {}
 
@@ -85,4 +85,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

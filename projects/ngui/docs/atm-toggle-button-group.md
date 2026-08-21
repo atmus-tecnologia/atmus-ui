@@ -22,7 +22,7 @@ Pressed/unpressed button. Standalone or inside atm-toggle-button-group. */
       (click)="toggle()"
     >
       @if (icon()) {
-        <i [class]="'icofont-' + icon()" aria-hidden="true"></i>
+        <i [class]="'atm atm-' + icon()" aria-hidden="true"></i>
       }
       <ng-content />
     </button>
@@ -52,7 +52,9 @@ export class AtmToggleButton {
   }
 }
 
-/**Exclusive (or multiple) toggle group bound to a form value:  <atm-toggle-button-group [options]="[{label, value, icon?}]" [(ngModel)]="v" />
+/**
+Exclusive (or multiple) toggle group bound to a form value:
+  <atm-toggle-button-group [options]="[{label, value, icon?}]" [(ngModel)]="v" />
 
 ## Identity
 
@@ -88,4 +90,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

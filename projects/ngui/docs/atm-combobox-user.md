@@ -61,7 +61,17 @@ function sameGroup(a: unknown, b: unknown): boolean {
   return a === b || String(a) === String(b);
 }
 
-/**ComboBox for picking people (or any entity with a photo): options renderavatar + name + description, and can be grouped into tabs by a dot path ofthe option value (`groupBy="role.name"`). Tabs are auto-generated from thedistinct path values (capped by `maxTabs`), or provide `[tabs]` toname/order them yourself. When the tab row overflows, scroll chevrons withfading edges appear (same pattern as atm-tabs).Single (`T | null`) or multi (`[multiple]`, value `T[]`) — in multi mode theselection is shown as avatar chips inside the field (search inline, likeatm-tags); in single mode the panel has a search bar on top.Values can be backend objects; use `compareWith` to match by id.
+/**
+ComboBox for picking people (or any entity with a photo): options render
+avatar + name + description, and can be grouped into tabs by a dot path of
+the option value (`groupBy="role.name"`). Tabs are auto-generated from the
+distinct path values (capped by `maxTabs`), or provide `[tabs]` to
+name/order them yourself. When the tab row overflows, scroll chevrons with
+fading edges appear (same pattern as atm-tabs).
+Single (`T | null`) or multi (`[multiple]`, value `T[]`) — in multi mode the
+selection is shown as avatar chips inside the field (search inline, like
+atm-tags); in single mode the panel has a search bar on top.
+Values can be backend objects; use `compareWith` to match by id.
 
 ## Identity
 
@@ -145,4 +155,4 @@ Options tipicamente com avatar/description.
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

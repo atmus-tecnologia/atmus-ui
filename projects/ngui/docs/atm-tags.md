@@ -20,7 +20,12 @@ const MIN_HEIGHT: Record<AtmSize, string> = {
   slim: 'min-h-8',
 };
 
-/**Tags input with suggestions panel (multi-select).The form value is `T[]` — option values can be any object coming from thebackend; use `compareWith` to match by id and `displayWith` to renderlabels for values that are not in the options list.With `allowCustom`, free text becomes a tag via `createTag` (string by default).
+/**
+Tags input with suggestions panel (multi-select).
+The form value is `T[]` — option values can be any object coming from the
+backend; use `compareWith` to match by id and `displayWith` to render
+labels for values that are not in the options list.
+With `allowCustom`, free text becomes a tag via `createTag` (string by default).
 
 ## Identity
 
@@ -80,4 +85,4 @@ export interface AtmTagsOption<T = unknown> extends AtmSelectOption<T> {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

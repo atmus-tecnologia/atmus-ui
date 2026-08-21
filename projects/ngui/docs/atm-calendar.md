@@ -8,7 +8,9 @@ Calendário de seleção de data (single/range).
 
 ## Notes from source
 
-Month calendar. Single mode: [(value)]. Range mode: [range]=true + [(rangeValue)].`[months]="2"` renders consecutive months side by side (double calendar).`[flat]="true"` removes the border/background so it can live inside a panel.
+Month calendar. Single mode: [(value)]. Range mode: [range]=true + [(rangeValue)].
+`[months]="2"` renders consecutive months side by side (double calendar).
+`[flat]="true"` removes the border/background so it can live inside a panel.
 
 ## Identity
 
@@ -63,4 +65,4 @@ export interface AtmCalendarDay {
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

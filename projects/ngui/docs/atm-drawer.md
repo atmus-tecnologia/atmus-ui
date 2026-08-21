@@ -25,7 +25,13 @@ const LEAVE_ANIM: Record<AtmDrawerPosition, string> = {
   bottom: 'atm-drawer-out-bottom',
 };
 
-/**Slide-in panel with enter/exit animation on every edge.Top/bottom render as a centered sheet (grab handle + rounded corners).  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>  <atm-drawer [(open)]="show" position="bottom" header="Preferences" description="...">...</atm-drawer>Inside a container (e.g. a modal — the nearest `relative` + `overflow-hidden` ancestor):  <atm-drawer [(open)]="show" position="bottom" container="parent">...</atm-drawer>
+/**
+Slide-in panel with enter/exit animation on every edge.
+Top/bottom render as a centered sheet (grab handle + rounded corners).
+  <atm-drawer [(open)]="showDrawer" header="Filters" position="right">...</atm-drawer>
+  <atm-drawer [(open)]="show" position="bottom" header="Preferences" description="...">...</atm-drawer>
+Inside a container (e.g. a modal — the nearest `relative` + `overflow-hidden` ancestor):
+  <atm-drawer [(open)]="show" position="bottom" container="parent">...</atm-drawer>
 
 ## Identity
 
@@ -81,4 +87,4 @@ export type AtmDrawerPosition = 'left' | 'right' | 'top' | 'bottom';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

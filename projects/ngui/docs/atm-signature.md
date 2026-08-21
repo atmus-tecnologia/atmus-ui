@@ -15,7 +15,14 @@ const BOX_H: Record<AtmSize, string> = { large: 'h-44', medium: 'h-36', slim: 'h
 const TYPED_TEXT: Record<AtmSize, string> = { large: 'text-4xl', medium: 'text-3xl', slim: 'text-2xl' };
 const SCRIPT_FONT = `'Segoe Script', 'Bradley Hand', 'Brush Script MT', cursive`;
 
-/**Signature pad integrated with Angular forms (ngModel / formControl).The form value is a transparent PNG data URL (or `null` when empty).Two capture modes: free-hand drawing on canvas (with stroke smoothing andretina-aware rendering) and typed signature rendered in a script font.Switching modes clears the current signature.  <atm-signature [(ngModel)]="signature" />  <atm-signature formControlName="signature" [invalid]="isInvalid('signature')" />
+/**
+Signature pad integrated with Angular forms (ngModel / formControl).
+The form value is a transparent PNG data URL (or `null` when empty).
+Two capture modes: free-hand drawing on canvas (with stroke smoothing and
+retina-aware rendering) and typed signature rendered in a script font.
+Switching modes clears the current signature.
+  <atm-signature [(ngModel)]="signature" />
+  <atm-signature formControlName="signature" [invalid]="isInvalid('signature')" />
 
 ## Identity
 
@@ -67,4 +74,4 @@ export type AtmSignatureMode = 'draw' | 'type';
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

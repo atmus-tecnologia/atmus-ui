@@ -8,7 +8,8 @@ Checkbox com CVA boolean/indeterminate.
 
 ## Notes from source
 
-Checkbox. Works with forms (ngModel/formControl) or controlled via[checked] + (changed) when used inside groups.
+Checkbox. Works with forms (ngModel/formControl) or controlled via
+[checked] + (changed) when used inside groups.
 
 ## Identity
 
@@ -54,4 +55,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

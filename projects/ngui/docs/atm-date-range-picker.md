@@ -8,7 +8,10 @@ Range de datas com presets opcionais.
 
 ## Notes from source
 
-Date range picker — input + range calendar popover. Value: { start, end }.Shows preset recommendations on the side ([presets]="[]" hides them) and adouble-month calendar ([months]="1" for a single one). With [confirm]="true"the selection is only applied when the user clicks "Confirmar".
+Date range picker — input + range calendar popover. Value: { start, end }.
+Shows preset recommendations on the side ([presets]="[]" hides them) and a
+double-month calendar ([months]="1" for a single one). With [confirm]="true"
+the selection is only applied when the user clicks "Confirmar".
 
 ## Identity
 
@@ -54,4 +57,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`

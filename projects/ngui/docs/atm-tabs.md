@@ -36,7 +36,13 @@ const INNER_SIZE: Record<AtmSize, string> = {
   slim: 'h-6 px-3 text-xs',
 };
 
-/**Tabs:  <atm-tabs [(activeIndex)]="tab" variant="segmented">    <atm-tab label="General" icon="gear">...</atm-tab>  </atm-tabs>When the tab list exceeds the available width, scroll chevrons with fadingedges appear automatically (all variants). Arrow keys / Home / End navigate.
+/**
+Tabs:
+  <atm-tabs [(activeIndex)]="tab" variant="segmented">
+    <atm-tab label="General" icon="settings-02">...</atm-tab>
+  </atm-tabs>
+When the tab list exceeds the available width, scroll chevrons with fading
+edges appear automatically (all variants). Arrow keys / Home / End navigate.
 
 ## Identity
 
@@ -74,4 +80,4 @@ _Nenhum._
 - Colors: `primary | success | warning | danger | info | neutral` (when `color` input exists)
 - Variants: `solid | soft | outline | ghost` (when `variant` input exists)
 - Prefer theme tokens (`bg-primary`, `text-ink`, etc.) — never hardcode palette colors
-- Icons via icofont name or `<atm-icon name="..." />`
+- Icons via Atmus Icons name or `<atm-icon name="..." />`
