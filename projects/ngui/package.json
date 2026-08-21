@@ -1,6 +1,6 @@
 {
   "name": "@atmus/ngui",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Biblioteca de componentes Angular do Atmus UI.",
   "license": "MIT",
   "peerDependencies": {
@@ -11,7 +11,7 @@
     "rxjs": "~7.8.0"
   },
   "dependencies": {
-    "@atmus/icons": "^1.0.0",
+    "@atmus/icons": "^1.0.2",
     "tslib": "^2.3.0"
   },
   "sideEffects": false,
