@@ -14,7 +14,12 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   selector: 'atm-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex items-center justify-center leading-none' },
-  template: `<i [class]="iconClass()" aria-hidden="true"></i>`,
+  // O glifo da fonte Atmus Icons não é desenhado centralizado no próprio em-box —
+  // toda a família (Stroke/Solid/Duotone/Twotone/Bulk) fica visualmente alta dentro
+  // da caixa de caractere, mesmo com a caixa em si centralizada pelo host flex.
+  // Confirmado medindo o bounding box de tinta de vários ícones em canvas: o centro
+  // vertical do desenho fica ~10% acima do centro geométrico, de forma consistente.
+  template: `<i [class]="iconClass()" style="transform: translateY(12%)" aria-hidden="true"></i>`,
 })
 export class AtmIcon {
   readonly name = input.required<string>();
