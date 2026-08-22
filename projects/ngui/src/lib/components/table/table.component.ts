@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnDestroy,
   TemplateRef,
+  afterNextRender,
   computed,
   effect,
   inject,
@@ -70,6 +71,12 @@ export interface AtmTableColumn<T = Record<string, unknown>> {
   footerValue?: (rows: T[]) => unknown;
   /** Custom footer renderer. Context = visible rows. */
   footerTemplate?: TemplateRef<{ $implicit: T[] }>;
+  /**
+   * Only consumed by `[responsive]` mode: the first column marked 'high'
+   * becomes the card's title line (bold, own row) instead of a label/value
+   * pair. Doesn't affect the regular table — no column is ever hidden there.
+   */
+  priority?: 'high' | 'medium' | 'low';
 }
 
 export interface AtmSortEvent {
@@ -219,6 +226,16 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
  *   <atm-table [columns]="cols" [rows]="pageRows" [serverSide]="true"
  *              [totalItems]="total" [paginator]="true"
  *              (queryChange)="load($event)" />
+ *
+ * Responsive (row becomes a stacked card below the breakpoint — nothing gets
+ * hidden, just re-laid-out; mark one column `priority: 'high'` to make it the
+ * card's title, otherwise the first column takes that role):
+ *   <atm-table [columns]="cols" [rows]="rows" [responsive]="true"
+ *              responsiveBreakpoint="md" />
+ *
+ * Any table wider than its container (responsive or not) shows a soft fade
+ * on whichever edge still has hidden columns, so horizontal scroll is never
+ * silent — it disappears once you've scrolled that side into view.
  */
 @Component({
   selector: 'atm-table',
@@ -226,13 +243,29 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
   imports: [NgTemplateOutlet, AtmSkeleton, AtmCheckbox, AtmPagination],
   host: { class: 'block w-full' },
   template: `
+    <ng-template #tableView>
     <div class="overflow-hidden rounded-atm-lg border border-line bg-surface">
       <!-- Scroll area: only header + rows + footer live here; pagination stays out -->
-      <div
-        class="overflow-x-auto"
-        [class.overflow-y-auto]="scrollable()"
-        [style.max-height]="scrollable() ? scrollHeight() : null"
-      >
+      <div class="relative">
+        @if (hasOverflowLeft()) {
+          <div
+            class="pointer-events-none absolute inset-y-0 left-0 z-40 w-8 bg-gradient-to-r from-surface to-transparent"
+            aria-hidden="true"
+          ></div>
+        }
+        @if (hasOverflowRight()) {
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 z-40 w-8 bg-gradient-to-l from-surface to-transparent"
+            aria-hidden="true"
+          ></div>
+        }
+        <div
+          #scroller
+          class="overflow-x-auto"
+          [class.overflow-y-auto]="scrollable()"
+          [style.max-height]="scrollable() ? scrollHeight() : null"
+          (scroll)="updateOverflow()"
+        >
         <table class="w-full border-separate border-spacing-0 text-left">
           <thead>
             <tr>
@@ -401,6 +434,7 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
             </tfoot>
           }
         </table>
+        </div>
       </div>
 
       @if (paginator()) {
@@ -422,6 +456,125 @@ const EMPTY_PAGE: AtmPaginated<Record<string, unknown>> = {
         </div>
       }
     </div>
+    </ng-template>
+
+    <ng-template #cardView>
+      <div class="flex flex-col gap-2">
+        @if (isLoading()) {
+          @for (r of skeletonRows(); track r) {
+            <div class="flex flex-col gap-2 rounded-atm-lg border border-line bg-surface p-3">
+              <atm-skeleton height="1rem" width="50%" />
+              <atm-skeleton height="0.875rem" width="80%" />
+              <atm-skeleton height="0.875rem" width="65%" />
+            </div>
+          }
+        } @else {
+          @for (row of displayRows(); track trackRow($index, row)) {
+            <div [class]="cardClass(row)" (click)="clickableRows() && rowClick.emit(row)">
+              <div class="flex items-start justify-between gap-3">
+                @if (selectable()) {
+                  <div (click)="$event.stopPropagation()">
+                    <atm-checkbox
+                      size="slim"
+                      [checked]="isSelected(row)"
+                      (changed)="toggleRow(row, $event)"
+                    />
+                  </div>
+                }
+                @if (titleColumn(); as col) {
+                  <div class="min-w-0 flex-1 truncate text-sm font-semibold text-ink">
+                    @if (col.template) {
+                      <ng-container
+                        [ngTemplateOutlet]="col.template"
+                        [ngTemplateOutletContext]="{ $implicit: row }"
+                      />
+                    } @else {
+                      {{ cellValue(row, col) }}
+                    }
+                  </div>
+                }
+              </div>
+              @if (detailColumns().length) {
+                <dl class="flex flex-col gap-1.5 border-t border-line pt-2">
+                  @for (col of detailColumns(); track col.key) {
+                    <div class="flex items-baseline justify-between gap-3 text-sm">
+                      <dt class="shrink-0 text-ink-faint">{{ col.header }}</dt>
+                      <dd class="min-w-0 truncate text-ink">
+                        @if (col.template) {
+                          <ng-container
+                            [ngTemplateOutlet]="col.template"
+                            [ngTemplateOutletContext]="{ $implicit: row }"
+                          />
+                        } @else {
+                          {{ cellValue(row, col) }}
+                        }
+                      </dd>
+                    </div>
+                  }
+                </dl>
+              }
+            </div>
+          } @empty {
+            <div
+              class="flex flex-col items-center gap-2 rounded-atm-lg border border-line bg-surface px-4 py-12 text-center text-ink-faint"
+            >
+              @if (remoteError()) {
+                <i class="atm atm-alert-circle text-3xl" aria-hidden="true"></i>
+                <span class="text-sm">Erro ao carregar dados</span>
+                <button
+                  type="button"
+                  class="cursor-pointer text-xs font-medium text-primary hover:underline"
+                  (click)="reload()"
+                >
+                  Tentar novamente
+                </button>
+              } @else {
+                <i class="atm atm-file-02 text-3xl" aria-hidden="true"></i>
+                <span class="text-sm">{{ emptyMessage() }}</span>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      @if (paginator()) {
+        <div class="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-line px-1 py-2.5">
+          <span class="text-xs text-ink-muted">
+            @if (total() > 0) {
+              Mostrando {{ rangeStart() }}–{{ rangeEnd() }} de {{ total() }}
+            } @else {
+              0 registros
+            }
+          </span>
+          <atm-pagination
+            size="slim"
+            [totalItems]="total()"
+            [pageSize]="pageSize()"
+            [page]="page()"
+            (pageChange)="page.set($event)"
+          />
+        </div>
+      }
+    </ng-template>
+
+    @if (responsive()) {
+      @switch (responsiveBreakpoint()) {
+        @case ('md') {
+          <div class="hidden md:block"><ng-container [ngTemplateOutlet]="tableView" /></div>
+          <div class="md:hidden"><ng-container [ngTemplateOutlet]="cardView" /></div>
+        }
+        @case ('lg') {
+          <div class="hidden lg:block"><ng-container [ngTemplateOutlet]="tableView" /></div>
+          <div class="lg:hidden"><ng-container [ngTemplateOutlet]="cardView" /></div>
+        }
+        @default {
+          <div class="hidden sm:block"><ng-container [ngTemplateOutlet]="tableView" /></div>
+          <div class="sm:hidden"><ng-container [ngTemplateOutlet]="cardView" /></div>
+        }
+      }
+    } @else {
+      <ng-container [ngTemplateOutlet]="tableView" />
+    }
 
     <!-- Per-column filter popup -->
     @if (filterCol(); as col) {
@@ -502,6 +655,10 @@ export class AtmTable<T = Record<string, unknown>>
   readonly clickableRows = input(false);
   readonly trackBy = input<string>('id');
 
+  /** Below `responsiveBreakpoint`, rows render as stacked cards instead of table columns. */
+  readonly responsive = input(false);
+  readonly responsiveBreakpoint = input<'sm' | 'md' | 'lg'>('sm');
+
   /** Shows the checkbox column + select-all. Selected rows via [(selection)]. */
   readonly selectable = input(false);
   readonly selection = model<T[]>([]);
@@ -530,6 +687,12 @@ export class AtmTable<T = Record<string, unknown>>
   readonly queryChange = output<AtmListQuery>();
 
   readonly filterPanelRef = viewChild<ElementRef<HTMLElement>>('filterPanel');
+  private readonly scrollerRef = viewChild<ElementRef<HTMLDivElement>>('scroller');
+
+  /** Fade shown on the edge that still has columns scrolled out of view. */
+  readonly hasOverflowLeft = signal(false);
+  readonly hasOverflowRight = signal(false);
+  private resizeObserver?: ResizeObserver;
 
   readonly sortKey = signal<string | null>(null);
   readonly sortDir = signal<'asc' | 'desc'>('asc');
@@ -565,6 +728,18 @@ export class AtmTable<T = Record<string, unknown>>
   readonly hasFooter = computed(() =>
     this.columns().some((c) => c.footer !== undefined || c.footerValue || c.footerTemplate),
   );
+
+  /** Card-view title column — first 'high' priority column, else the first column. */
+  readonly titleColumn = computed<AtmTableColumn<T> | null>(() => {
+    const cols = this.columns();
+    if (!cols.length) return null;
+    return cols.find((c) => c.priority === 'high') ?? cols[0];
+  });
+  /** Card-view label/value rows — every column except the title one. */
+  readonly detailColumns = computed(() => {
+    const title = this.titleColumn();
+    return this.columns().filter((c) => c !== title);
+  });
 
   /** Cumulative left offsets for sticky (fixed) columns. */
   readonly fixedLeft = computed<Record<string, number>>(() => {
@@ -670,6 +845,34 @@ export class AtmTable<T = Record<string, unknown>>
         if (ds && !skipLoad) this.load$.next(query);
       });
     });
+
+    // Fade indicator: ResizeObserver catches container resize (sidebar toggle,
+    // viewport change); scrollWidth itself doesn't fire ResizeObserver when only
+    // the CONTENT grows/shrinks (columns/rows changing, same container box), so
+    // that path re-checks on every render that could affect it instead.
+    afterNextRender(() => {
+      const el = this.scrollerRef()?.nativeElement;
+      if (!el) return;
+      this.resizeObserver = new ResizeObserver(() => this.updateOverflow());
+      this.resizeObserver.observe(el);
+      this.updateOverflow();
+    });
+    effect(() => {
+      this.columns();
+      this.displayRows();
+      this.isLoading();
+      queueMicrotask(() => this.updateOverflow());
+    });
+  }
+
+  updateOverflow(): void {
+    const el = this.scrollerRef()?.nativeElement;
+    if (!el) return;
+    const overflowing = el.scrollWidth > el.clientWidth + 1;
+    const left = overflowing && el.scrollLeft > 1;
+    const right = overflowing && el.scrollLeft < el.scrollWidth - el.clientWidth - 1;
+    if (left !== this.hasOverflowLeft()) this.hasOverflowLeft.set(left);
+    if (right !== this.hasOverflowRight()) this.hasOverflowRight.set(right);
   }
 
   // Data helpers ----------------------------------------------------------
@@ -854,6 +1057,7 @@ export class AtmTable<T = Record<string, unknown>>
 
   ngOnDestroy(): void {
     this.detachFilterListeners();
+    this.resizeObserver?.disconnect();
   }
 
   // Style helpers -----------------------------------------------------------
@@ -920,6 +1124,16 @@ export class AtmTable<T = Record<string, unknown>>
     return (
       'group transition-colors last:*:border-b-0 ' +
       (this.isSelected(row) ? 'bg-primary-soft/40 ' : 'hover:bg-surface-alt/50 ') +
+      (this.clickableRows() ? 'cursor-pointer' : '')
+    );
+  }
+
+  cardClass(row: T): string {
+    return (
+      'flex flex-col gap-2 rounded-atm-lg border p-3 transition-colors ' +
+      (this.isSelected(row)
+        ? 'border-primary bg-primary-soft/40 '
+        : 'border-line bg-surface hover:bg-surface-alt/50 ') +
       (this.clickableRows() ? 'cursor-pointer' : '')
     );
   }
