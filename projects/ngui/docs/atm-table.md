@@ -53,6 +53,12 @@ export interface AtmTableColumn<T = Record<string, unknown>> {
   footerValue?: (rows: T[]) => unknown;
   /** Custom footer renderer. Context = visible rows. */
   footerTemplate?: TemplateRef<{ $implicit: T[] }>;
+  /**
+   * Only consumed by `[responsive]` mode: the first column marked 'high'
+   * becomes the card's title line (bold, own row) instead of a label/value
+   * pair. Doesn't affect the regular table — no column is ever hidden there.
+   */
+  priority?: 'high' | 'medium' | 'low';
 }
 
 export interface AtmSortEvent {
@@ -199,6 +205,14 @@ Manual server-side (you fetch, table only emits events):
   <atm-table [columns]="cols" [rows]="pageRows" [serverSide]="true"
              [totalItems]="total" [paginator]="true"
              (queryChange)="load($event)" />
+Responsive (row becomes a stacked card below the breakpoint — nothing gets
+hidden, just re-laid-out; mark one column `priority: 'high'` to make it the
+card's title, otherwise the first column takes that role):
+  <atm-table [columns]="cols" [rows]="rows" [responsive]="true"
+             responsiveBreakpoint="md" />
+Any table wider than its container (responsive or not) shows a soft fade on
+whichever edge still has hidden columns, so horizontal scroll is never
+silent — it disappears once you've scrolled that side into view.
 
 ## Identity
 
@@ -218,6 +232,8 @@ Manual server-side (you fetch, table only emits events):
 | `emptyMessage` | string | no | 'Nenhum registro encontrado' |
 | `clickableRows` | boolean | no | false |
 | `trackBy` | string | no | 'id' |
+| `responsive` | boolean | no | false |
+| `responsiveBreakpoint` | 'sm' \| 'md' \| 'lg' | no | 'sm' |
 | `selectable` | boolean | no | false |
 | `scrollable` | boolean | no | false |
 | `scrollHeight` | string | no | '400px' |
@@ -305,6 +321,12 @@ export interface AtmTableColumn<T = Record<string, unknown>> {
   footerValue?: (rows: T[]) => unknown;
   /** Custom footer renderer. Context = visible rows. */
   footerTemplate?: TemplateRef<{ $implicit: T[] }>;
+  /**
+   * Only consumed by `[responsive]` mode: the first column marked 'high'
+   * becomes the card's title line (bold, own row) instead of a label/value
+   * pair. Doesn't affect the regular table — no column is ever hidden there.
+   */
+  priority?: 'high' | 'medium' | 'low';
 }
 ```
 
