@@ -1,6 +1,6 @@
 {
   "name": "@atmus/ngui",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Biblioteca de componentes Angular do Atmus UI.",
   "license": "MIT",
   "peerDependencies": {
