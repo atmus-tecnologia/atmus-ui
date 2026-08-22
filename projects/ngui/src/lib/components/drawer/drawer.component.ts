@@ -141,7 +141,12 @@ export class AtmDrawer implements OnDestroy {
       right: 'inset-y-0 right-0 border-l border-line',
       left: 'inset-y-0 left-0 border-r border-line',
       top: 'inset-x-0 top-0 mx-auto rounded-b-2xl border border-t-0 border-line',
-      bottom: 'inset-x-0 bottom-0 mx-auto rounded-t-2xl border border-b-0 border-line',
+      // pb extra: em device com home indicator/gesture bar, o rodape do sheet
+      // (footer ou o proprio conteudo, quando nao ha footer) nao pode ficar
+      // colado na area do sistema — sem isso o ultimo botao fica dificil de
+      // tocar com confianca, ou o gesto de voltar do sistema disputa com ele.
+      bottom:
+        'inset-x-0 bottom-0 mx-auto rounded-t-2xl border border-b-0 border-line pb-[env(safe-area-inset-bottom)]',
     };
     return `${base} ${layout[pos]} ${anim}`;
   });
