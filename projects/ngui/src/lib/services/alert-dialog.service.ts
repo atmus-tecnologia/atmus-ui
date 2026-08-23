@@ -71,7 +71,7 @@ export class AtmAlertDialog {
 
   defaultIcon(): string {
     const color = this.options().color ?? 'primary';
-    return { danger: 'warning-alt', warning: 'warning', success: 'check-circled', info: 'info-circle', primary: 'question-circle', neutral: 'question-circle' }[color];
+    return { danger: 'alert-circle', warning: 'triangle-alert', success: 'checkmark-circle-01', info: 'information-circle', primary: 'circle-question-mark', neutral: 'circle-question-mark' }[color];
   }
 
   iconWrapClass(): string {
