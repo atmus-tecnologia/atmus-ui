@@ -15,7 +15,10 @@ const STYLES: Record<string, { bar: string; icon: string; iconColor: string }> =
   selector: 'atm-toast-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="pointer-events-none fixed top-4 right-4 z-[80] flex w-full max-w-sm flex-col gap-2">
+    <div
+      class="pointer-events-none fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-[80] flex
+        w-[min(24rem,calc(100%-2rem))] flex-col gap-2"
+    >
       @for (toast of service.toasts(); track toast.id) {
         <div
           class="atm-panel pointer-events-auto relative overflow-hidden transition-all duration-200"
